@@ -1,0 +1,79 @@
+package giis.demo.tkrun.controlador;
+
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import modelo.IncidenciasCModelo;
+import vista.IncidenciasTecnicoProceso;
+
+import javax.swing.JOptionPane;
+
+public class IncidenciasCControlador {
+    private IncidenciasCModelo modelo;
+    private IncidenciasTecnicoProceso vista;
+    private String emailTecnico;
+
+    public IncidenciasCControlador(IncidenciasCModelo modelo, IncidenciasTecnicoProceso vista, String emailTecnico) {
+        this.modelo = modelo;
+        this.vista = vista;
+        this.emailTecnico = emailTecnico;
+
+        cargarTabla();
+
+        // Escuchar selección de tabla para autocompletar
+        this.vista.tablaIncidencias.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                rellenarFormularioDesdeTabla();
+            }
+        });
+
+        // Eventos de botones
+        this.vista.btnMarcarResuelta.addActionListener(e -> marcarComoResuelta());
+        this.vista.btnCancelar.addActionListener(e -> limpiarFormulario());
+        this.vista.btnSalir.addActionListener(e -> System.exit(0));
+    }
+
+    private void cargarTabla() {
+        try {
+            vista.modeloTabla.setRowCount(0);
+            for (Object[] fila : modelo.obtenerIncidenciasProceso(modelo.getIdUsuarioByEmail(emailTecnico))) {
+                vista.modeloTabla.addRow(fila);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(vista, "Error al cargar: " + e.getMessage());
+        }
+    }
+
+    private void rellenarFormularioDesdeTabla() {
+        int fila = vista.tablaIncidencias.getSelectedRow();
+        if (fila != -1) {
+            vista.txtIdIncidencia.setText(vista.modeloTabla.getValueAt(fila, 0).toString());
+            vista.txtTituloIncidencia.setText(vista.modeloTabla.getValueAt(fila, 1).toString());
+            vista.txtHorasEstimadas.setText(vista.modeloTabla.getValueAt(fila, 4).toString());
+        }
+    }
+
+    private void marcarComoResuelta() {
+        try {
+            int id = Integer.parseInt(vista.txtIdIncidencia.getText());
+            double tReal = Double.parseDouble(vista.txtHorasReales.getText());
+            String desc = vista.txtAreaTrabajos.getText();
+
+            if (modelo.marcarComoResuelta(id, emailTecnico, tReal, desc)) {
+                JOptionPane.showMessageDialog(vista, "¡Guardado con éxito!");
+                limpiarFormulario();
+                cargarTabla();
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(vista, "Error: Datos inválidos o no seleccionados.");
+        }
+    }
+
+    private void limpiarFormulario() {
+        vista.txtIdIncidencia.setText("");
+        vista.txtTituloIncidencia.setText("");
+        vista.txtHorasEstimadas.setText("");
+        vista.txtHorasReales.setText("");
+        vista.txtAreaTrabajos.setText("");
+        vista.tablaIncidencias.clearSelection();
+    }
+}
