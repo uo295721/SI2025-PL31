@@ -2,10 +2,11 @@ package giis.demo.tkrun.vista;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import giis.demo.tkrun.modelo.TecnicoDTO;
+
 import java.awt.*;
 import java.util.List;
-import modelo.IncidenciaDTO;
-import modelo.TecnicoDTO;
 
 public class VentanaOperador extends JFrame {
 

@@ -2,8 +2,9 @@ package giis.demo.tkrun.controlador;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import modelo.IncidenciasCModelo;
-import vista.IncidenciasTecnicoProceso;
+
+import giis.demo.tkrun.modelo.IncidenciasCModelo;
+import giis.demo.tkrun.vista.IncidenciasTecnicoProceso;
 
 import javax.swing.JOptionPane;
 

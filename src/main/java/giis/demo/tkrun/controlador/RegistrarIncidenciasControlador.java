@@ -3,8 +3,9 @@ package giis.demo.tkrun.controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
-import modelo.IncidenciaModelo;
-import vista.RegistrarIncidencia;
+
+import giis.demo.tkrun.modelo.IncidenciaModelo;
+import giis.demo.tkrun.vista.RegistrarIncidencia;
 
 public class RegistrarIncidenciasControlador {
 

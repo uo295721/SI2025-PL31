@@ -8,6 +8,11 @@ import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
+import giis.demo.tkrun.modelo.IncidenciaDTO;
+import giis.demo.tkrun.modelo.IncidenciaModelo;
+import giis.demo.tkrun.vista.RegistrarIncidencia;
+import giis.demo.tkrun.vista.VentanaMisIncidencias;
+
 
 
 public class ConsultaIncidenciasControlador {
@@ -72,10 +77,10 @@ public class ConsultaIncidenciasControlador {
 		
 		String filtradoEstado = (String) ventana.getCbEstados().getSelectedItem();
 		
-		List<modelo.IncidenciaDTO> listaIncidencias = incidencias.incidenciasRegistradasCiudadano(idCiudadano);
+		List<IncidenciaDTO> listaIncidencias = incidencias.incidenciasRegistradasCiudadano(idCiudadano);
 		
 		//Recorremos la lista añadiendo solo las que cumplan el estado
-		for (modelo.IncidenciaDTO iDTO : listaIncidencias) {
+		for (IncidenciaDTO iDTO : listaIncidencias) {
 			
 			//Comprobamos el estado
 			if (filtradoEstado.equals("Todas") || iDTO.getEstado().equals(filtradoEstado)) {

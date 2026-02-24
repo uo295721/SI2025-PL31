@@ -4,13 +4,16 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
+import giis.demo.tkrun.modelo.IncidenciaDTO;
+import giis.demo.tkrun.modelo.TecnicoModelo;
+import giis.demo.tkrun.vista.DialogoPlanificar;
+import giis.demo.tkrun.vista.VentanaTecnico;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import modelo.IncidenciaDTO;
-import modelo.TecnicoModelo;
-import vista.DialogoPlanificar;
-import vista.VentanaTecnico;
+
 
 public class TecnicoControlador {
 	

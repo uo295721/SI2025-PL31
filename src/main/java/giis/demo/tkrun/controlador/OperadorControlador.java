@@ -5,10 +5,12 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-import modelo.IncidenciaDTO;
-import modelo.IncidenciaModelo;
-import modelo.TecnicoDTO;
-import vista.VentanaOperador;
+import giis.demo.tkrun.modelo.IncidenciaDTO;
+import giis.demo.tkrun.modelo.IncidenciaModelo;
+import giis.demo.tkrun.modelo.TecnicoDTO;
+import giis.demo.tkrun.vista.VentanaOperador;
+
+
 
 public class OperadorControlador {
 

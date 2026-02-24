@@ -5,14 +5,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import modelo.IncidenciaModelo;
-import modelo.LoginUsuario;
-import modelo.TecnicoModelo;
-import modelo.UsuarioDTO;
-import vista.VentanaLogin;
-import vista.VentanaMisIncidencias;
-import vista.VentanaOperador;
-import vista.VentanaTecnico;
+import giis.demo.tkrun.modelo.IncidenciaModelo;
+import giis.demo.tkrun.modelo.LoginUsuario;
+import giis.demo.tkrun.modelo.TecnicoModelo;
+import giis.demo.tkrun.modelo.UsuarioDTO;
+import giis.demo.tkrun.vista.VentanaLogin;
+import giis.demo.tkrun.vista.VentanaMisIncidencias;
+import giis.demo.tkrun.vista.VentanaOperador;
+import giis.demo.tkrun.vista.VentanaTecnico;
+
+
 
 public class LoginControlador {
 	
@@ -24,7 +26,6 @@ public class LoginControlador {
 		this.login = login;
 		
 		this.ventanaLogin.getBtnAceptar().addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				intentarAcceder();
 			}

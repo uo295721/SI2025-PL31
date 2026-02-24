@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import giis.demo.jdbc.DemoJdbc;
 import util.Jdbc;
 
 public class IncidenciasCModelo {
