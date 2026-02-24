@@ -1,33 +1,27 @@
 package giis.demo.tkrun.modelo;
 
-import java.sql.*;
-
+import java.util.List;
 import giis.demo.util.Database;
 
 public class CiudadanoModelo {
 
+    // Creamos la instancia de la base de datos como en la plantilla
+    private Database db = new Database();
+
+    
     public CiudadanoDTO loginCiudadano(String identificador) {
-    	
+        // Definimos la SQL
         String sql = "SELECT dni, nombre, email FROM Ciudadano WHERE dni = ? OR email = ?";
         
-        try (Connection con = Database.getConnection();
-             PreparedStatement pst = con.prepareStatement(sql)) {
-            
-            	pst.setString(1, identificador);
-            	pst.setString(2, identificador);
-            	ResultSet rs = pst.executeQuery();
-            
-            	if (rs.next()) {
-            		// Si existe, metemos los datos en el DTO (la maleta)
-            		CiudadanoDTO ciudadano = new CiudadanoDTO(
-            				rs.getString("dni"),
-            				rs.getString("nombre"),
-            				rs.getString("email"));
-                	return ciudadano;
-            	}
-        } catch (SQLException e) {
-            e.printStackTrace();
+        // Ejecutamos la query. 
+       
+        List<CiudadanoDTO> ciudadanos = db.executeQueryPojo(CiudadanoDTO.class, sql, identificador, identificador);
+        
+        //  Comprobamos si encontró a alguien
+        if (ciudadanos.isEmpty()) {
+            return null; // Si no existe
+        } else {
+            return ciudadanos.get(0); // Devolvemos el primero encontrado
         }
-        return null; // Si no existe o hay error
     }
 }

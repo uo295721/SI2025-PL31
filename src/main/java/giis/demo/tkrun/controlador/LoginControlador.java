@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import giis.demo.tkrun.modelo.IncidenciaModelo;
-import giis.demo.tkrun.modelo.LoginUsuario;
+import giis.demo.tkrun.modelo.LoginUsuarioModelo;
 import giis.demo.tkrun.modelo.TecnicoModelo;
 import giis.demo.tkrun.modelo.UsuarioDTO;
 import giis.demo.tkrun.vista.VentanaLogin;
@@ -19,9 +19,9 @@ import giis.demo.tkrun.vista.VentanaTecnico;
 public class LoginControlador {
 	
 	private VentanaLogin ventanaLogin;
-	private LoginUsuario login;
+	private LoginUsuarioModelo login;
 	
-	public LoginControlador(VentanaLogin ventanaLogin, LoginUsuario login) {
+	public LoginControlador(VentanaLogin ventanaLogin, LoginUsuarioModelo login) {
 		this.ventanaLogin = ventanaLogin;
 		this.login = login;
 		
