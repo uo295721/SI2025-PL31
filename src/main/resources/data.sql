@@ -1,10 +1,17 @@
---Datos para carga inicial de la base de datos
+DELETE FROM "Historial";
+DELETE FROM "Incidencia";
+DELETE FROM "Usuario";
 
---Para giis.demo.tkrun:
-delete from carreras;
-insert into carreras(id,inicio,fin,fecha,descr) values 
-	(100,'2016-10-05','2016-10-25','2016-11-09','finalizada'),
-	(101,'2016-10-05','2016-10-25','2016-11-10','en fase 3'),
-	(102,'2016-11-05','2016-11-09','2016-11-20','en fase 2'),
-	(103,'2016-11-10','2016-11-15','2016-11-21','en fase 1'),
-	(104,'2016-11-11','2016-11-15','2016-11-22','antes inscripcion');
+INSERT INTO "Usuario" ("id_usuario", "nombre", "apellidos", "email", "rol") VALUES 
+('T1', 'Ana', 'García', 'ana.tecnico@oviedo.es', 'TÉCNICO'),
+('T2', 'Carlos', 'Pérez', 'carlos.tecnico@oviedo.es', 'TÉCNICO'),
+('C1', 'Diego', 'Otero', 'diego.ciudadano@oviedo.es', 'CIUDADANO'),
+('O1', 'Omar', 'Lobo', 'omar.operador@oviedo.es', 'OPERADOR');
+
+INSERT INTO "Incidencia" 
+("estado", "id_incidencia", "descripcion", "id_ciudadano", "localización", "tipo", "fecha") 
+VALUES 
+('Validada', 101, 'Falla de alumbrado público en Plaza Mayor', 'C1', 'Plaza Mayor, 1', 'Electricidad', '2026-02-19');
+
+INSERT INTO "Historial" ("id_modificacion", "id_incidencia", "id_usuario", "estado_nuevo", "fecha_modificacion", "comentario")
+VALUES (1, 101, 'O1', 'Validada', '2026-02-19', 'Incidencia recibida y validada correctamente.');
