@@ -70,11 +70,19 @@ public class LoginControlador {
 			break;
 			
 		case "TÉCNICO":
+			
 			VentanaTecnico vT = new VentanaTecnico();
 			TecnicoModelo tM = new TecnicoModelo();
 			new TecnicoControlador(tM, vT, id);
 			vT.setVisible(true);
 			break;
+			/*
+			VentanaTecnico vT = new VentanaTecnico();
+			TecnicoModelo tM = new TecnicoModelo();
+			new TecnicoControlador(tM, vT, id);
+			vT.setVisible(true);
+			break;
+			*/
 			
 		case "OPERADOR":
 			VentanaOperador vO = new VentanaOperador();

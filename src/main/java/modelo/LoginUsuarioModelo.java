@@ -7,7 +7,7 @@ import util.Database;
 public class LoginUsuarioModelo {
     
     private Database db = new Database();
-    
+  
     public UsuarioDTO validarAcceso(String identificador) {
         
         System.out.println("Buscando en la BD el identificador: [" + identificador + "]");
