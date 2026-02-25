@@ -78,99 +78,56 @@ public class SwingMain {
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		frame.getContentPane().add(btnCargarDatosIniciales);
 		
-		JButton btnEjecutarClau = new JButton("Botón Clau");
-		btnEjecutarClau.addActionListener(new ActionListener() { //NOSONAR codigo autogenerado
-			public void actionPerformed(ActionEvent e) {
-				VentanaLogin vista = new VentanaLogin();
-		        LoginUsuarioModelo login = new LoginUsuarioModelo();
-		        
-		        // Creo el controlador que gestionará el acceso
-		        new LoginControlador(vista,login);
-		        
-		        // Hacemos visible la ventana principal
-		        vista.setVisible(true);
-		        vista.setLocationRelativeTo(null); // Para que salga centrada
-		        
-		        System.out.println("Sistema de Gestión de Incidencias: Esperando identificación...");
-			}
-		});
-		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		frame.getContentPane().add(btnEjecutarClau);
-		/*
-				
-				
-		
-		
-				
-		frame.getContentPane().add(btnEjecutar33511);
-		
-		JButton btnEntregaReportaje = new JButton("Boton Dani");
-		btnEntregaReportaje.addActionListener(new ActionListener() { //NOSONAR codigo autogenerado
-			public void actionPerformed(ActionEvent e) {
-				String nombre = javax.swing.JOptionPane.showInputDialog("Introduzca su nombre de reportero:");
-				if (nombre != null && !nombre.trim().isEmpty()) {
-					EntregaReportajeController controller = new EntregaReportajeController(
-						new EntregaReportajeModel(), 
-						new EntregaReportajeView(), 
-						nombre
-					);
-					controller.initController();
-				}
-			}
-		});
-		frame.getContentPane().add(btnEntregaReportaje);
+		// Botón para la Historia de Claudia (Técnico - Resolución)
+	    JButton btnClau = new JButton("Historia: Claudia");
+	    btnClau.addActionListener(e -> ejecutarHistoria("CLAUDIA"));
+	    frame.getContentPane().add(btnClau);
 
-		JButton btnOfrecerReportajes = new JButton("Boton Hugo");
-		btnOfrecerReportajes.addActionListener(new ActionListener() { //NOSONAR codigo autogenerado
-			public void actionPerformed(ActionEvent e) {
-				String nombre = javax.swing.JOptionPane.showInputDialog("Introduzca el nombre de su agencia: ");
-				if(nombre != null && !nombre.trim().isEmpty()) {
-					ReportajeController controller=new ReportajeController(new ReportajeModel(), new ReportajeVista(), nombre);
-					controller.initController();
-				}
-				
-			}
-		});
-		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		frame.getContentPane().add(btnOfrecerReportajes);
-
-		JButton btnOfrecimiento = new JButton("Gestión de los ofrecimientos a una empresa ( #33514)");
-		btnOfrecimiento.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String empresa = javax.swing.JOptionPane.showInputDialog("Introduzca el nombre de la empresa: ");
-				if(empresa != null) {
-					OfrecimientoController controller = new OfrecimientoController(
-						new OfrecimientoModel(),
-						new OfrecimientoView(),
-						empresa
-					);
-					controller.initController();
-				}
-			}
-		});
-		frame.getContentPane().add(btnOfrecimiento);
-		
-		
-		JButton btnVerReportaje = new JButton("Boton Liam);
-        btnVerReportaje.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String empresa = javax.swing.JOptionPane.showInputDialog("Introduzca el nombre de la empresa: ");
-                if(empresa != null && !empresa.trim().isEmpty()) {
-                    ReportajeOfrecimientoController controller = new ReportajeOfrecimientoController(
-                        new ReportajeOfrecimientoModel(),
-                        new ReportajeOfrecimientoView(),
-                        empresa
-                    );
-                    controller.initController();
-                }
-            }
-        });
-        frame.getContentPane().add(btnVerReportaje);
-		*/
+	    // Botón para la Historia de Liam (Técnico - Planificación)
+	    JButton btnLiam = new JButton("Historia: Liam");
+	    btnLiam.addActionListener(e -> ejecutarHistoria("LIAM"));
+	    frame.getContentPane().add(btnLiam);
 	}
-	
-		
-	
 
-	public JFrame getFrame() { return this.frame; }
-}
+	/**
+	 * Método centralizado que pide login y lanza la vista correspondiente
+	 */
+	private void ejecutarHistoria(String integrante) {
+	    // 1. Panel emergente para pedir identificación
+	    String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para " + integrante + ":");
+	    
+	    if (idIngresado == null || idIngresado.trim().isEmpty()) return;
+
+	    // 2. Validamos contra la BD usando el modelo existente
+	    modelo.LoginUsuarioModelo modeloLogin = new modelo.LoginUsuarioModelo();
+	    modelo.UsuarioDTO usuario = modeloLogin.validarAcceso(idIngresado.trim());
+
+	    if (usuario == null) {
+	        JOptionPane.showMessageDialog(frame, "Usuario no encontrado en la base de datos.");
+	        return;
+	    }
+
+	    // 3. Si el usuario existe, lanzamos la vista que toca según el botón pulsado
+	    lanzarVistaEspecifica(integrante, usuario);
+	}
+
+	private void lanzarVistaEspecifica(String integrante, modelo.UsuarioDTO usuario) {
+	    String id = usuario.getIdUsuario();
+	    
+	    switch (integrante) {
+	        case "CLAUDIA":
+	            
+	         // Aquí lanzas la vista de planificación directamente
+	            vista.IncidenciasTecnicoProceso vL = new vista.IncidenciasTecnicoProceso(id);
+	            vL.setVisible(true);
+	            break;
+	        case "LIAM":
+	            
+	        	vista.VentanaTecnico vT = new vista.VentanaTecnico();
+	            new controlador.TecnicoControlador(new modelo.TecnicoModelo(), vT, id);
+	            vT.setVisible(true);
+	            break;
+	        // Puedes añadir aquí a Daniel y Hugo siguiendo el mismo patrón
+	    }
+	}
+}	
