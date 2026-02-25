@@ -7,9 +7,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import controlador.LoginControlador;
-import modelo.LoginUsuarioModelo;
-import vista.VentanaLogin;
+import controlador.IncidenciasCControlador;
+import modelo.IncidenciasCModelo;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -80,54 +79,28 @@ public class SwingMain {
 		
 		// Botón para la Historia de Claudia (Técnico - Resolución)
 	    JButton btnClau = new JButton("Historia: Claudia");
-	    btnClau.addActionListener(e -> ejecutarHistoria("CLAUDIA"));
+	    btnClau.addActionListener(new ActionListener() {
+	    	public void actionPerformed (ActionEvent e) {
+	    		String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para :");
+	    		
+	    		vista.IncidenciasTecnicoProceso vL = new vista.IncidenciasTecnicoProceso(idIngresado);
+	    		IncidenciasCModelo modelo = new IncidenciasCModelo();
+	    		IncidenciasCControlador controlador = new IncidenciasCControlador(modelo, vL, idIngresado);
+	            vL.setVisible(true);
+	    	}
+	    	
+	    });
 	    frame.getContentPane().add(btnClau);
 
 	    // Botón para la Historia de Liam (Técnico - Planificación)
+	    /*
 	    JButton btnLiam = new JButton("Historia: Liam");
 	    btnLiam.addActionListener(e -> ejecutarHistoria("LIAM"));
 	    frame.getContentPane().add(btnLiam);
+	    */
 	}
 
 	/**
 	 * Método centralizado que pide login y lanza la vista correspondiente
 	 */
-	private void ejecutarHistoria(String integrante) {
-	    // 1. Panel emergente para pedir identificación
-	    String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para " + integrante + ":");
-	    
-	    if (idIngresado == null || idIngresado.trim().isEmpty()) return;
-
-	    // 2. Validamos contra la BD usando el modelo existente
-	    modelo.LoginUsuarioModelo modeloLogin = new modelo.LoginUsuarioModelo();
-	    modelo.UsuarioDTO usuario = modeloLogin.validarAcceso(idIngresado.trim());
-
-	    if (usuario == null) {
-	        JOptionPane.showMessageDialog(frame, "Usuario no encontrado en la base de datos.");
-	        return;
-	    }
-
-	    // 3. Si el usuario existe, lanzamos la vista que toca según el botón pulsado
-	    lanzarVistaEspecifica(integrante, usuario);
-	}
-
-	private void lanzarVistaEspecifica(String integrante, modelo.UsuarioDTO usuario) {
-	    String id = usuario.getIdUsuario();
-	    
-	    switch (integrante) {
-	        case "CLAUDIA":
-	            
-	         // Aquí lanzas la vista de planificación directamente
-	            vista.IncidenciasTecnicoProceso vL = new vista.IncidenciasTecnicoProceso(id);
-	            vL.setVisible(true);
-	            break;
-	        case "LIAM":
-	            
-	        	vista.VentanaTecnico vT = new vista.VentanaTecnico();
-	            new controlador.TecnicoControlador(new modelo.TecnicoModelo(), vT, id);
-	            vT.setVisible(true);
-	            break;
-	        // Puedes añadir aquí a Daniel y Hugo siguiendo el mismo patrón
-	    }
-	}
 }	
