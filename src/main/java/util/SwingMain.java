@@ -8,7 +8,11 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import controlador.IncidenciasCControlador;
+import controlador.OperadorControlador;
+import controlador.TecnicoControlador;
+import modelo.IncidenciaModelo;
 import modelo.IncidenciasCModelo;
+import modelo.TecnicoModelo;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -85,7 +89,7 @@ public class SwingMain {
 	    		
 	    		vista.IncidenciasTecnicoProceso vL = new vista.IncidenciasTecnicoProceso(idIngresado);
 	    		IncidenciasCModelo modelo = new IncidenciasCModelo();
-	    		IncidenciasCControlador controlador = new IncidenciasCControlador(modelo, vL, idIngresado);
+	    		IncidenciasCControlador controladorC = new IncidenciasCControlador(modelo, vL, idIngresado);
 	            vL.setVisible(true);
 	    	}
 	    	
@@ -93,14 +97,34 @@ public class SwingMain {
 	    frame.getContentPane().add(btnClau);
 
 	    // Botón para la Historia de Liam (Técnico - Planificación)
-	    /*
 	    JButton btnLiam = new JButton("Historia: Liam");
-	    btnLiam.addActionListener(e -> ejecutarHistoria("LIAM"));
+	    btnLiam.addActionListener(new ActionListener() {
+	    	public void actionPerformed (ActionEvent e) {
+	    		String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para :");
+	    		
+	    		vista.VentanaTecnico vT = new vista.VentanaTecnico();
+	    		TecnicoModelo modelo = new TecnicoModelo();
+	    		TecnicoControlador controladorL = new TecnicoControlador(modelo, vT, idIngresado);
+	            vT.setVisible(true);
+	    	}
+	    	
+	    });
 	    frame.getContentPane().add(btnLiam);
-	    */
+	    
+	    // Botón para la Historia de Hugo (Técnico - Planificación)
+	    JButton btnHugo = new JButton("Historia: Hugo");
+	    btnHugo.addActionListener(new ActionListener() {
+	    	public void actionPerformed (ActionEvent e) {
+	    			    		
+	    		vista.VentanaOperador vH = new vista.VentanaOperador();
+	    		IncidenciaModelo modelo = new IncidenciaModelo();
+	    		OperadorControlador controladorH = new OperadorControlador(vH, modelo);
+	            vH.setVisible(true);
+	    	}
+	    	
+	    });
+	    frame.getContentPane().add(btnHugo);
+	    
 	}
 
-	/**
-	 * Método centralizado que pide login y lanza la vista correspondiente
-	 */
 }	
