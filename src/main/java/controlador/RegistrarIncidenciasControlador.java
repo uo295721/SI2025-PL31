@@ -22,6 +22,7 @@ public class RegistrarIncidenciasControlador {
         this.vista.getBtnRegistrar().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 registrar();
+                vista.dispose();
             }
         });
     }
@@ -37,12 +38,11 @@ public class RegistrarIncidenciasControlador {
             return;
         }
 
-        // Inserto los valores dados usando la función creada en el modelo modelo
+        // Inserto los valores dados usando la función creada en el modelo
         boolean insertado = modelo.insertarIncidencia(tipo, descripcion, localizacion, idCiudadano);
 
         if (insertado) {
             JOptionPane.showMessageDialog(vista, "Incidencia registrada correctamente.");
-            vista.dispose();
         } else {
             JOptionPane.showMessageDialog(vista, "Error técnico al guardar en la base de datos.");
         }

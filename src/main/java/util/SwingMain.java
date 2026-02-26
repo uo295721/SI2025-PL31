@@ -7,11 +7,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import controlador.IncidenciasCControlador;
+import controlador.IncidenciaControlador;
 import controlador.OperadorControlador;
 import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
-import modelo.IncidenciasCModelo;
 import modelo.TecnicoModelo;
 
 import java.awt.event.ActionListener;
@@ -88,8 +87,8 @@ public class SwingMain {
 	    		String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para :");
 	    		
 	    		vista.IncidenciasTecnicoProceso vL = new vista.IncidenciasTecnicoProceso(idIngresado);
-	    		IncidenciasCModelo modelo = new IncidenciasCModelo();
-	    		IncidenciasCControlador controladorC = new IncidenciasCControlador(modelo, vL, idIngresado);
+	    		IncidenciaModelo modelo = new IncidenciaModelo();
+	    		IncidenciaControlador controladorC = new IncidenciaControlador(modelo, vL, idIngresado);
 	            vL.setVisible(true);
 	    	}
 	    	
@@ -124,6 +123,19 @@ public class SwingMain {
 	    	
 	    });
 	    frame.getContentPane().add(btnHugo);
+	    
+	    JButton btnDani = new JButton("Historia: Dani");
+	    btnDani.addActionListener(new ActionListener() {
+	    	public void actionPerformed (ActionEvent e) {
+	    			    		
+	    		vista.RegistrarIncidencia rI = new vista.RegistrarIncidencia();
+	    		IncidenciaModelo modelo = new IncidenciaModelo();
+	    		IncidenciaControlador controladorH = new IncidenciaControlador(modelo, rI);
+	            rI.setVisible(true);
+	    	}
+	    	
+	    });
+	    frame.getContentPane().add(btnDani);
 	    
 	}
 

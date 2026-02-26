@@ -7,7 +7,7 @@ public class IncidenciaDTO {
 	private String descripcion;
 	private String descripcionCiudadano;
 	private String estado;
-	private String fecha; // Añadido para el ordenamiento
+	private String fecha; // Para poder ordenar
 	
 	// Nuevos atributos para historia de Usuario
 	private int horasEstimadas;

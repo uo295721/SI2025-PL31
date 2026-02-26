@@ -3,17 +3,19 @@ package controlador;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import modelo.IncidenciasCModelo;
+import modelo.IncidenciaModelo;
 import vista.IncidenciasTecnicoProceso;
+import vista.RegistrarIncidencia;
 
 import javax.swing.JOptionPane;
 
-public class IncidenciasCControlador {
-    private IncidenciasCModelo modelo;
+public class IncidenciaControlador {
+    private IncidenciaModelo modelo;
     private IncidenciasTecnicoProceso vista;
     private String emailTecnico;
+    private RegistrarIncidencia vistaReg;
 
-    public IncidenciasCControlador(IncidenciasCModelo modelo, IncidenciasTecnicoProceso vista, String emailTecnico) {
+    public IncidenciaControlador(IncidenciaModelo modelo, IncidenciasTecnicoProceso vista, String emailTecnico) {
         this.modelo = modelo;
         this.vista = vista;
         this.emailTecnico = emailTecnico;
@@ -31,6 +33,11 @@ public class IncidenciasCControlador {
         this.vista.btnMarcarResuelta.addActionListener(e -> marcarComoResuelta());
         this.vista.btnCancelar.addActionListener(e -> limpiarFormulario());
         this.vista.btnSalir.addActionListener(e -> System.exit(0));
+    }
+    
+    public IncidenciaControlador(IncidenciaModelo modelo, RegistrarIncidencia vista) {
+        this.modelo = modelo;
+        this.vistaReg = vista;
     }
 
     private void cargarTabla() {
