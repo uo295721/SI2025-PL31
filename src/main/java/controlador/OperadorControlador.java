@@ -5,9 +5,12 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JOptionPane;
 
+import modelo.HistorialDTO;
 import modelo.IncidenciaDTO;
 import modelo.IncidenciaModelo;
 import modelo.TecnicoDTO;
+import vista.VentanaOperador;
+import vista.VentanaHistorial;
 import vista.VentanaOperador;
 
 
@@ -96,6 +99,27 @@ public class OperadorControlador {
 				}
 			}
 		});
+		vista.getBtnHistorial().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int fila = vista.getTablaIncidencias().getSelectedRow();
+
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(vista, "Seleccione primero una incidencia de la lista.");
+                    return;
+                }
+
+                // 1. Obtener ID de la fila seleccionada
+                int idIncidencia = (int) vista.getModeloTabla().getValueAt(fila, 0);
+
+                // 2. Obtener datos del modelo (la lista de cambios)
+                List<HistorialDTO> historial = modelo.obtenerHistorialIncidencia(idIncidencia);
+
+                // 3. Abrir la ventana de historial
+                VentanaHistorial vh = new VentanaHistorial(vista, idIncidencia, historial);
+                vh.setVisible(true);
+            }
+        });
 	}
 	
 	// Método que va a permitir al operador acceder a las indicendias sus respectivos técnicos
@@ -103,6 +127,7 @@ public class OperadorControlador {
 		vista.getTablaIncidencias().setEnabled(true);
 		vista.getListaTecnicos().setEnabled(true);
 		vista.getBtnAsignar().setEnabled(true);
+		vista.getBtnHistorial().setEnabled(true);
 	}
 
 }

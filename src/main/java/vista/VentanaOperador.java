@@ -97,7 +97,9 @@ public class VentanaOperador extends JFrame {
 	public JButton getBtnAsignar() {
 		return btnAsignar;
 	}
-
+	public JButton getBtnHistorial() {
+	    return getBtnHistorial(); 
+	}
 	public JLabel getLblEmailOperador() {
 		return lblEmailOperador;
 	}
