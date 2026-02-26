@@ -31,15 +31,9 @@
 	</classpathentry>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
-<<<<<<< HEAD
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="test" value="true"/>
-=======
 			<attribute name="test" value="true"/>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
->>>>>>> branch 'main' of https://github.com/uo295721/SI2025-PL31
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
