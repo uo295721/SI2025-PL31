@@ -8,6 +8,7 @@ public class IncidenciaDTO {
 	private String descripcionCiudadano;
 	private String estado;
 	private String fecha; // Para poder ordenar
+	private String localizacion;
 	
 	// Nuevos atributos para historia de Usuario
 	private int horasEstimadas;
@@ -47,6 +48,10 @@ public class IncidenciaDTO {
 	public String getEstado() {
 		return estado;
 	}
+	
+	public String getLocalizacion() {
+		return localizacion;
+	}
 
 	public int getHorasEstimadas() {
 		return horasEstimadas;
@@ -74,6 +79,10 @@ public class IncidenciaDTO {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	
+	public void setLocalizacion(String localizacion) {
+		this.localizacion = localizacion;
 	}
 
 	public void setHorasEstimadas(int horasEstimadas) {
