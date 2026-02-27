@@ -39,7 +39,7 @@ public class Controlador33787 {
             try {
                 // Pasamos el ID 'O1' al modelo
                 modelo.validarClasificacion(idInc, tipo, idOperador);
-                JOptionPane.showMessageDialog(vista, "Guardado con éxito (Operador: " + idOperador + ")");
+                JOptionPane.showMessageDialog(vista, "Guardado con éxito)");
                 refrescarTabla();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(vista, "Error: " + ex.getMessage());
