@@ -32,6 +32,17 @@ public class UsuarioModelo {
 		List<Object[]> result = db.executeQueryArray(sql, email, rol);
 		
 		return !result.isEmpty();
+	}
+	
+	public boolean esUsuario(String id) {
 		
+		//La consulta busca en la columna del email
+		//filtrando por el rol que pasamos como parámetro
+		id = id.trim();
+		String sql = "SELECT rol FROM Usuario WHERE (id_usuario = ? or email = ?)";
+		
+		List<Object[]> result = db.executeQueryArray(sql, id, id);
+		
+		return !result.isEmpty();
 	}
 }

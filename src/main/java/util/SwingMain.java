@@ -11,6 +11,7 @@ import controlador.Controlador33787;
 import controlador.IncidenciaControlador;
 import controlador.InformeResponsableControlador;
 import controlador.OperadorControlador;
+import controlador.RegistrarIncidenciasControlador;
 import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
 import modelo.Modelo33787;
@@ -147,17 +148,29 @@ public class SwingMain {
 		});
 		frame.getContentPane().add(btnHugo);
 
-		JButton btnDani = new JButton("Historia: Dani");
-		btnDani.addActionListener(new ActionListener() {
+		JButton btnRegistrarI = new JButton("Registrar una nueva incidencia");
+		btnRegistrarI.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistrarIncidencia rI = new vista.RegistrarIncidencia();
-				IncidenciaModelo modelo = new IncidenciaModelo();
-				IncidenciaControlador controladorH = new IncidenciaControlador(modelo, rI);
-				rI.setVisible(true);
+				
+				String idIntroducido = JOptionPane.showInputDialog(frame, "Ingrese su DNI o Email para identificarse:");
+
+				if (idIntroducido == null || idIntroducido.trim().isEmpty())
+					return;
+
+				if (usuario.esUsuario(idIntroducido)) {
+					RegistrarIncidencia vRI = new RegistrarIncidencia();
+					IncidenciaModelo mI = new IncidenciaModelo();
+					RegistrarIncidenciasControlador controladorRI = new RegistrarIncidenciasControlador(vRI, mI, idIntroducido);
+					vRI.setVisible(true);
+				} else {
+					JOptionPane.showMessageDialog(frame,
+							"Acceso denegado. No se encuentra al usuario introducido", "Error de Acceso",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 
 		});
-		frame.getContentPane().add(btnDani);
+		frame.getContentPane().add(btnRegistrarI);
 
 		JButton btnInforme = new JButton("Generar informe de responsable");
 		btnInforme.addActionListener(new ActionListener() {
