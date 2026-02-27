@@ -35,8 +35,19 @@ public class IncidenciaModelo {
             return false;
         }
     }
+    
+    public List<Object[]> getInformeMensualIncidencias(String fechaInicio, String fechaFin) {
+        String sql = "SELECT u.nombre, COUNT(i.id_incidencia) AS total_incidencias, SUM(i.coste) AS coste_total " +
+                     "FROM Usuario u " +
+                     "JOIN Incidencia i ON u.id_usuario = i.id_tecnico " +
+                     "WHERE u.rol = 'TÉCNICO' AND i.estado = 'Resuelta' " +
+                     "AND (i.fecha >= ? AND i.fecha <= ?)" + 
+                     "GROUP BY u.nombre " +
+                     "ORDER BY u.nombre ASC";
 
-   
+        return db.executeQueryArray(sql, fechaInicio, fechaFin);
+    }
+
     public List<TecnicoDTO> obtenerListaTecnicos() {
         String sql = "SELECT id_usuario, nombre, email FROM Usuario WHERE rol = 'Tecnico' ORDER BY nombre";
         return db.executeQueryPojo(TecnicoDTO.class, sql);
