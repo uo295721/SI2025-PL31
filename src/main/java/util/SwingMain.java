@@ -14,6 +14,7 @@ import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
 import modelo.TecnicoModelo;
 import modelo.HistorialDTO;
+import modelo.UsuarioModelo;
 import vista.VentanaHistorial;
 
 import java.awt.event.ActionListener;
@@ -29,6 +30,7 @@ import java.awt.event.ActionEvent;
 public class SwingMain {
 
 	private JFrame frame;
+	private modelo.UsuarioModelo usuario = new modelo.UsuarioModelo();
 
 	/**
 	 * Launch the application
@@ -59,7 +61,7 @@ public class SwingMain {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Main");
-		frame.setBounds(0, 0, 287, 185); 
+		frame.setBounds(0, 0, 450, 500); 
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		
 		JButton btnInicializarBaseDeDatos = new JButton("Inicializar Base de Datos en Blanco");
@@ -102,12 +104,25 @@ public class SwingMain {
 		JButton btnLiam = new JButton("Historia: Liam");
 		btnLiam.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent e) {
-				String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para :");
+				String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email de Técnico:");
 				
-				vista.VentanaTecnico vT = new vista.VentanaTecnico();
-				TecnicoModelo modelo = new TecnicoModelo();
-				TecnicoControlador controladorL = new TecnicoControlador(modelo, vT, idIngresado);
-				vT.setVisible(true);
+				if (idIngresado == null || idIngresado.trim().isEmpty())
+					return;
+				
+				if (usuario.esUsuarioConRol(idIngresado, "TÉCNICO")) {
+					
+					vista.VentanaTecnico vT = new vista.VentanaTecnico();
+					modelo.TecnicoModelo mT = new modelo.TecnicoModelo();
+					
+					//Pasamos el id al controlador para usarlo posteriormente
+					new controlador.TecnicoControlador(mT, vT, idIngresado);
+					vT.setVisible(true);
+					
+				} else {
+					
+					JOptionPane.showMessageDialog(frame, "Acceso denegado. No se encuentra dicho técnico o no tiene permisos.",
+													"Error de Acceso", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 			
 		});

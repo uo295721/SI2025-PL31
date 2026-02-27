@@ -43,12 +43,12 @@ public class TecnicoControlador {
 		List<IncidenciaDTO> incidencias = modeloTec1.getIncidenciasAsignadas(emailTecnico);
 		
 		//Definimos las columnas que queremos ver
-		String[] columnas = {"ID","Título","Descripción","Estado"};
+		String[] columnas = {"ID","Título","Localización","Estado"};
 		DefaultTableModel tablaModelo = new DefaultTableModel(columnas,0);
 		
 		//Rellenamos la tabla modelo con la lista del DTO
 		for (IncidenciaDTO i : incidencias) {
-			Object[] fila = {i.getIdIncidencia(),i.getDescripcion(),i.getDescripcionCiudadano(),i.getEstado()};
+			Object[] fila = {i.getIdIncidencia(),i.getDescripcion(),i.getLocalizacion(),i.getEstado()};
 			tablaModelo.addRow(fila);
 		}
 		
@@ -94,5 +94,6 @@ public class TecnicoControlador {
 		dialogo.setVisible(true);
 		
 	}
+
 	
 }
