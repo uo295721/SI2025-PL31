@@ -36,13 +36,13 @@ public class SwingMain {
 	 * Launch the application
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() { // NOSONAR codigo autogenerado
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					SwingMain window = new SwingMain();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace(); // NOSONAR codigo autogenerado
+					e.printStackTrace();
 				}
 			}
 		});
