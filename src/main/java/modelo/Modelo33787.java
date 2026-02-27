@@ -36,9 +36,7 @@ public class Modelo33787 {
         return lista;
     }
 
-    /**
-     * Ahora recibe el idOperador (ej. 'O1') para guardarlo en la FK.
-     */
+    
     public void validarClasificacion(int idIncidencia, String nuevoTipo, String idOperador) {
         String sqlUpdate = "UPDATE Incidencia SET tipo = ?, estado = 'Validada', id_operador = ? " +
                            "WHERE id_incidencia = ?";
