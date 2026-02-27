@@ -7,12 +7,15 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+import controlador.Controlador33787;
 import controlador.IncidenciaControlador;
 import controlador.OperadorControlador;
 import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
+import modelo.Modelo33787;
 import modelo.TecnicoModelo;
 import modelo.UsuarioModelo;
+import vista.Vista33787;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -151,6 +154,36 @@ public class SwingMain {
 	    	
 	    });
 	    frame.getContentPane().add(btnDani);
+	    
+	 // Dentro del método initialize() de SwingMain.java
+
+	    JButton btnClaudia = new JButton("Historia: Claudia (HU 33787)");
+	    btnClaudia.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            String emailIngresado = JOptionPane.showInputDialog(frame, "Ingrese su Email de Operador:");
+	            
+	            if (emailIngresado == null || emailIngresado.trim().isEmpty()) return;
+
+	            if (usuario.esUsuarioConRol(emailIngresado, "OPERADOR")) {
+	                
+	                Modelo33787 modeloHU = new Modelo33787();
+	                // Obtenemos el ID real (ej. 'O1') usando el email
+	                String idReal = modeloHU.obtenerIdPorEmail(emailIngresado);
+	                
+	                if (idReal != null) {
+	                    Vista33787 vistaHU = new Vista33787(idReal); // La vista mostrará 'O1'
+	                    new Controlador33787(modeloHU, vistaHU, idReal);
+	                    vistaHU.setVisible(true);
+	                } else {
+	                    JOptionPane.showMessageDialog(frame, "No se pudo recuperar el ID del usuario.");
+	                }
+	                
+	            } else {
+	                JOptionPane.showMessageDialog(frame, "Acceso denegado: El email no pertenece a un Operador.");
+	            }
+	        }
+	    });
+	    frame.getContentPane().add(btnClaudia);
 	    
 	}
 
