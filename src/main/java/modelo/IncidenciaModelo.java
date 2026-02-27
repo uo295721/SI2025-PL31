@@ -48,6 +48,14 @@ public class IncidenciaModelo {
         
         return db.executeQueryPojo(IncidenciaDTO.class, sql, idCiudadano);
     }
+    
+    public List<HistorialDTO> obtenerHistorialIncidencia(int idIncidencia){
+    	String sql = "SELECT id_modificacion, id_incidencia, id_usuario, estado_nuevo, "
+                + "fecha_modificacion, comentario FROM Historial "
+                + "WHERE id_incidencia = ? "
+                + "ORDER BY fecha_modificacion DESC";
+    	return db.executeQueryPojo(HistorialDTO.class, sql, idIncidencia);
+    }
 
    
     public boolean insertarIncidencia(String tipo, String descripcion, String localizacion, String idCiudadano) {
