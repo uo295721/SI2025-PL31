@@ -7,12 +7,15 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+import controlador.Controlador33787;
 import controlador.IncidenciaControlador;
 import controlador.OperadorControlador;
 import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
+import modelo.Modelo33787;
 import modelo.TecnicoModelo;
 import modelo.UsuarioModelo;
+import vista.Vista33787;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -151,6 +154,27 @@ public class SwingMain {
 	    	
 	    });
 	    frame.getContentPane().add(btnDani);
+	    
+	    JButton btnClaudia = new JButton("Historia: Claudia (HU 33787 - Clasificar)");
+        btnClaudia.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su Email de Operador:");
+                
+                if (idIngresado == null || idIngresado.trim().isEmpty()) return;
+
+                if (usuario.esUsuarioConRol(idIngresado, "OPERADOR")) {
+                    // Usando los nuevos nombres solicitados
+                    Vista33787 vista = new Vista33787(idIngresado);
+                    Modelo33787 modelo = new Modelo33787();
+                    new Controlador33787(modelo, vista, idIngresado);
+                    vista.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Acceso denegado. Se requiere rol OPERADOR.",
+                            "Error de Acceso", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        frame.getContentPane().add(btnClaudia);
 	    
 	}
 
