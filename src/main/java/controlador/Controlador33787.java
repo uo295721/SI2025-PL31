@@ -1,8 +1,8 @@
 package controlador;
 
-import modelo.IncidenciaDTO;
 import modelo.Modelo33787;
 import vista.Vista33787;
+import modelo.IncidenciaDTO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
@@ -10,43 +10,37 @@ import java.util.List;
 public class Controlador33787 {
     private Modelo33787 modelo;
     private Vista33787 vista;
-    private String emailOperador;
+    private String idOperador; // Guardamos 'O1', no el mail
 
-    public Controlador33787(Modelo33787 modelo, Vista33787 vista, String email) {
+    public Controlador33787(Modelo33787 modelo, Vista33787 vista, String idOperador) {
         this.modelo = modelo;
         this.vista = vista;
-        this.emailOperador = email;
+        this.idOperador = idOperador;
 
         refrescarTabla();
 
-        // Listener: Al seleccionar una fila, actualiza el label y el combo
+        // Evento de selección de tabla
         this.vista.getTablaIncidencias().getSelectionModel().addListSelectionListener(e -> {
             int fila = vista.getTablaIncidencias().getSelectedRow();
             if (fila != -1) {
-                String id = vista.getTablaIncidencias().getValueAt(fila, 0).toString();
-                String tipoPropuesto = vista.getTablaIncidencias().getValueAt(fila, 3).toString();
-                
-                vista.setLblDetalleId(id);
-                vista.getCbTipos().setSelectedItem(tipoPropuesto);
+                vista.setLblDetalleId(vista.getTablaIncidencias().getValueAt(fila, 0).toString());
+                vista.getCbTipos().setSelectedItem(vista.getTablaIncidencias().getValueAt(fila, 3).toString());
             }
         });
 
         // Botón Validar
         this.vista.getBtnValidar().addActionListener(e -> {
             int fila = vista.getTablaIncidencias().getSelectedRow();
-            if (fila == -1) {
-                JOptionPane.showMessageDialog(vista, "Seleccione una incidencia para validar.");
-                return;
-            }
+            if (fila == -1) return;
 
-            int id = (int) vista.getTablaIncidencias().getValueAt(fila, 0);
-            String tipoFinal = (String) vista.getCbTipos().getSelectedItem();
+            int idInc = (int) vista.getTablaIncidencias().getValueAt(fila, 0);
+            String tipo = (String) vista.getCbTipos().getSelectedItem();
 
             try {
-                modelo.validarClasificacion(id, tipoFinal, emailOperador);
-                JOptionPane.showMessageDialog(vista, "Clasificación registrada correctamente.");
+                // Pasamos el ID 'O1' al modelo
+                modelo.validarClasificacion(idInc, tipo, idOperador);
+                JOptionPane.showMessageDialog(vista, "Guardado con éxito (Operador: " + idOperador + ")");
                 refrescarTabla();
-                vista.setLblDetalleId("---");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(vista, "Error: " + ex.getMessage());
             }
@@ -58,12 +52,7 @@ public class Controlador33787 {
         DefaultTableModel m = (DefaultTableModel) vista.getTablaIncidencias().getModel();
         m.setRowCount(0);
         for (IncidenciaDTO i : lista) {
-            m.addRow(new Object[]{
-                i.getIdIncidencia(), 
-                i.getFecha(), 
-                i.getDescripcionCiudadano(), 
-                i.getTipo()
-            });
+            m.addRow(new Object[]{i.getIdIncidencia(), i.getFecha(), i.getDescripcionCiudadano(), i.getTipo()});
         }
     }
 }

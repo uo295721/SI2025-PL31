@@ -155,26 +155,35 @@ public class SwingMain {
 	    });
 	    frame.getContentPane().add(btnDani);
 	    
-	    JButton btnClaudia = new JButton("Historia: Claudia (HU 33787 - Clasificar)");
-        btnClaudia.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su Email de Operador:");
-                
-                if (idIngresado == null || idIngresado.trim().isEmpty()) return;
+	 // Dentro del método initialize() de SwingMain.java
 
-                if (usuario.esUsuarioConRol(idIngresado, "OPERADOR")) {
-                    // Usando los nuevos nombres solicitados
-                    Vista33787 vista = new Vista33787(idIngresado);
-                    Modelo33787 modelo = new Modelo33787();
-                    new Controlador33787(modelo, vista, idIngresado);
-                    vista.setVisible(true);
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Acceso denegado. Se requiere rol OPERADOR.",
-                            "Error de Acceso", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-        frame.getContentPane().add(btnClaudia);
+	    JButton btnClaudia = new JButton("Historia: Claudia (HU 33787)");
+	    btnClaudia.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            String emailIngresado = JOptionPane.showInputDialog(frame, "Ingrese su Email de Operador:");
+	            
+	            if (emailIngresado == null || emailIngresado.trim().isEmpty()) return;
+
+	            if (usuario.esUsuarioConRol(emailIngresado, "OPERADOR")) {
+	                
+	                Modelo33787 modeloHU = new Modelo33787();
+	                // Obtenemos el ID real (ej. 'O1') usando el email
+	                String idReal = modeloHU.obtenerIdPorEmail(emailIngresado);
+	                
+	                if (idReal != null) {
+	                    Vista33787 vistaHU = new Vista33787(idReal); // La vista mostrará 'O1'
+	                    new Controlador33787(modeloHU, vistaHU, idReal);
+	                    vistaHU.setVisible(true);
+	                } else {
+	                    JOptionPane.showMessageDialog(frame, "No se pudo recuperar el ID del usuario.");
+	                }
+	                
+	            } else {
+	                JOptionPane.showMessageDialog(frame, "Acceso denegado: El email no pertenece a un Operador.");
+	            }
+	        }
+	    });
+	    frame.getContentPane().add(btnClaudia);
 	    
 	}
 

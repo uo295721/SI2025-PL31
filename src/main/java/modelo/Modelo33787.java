@@ -8,9 +8,17 @@ public class Modelo33787 {
     private Database db = new Database();
 
     /**
-     * Recupera las incidencias en estado 'Nueva'.
-     * Mapea id_ciudadano al campo descripcionCiudadano del DTO.
+     * Busca el id_usuario (ej. 'O1') asociado a un email.
      */
+    public String obtenerIdPorEmail(String email) {
+        String sql = "SELECT id_usuario FROM Usuario WHERE email = ?";
+        List<Object[]> resultado = db.executeQueryArray(sql, email);
+        if (!resultado.isEmpty()) {
+            return (String) resultado.get(0)[0];
+        }
+        return null;
+    }
+
     public List<IncidenciaDTO> getIncidenciasNuevas() {
         List<IncidenciaDTO> lista = new ArrayList<>();
         String sql = "SELECT id_incidencia, fecha, id_ciudadano, tipo FROM Incidencia " +
@@ -29,20 +37,20 @@ public class Modelo33787 {
     }
 
     /**
-     * Actualiza el tipo y estado de la incidencia e inserta en el historial.
+     * Ahora recibe el idOperador (ej. 'O1') para guardarlo en la FK.
      */
-    public void validarClasificacion(int idIncidencia, String nuevoTipo, String emailOperador) {
+    public void validarClasificacion(int idIncidencia, String nuevoTipo, String idOperador) {
         String sqlUpdate = "UPDATE Incidencia SET tipo = ?, estado = 'Validada', id_operador = ? " +
                            "WHERE id_incidencia = ?";
         
         String sqlHistorial = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) " +
-                              "VALUES (?, ?, 'Validada', datetime('now','localtime'), 'Clasificación validada por operador')";
+                              "VALUES (?, ?, 'Validada', datetime('now','localtime'), 'Validación por operador id: " + idOperador + "')";
 
         try {
-            db.executeUpdate(sqlUpdate, nuevoTipo, emailOperador, idIncidencia);
-            db.executeUpdate(sqlHistorial, idIncidencia, emailOperador);
+            db.executeUpdate(sqlUpdate, nuevoTipo, idOperador, idIncidencia);
+            db.executeUpdate(sqlHistorial, idIncidencia, idOperador);
         } catch (Exception e) {
-            throw new RuntimeException("Error al procesar la validación: " + e.getMessage());
+            throw new RuntimeException("Error al actualizar BBDD: " + e.getMessage());
         }
     }
 }
