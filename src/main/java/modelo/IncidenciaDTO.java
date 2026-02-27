@@ -5,21 +5,21 @@ public class IncidenciaDTO {
 	private int idIncidencia;
 	private String tipo;
 	private String descripcion;
-	private String descripcionCiudadano;
 	private String estado;
 	private String fecha; // Para poder ordenar
-	private String localizacion;
-	
+	private String localización;
+
 	// Nuevos atributos para historia de Usuario
-	private int horasEstimadas;
-	private String descripcionTrabajos;
-	
+	private int horas_estimadas;
+	private String descripcion_trabajos;
+	private String descripción_ciudadano;
+
 	// Constructor de la clase
 	public IncidenciaDTO() {
-		
+
 	}
-	
-	public IncidenciaDTO(int idIncidencia,String tipo, String titulo, String fecha, String estado) {
+
+	public IncidenciaDTO(int idIncidencia, String tipo, String titulo, String fecha, String estado) {
 		this.idIncidencia = idIncidencia;
 		this.tipo = tipo;
 		this.descripcion = titulo;
@@ -28,11 +28,11 @@ public class IncidenciaDTO {
 	}
 
 	// Getters y Setters correspondientes para cada atributo
-	
+
 	public int getIdIncidencia() {
 		return idIncidencia;
 	}
-	
+
 	public String getTipo() {
 		return tipo;
 	}
@@ -41,30 +41,26 @@ public class IncidenciaDTO {
 		return descripcion;
 	}
 
-	public String getDescripcionCiudadano() {
-		return descripcionCiudadano;
-	}
-
 	public String getEstado() {
 		return estado;
 	}
-	
+
 	public String getLocalizacion() {
-		return localizacion;
+		return localización;
 	}
 
-	public int getHorasEstimadas() {
-		return horasEstimadas;
+	public int getHoras_estimadas() {
+		return horas_estimadas;
 	}
 
-	public String getDescripcionTrabajos() {
-		return descripcionTrabajos;
+	public String getDescripcion_trabajos() {
+		return descripcion_trabajos;
 	}
 
 	public void setIdIncidencia(int idIncidencia) {
 		this.idIncidencia = idIncidencia;
 	}
-	
+
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
@@ -73,30 +69,36 @@ public class IncidenciaDTO {
 		this.descripcion = titulo;
 	}
 
-	public void setDescripcionCiudadano(String descripcionCiudadano) {
-		this.descripcionCiudadano = descripcionCiudadano;
-	}
-
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	
+
 	public void setLocalizacion(String localizacion) {
-		this.localizacion = localizacion;
+		this.localización = localizacion;
 	}
 
-	public void setHorasEstimadas(int horasEstimadas) {
-		this.horasEstimadas = horasEstimadas;
+	public void setHoras_estimadas(int horasEstimadas) {
+		this.horas_estimadas = horasEstimadas;
 	}
 
-	public void setDescripcionTrabajos(String descripcionTrabajos) {
-		this.descripcionTrabajos = descripcionTrabajos;
+	public void setDescripcion_trabajos(String descripcionTrabajos) {
+		this.descripcion_trabajos = descripcionTrabajos;
 	}
+
 	public String getFecha() {
 		return fecha;
 	}
+
 	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
-	
+
+	public String getDescripción_ciudadano() {
+		return descripción_ciudadano;
+	}
+
+	public void setDescripción_ciudadano(String descripción_ciudadano) {
+		this.descripción_ciudadano = descripción_ciudadano;
+	}
+
 }

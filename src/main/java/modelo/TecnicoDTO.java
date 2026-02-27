@@ -1,6 +1,10 @@
 package modelo;
 
 public class TecnicoDTO extends UsuarioDTO{
+	
+	public TecnicoDTO() {
+		super();
+	}
 
 
 	public TecnicoDTO(String id, String nombre, String email) {

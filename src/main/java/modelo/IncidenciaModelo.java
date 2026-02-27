@@ -13,32 +13,37 @@ public class IncidenciaModelo {
     }
     
     public List<IncidenciaDTO> getIncidenciasValidadas() {
-        String sql = "SELECT id_incidencia, tipo, descripcion, fecha, estado FROM Incidencia "
-                   + "WHERE estado = 'Validada' ORDER BY fecha ASC";
-        
-        return db.executeQueryPojo(IncidenciaDTO.class, sql);
-    }
+    	String sql = "SELECT id_incidencia AS idIncidencia, "
+                + "tipo, "
+                + "descripcion AS descripcion, "
+                + "fecha, "
+                + "estado "
+                + "FROM Incidencia WHERE estado = 'Validada' ORDER BY fecha ASC";
+     
+     return db.executeQueryPojo(IncidenciaDTO.class, sql);
+ }
 
    
     public boolean asignarTecnicoIncidencia(int idIncidencia, String idTecnico, String emailOperador) {
-        String sqlUpdate = "UPDATE Incidencia SET id_tecnico = ?, estado = 'Asignada' WHERE id_incidencia = ?";
-        String sqlHistorial = "INSERT INTO Historial (id_incidencia, estado_nuevo, fecha_modificacion, comentario) "
-                            + "VALUES (?, 'Asignada', datetime('now', 'localtime'), ?)";
-
+    	String sqlUpdate = "UPDATE Incidencia SET id_tecnico = ?, estado = 'Asignada' WHERE id_incidencia = ?";
+    	String sqlHistorial = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
+                + "VALUES (?, ?, 'Asignada', datetime('now', 'localtime'), ?)";
         try {
-           
+        	
+        	String idOperador = getIdUsuarioByEmail(emailOperador);
+        	
             db.executeUpdate(sqlUpdate, idTecnico, idIncidencia);
-            db.executeUpdate(sqlHistorial, idIncidencia, "Asignada por: " + emailOperador);
+            db.executeUpdate(sqlHistorial, idIncidencia, idOperador, "Asignada por: " + emailOperador);
             return true;
         } catch (Exception e) {
-            
+        	e.printStackTrace();
             return false;
         }
     }
 
    
     public List<TecnicoDTO> obtenerListaTecnicos() {
-        String sql = "SELECT id_usuario, nombre, email FROM Usuario WHERE rol = 'Tecnico' ORDER BY nombre";
+        String sql = "SELECT id_usuario, nombre, email FROM Usuario WHERE rol = 'TÉCNICO' ORDER BY nombre";
         return db.executeQueryPojo(TecnicoDTO.class, sql);
     }
 

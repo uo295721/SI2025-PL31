@@ -34,7 +34,7 @@ public class TecnicoModelo {
         	incidencia.setEstado((String) o[2]);
         	incidencia.setTipo((String) o[3]);
         	incidencia.setLocalizacion((String) o[4]);
-        	incidencia.setDescripcionCiudadano((String) o[1]);
+        	incidencia.setDescripción_ciudadano((String) o[1]);
         	
         	lista.add(incidencia);
         }

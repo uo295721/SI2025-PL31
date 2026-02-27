@@ -30,7 +30,7 @@ public class OperadorControlador {
 
 	private void cargarDatosEnComponentes() {
 		// 1. Rellenar Tabla de Incidencias
-		List<IncidenciaDTO> incidencia  = modelo.getIncidenciasValidadas();
+		List<IncidenciaDTO> incidencia = modelo.getIncidenciasValidadas();
 		vista.getModeloTabla().setRowCount(0);
 		for (IncidenciaDTO i : incidencia) {
 			vista.getModeloTabla()
