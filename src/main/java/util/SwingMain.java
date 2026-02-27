@@ -1,6 +1,7 @@
 package util;
 
 import java.awt.EventQueue;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.BoxLayout;
@@ -12,6 +13,8 @@ import controlador.OperadorControlador;
 import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
 import modelo.TecnicoModelo;
+import modelo.HistorialDTO;
+import vista.VentanaHistorial;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -81,62 +84,75 @@ public class SwingMain {
 		frame.getContentPane().add(btnCargarDatosIniciales);
 		
 		// Botón para la Historia de Claudia (Técnico - Resolución)
-	    JButton btnClau = new JButton("Historia: Claudia");
-	    btnClau.addActionListener(new ActionListener() {
-	    	public void actionPerformed (ActionEvent e) {
-	    		String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para :");
-	    		
-	    		vista.IncidenciasTecnicoProceso vL = new vista.IncidenciasTecnicoProceso(idIngresado);
-	    		IncidenciaModelo modelo = new IncidenciaModelo();
-	    		IncidenciaControlador controladorC = new IncidenciaControlador(modelo, vL, idIngresado);
-	            vL.setVisible(true);
-	    	}
-	    	
-	    });
-	    frame.getContentPane().add(btnClau);
+		JButton btnClau = new JButton("Historia: Claudia");
+		btnClau.addActionListener(new ActionListener() {
+			public void actionPerformed (ActionEvent e) {
+				String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para :");
+				
+				vista.IncidenciasTecnicoProceso vL = new vista.IncidenciasTecnicoProceso(idIngresado);
+				IncidenciaModelo modelo = new IncidenciaModelo();
+				IncidenciaControlador controladorC = new IncidenciaControlador(modelo, vL, idIngresado);
+				vL.setVisible(true);
+			}
+			
+		});
+		frame.getContentPane().add(btnClau);
 
-	    // Botón para la Historia de Liam (Técnico - Planificación)
-	    JButton btnLiam = new JButton("Historia: Liam");
-	    btnLiam.addActionListener(new ActionListener() {
-	    	public void actionPerformed (ActionEvent e) {
-	    		String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para :");
-	    		
-	    		vista.VentanaTecnico vT = new vista.VentanaTecnico();
-	    		TecnicoModelo modelo = new TecnicoModelo();
-	    		TecnicoControlador controladorL = new TecnicoControlador(modelo, vT, idIngresado);
-	            vT.setVisible(true);
-	    	}
-	    	
-	    });
-	    frame.getContentPane().add(btnLiam);
-	    
-	    // Botón para la Historia de Hugo (Técnico - Planificación)
-	    JButton btnHugo = new JButton("Historia: Hugo");
-	    btnHugo.addActionListener(new ActionListener() {
-	    	public void actionPerformed (ActionEvent e) {
-	    			    		
-	    		vista.VentanaOperador vH = new vista.VentanaOperador();
-	    		IncidenciaModelo modelo = new IncidenciaModelo();
-	    		OperadorControlador controladorH = new OperadorControlador(vH, modelo);
-	            vH.setVisible(true);
-	    	}
-	    	
-	    });
-	    frame.getContentPane().add(btnHugo);
-	    
-	    JButton btnDani = new JButton("Historia: Dani");
-	    btnDani.addActionListener(new ActionListener() {
-	    	public void actionPerformed (ActionEvent e) {
-	    			    		
-	    		vista.RegistrarIncidencia rI = new vista.RegistrarIncidencia();
-	    		IncidenciaModelo modelo = new IncidenciaModelo();
-	    		IncidenciaControlador controladorH = new IncidenciaControlador(modelo, rI);
-	            rI.setVisible(true);
-	    	}
-	    	
-	    });
-	    frame.getContentPane().add(btnDani);
-	    
-	}
+		// Botón para la Historia de Liam (Técnico - Planificación)
+		JButton btnLiam = new JButton("Historia: Liam");
+		btnLiam.addActionListener(new ActionListener() {
+			public void actionPerformed (ActionEvent e) {
+				String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para :");
+				
+				vista.VentanaTecnico vT = new vista.VentanaTecnico();
+				TecnicoModelo modelo = new TecnicoModelo();
+				TecnicoControlador controladorL = new TecnicoControlador(modelo, vT, idIngresado);
+				vT.setVisible(true);
+			}
+			
+		});
+		frame.getContentPane().add(btnLiam);
+		
+		// Botón para la Historia de Hugo (Técnico - Planificación)
+		JButton btnHugo = new JButton("Historia: Hugo");
+		btnHugo.addActionListener(new ActionListener() {
+			public void actionPerformed (ActionEvent e) {
+						
+				vista.VentanaOperador vH = new vista.VentanaOperador();
+				IncidenciaModelo modelo = new IncidenciaModelo();
+				OperadorControlador controladorH = new OperadorControlador(vH, modelo);
+				vH.setVisible(true);
+			}
+			
+		});
+		frame.getContentPane().add(btnHugo);
+		
+		JButton btnDani = new JButton("Historia: Dani");
+		btnDani.addActionListener(new ActionListener() {
+			public void actionPerformed (ActionEvent e) {
+						
+				vista.RegistrarIncidencia rI = new vista.RegistrarIncidencia();
+				IncidenciaModelo modelo = new IncidenciaModelo();
+				IncidenciaControlador controladorH = new IncidenciaControlador(modelo, rI);
+				rI.setVisible(true);
+			}
+			
+		});
+		frame.getContentPane().add(btnDani);
 
-}	
+		JButton btnHistorialHugo = new JButton("Historia: Hugo (Historial)");
+		btnHistorialHugo.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        vista.VentanaOperador vO = new vista.VentanaOperador();
+		        modelo.IncidenciaModelo mod = new modelo.IncidenciaModelo();
+		        new controlador.OperadorControlador(vO, mod);
+		        vO.setVisible(true);
+		        vO.setLocationRelativeTo(frame);
+		    }
+		});
+		frame.getContentPane().add(btnHistorialHugo);
+		
+	} 
+
+	public JFrame getFrame() { return this.frame; }
+}
