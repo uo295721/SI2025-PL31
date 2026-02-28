@@ -7,16 +7,25 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+import controlador.Controlador33787;
 import controlador.IncidenciaControlador;
+import controlador.InformeResponsableControlador;
 import controlador.OperadorControlador;
+import controlador.RegistrarIncidenciasControlador;
 import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
+import modelo.Modelo33787;
 import modelo.TecnicoModelo;
 import modelo.UsuarioModelo;
+import vista.IncidenciasTecnicoProceso;
+import vista.RegistrarIncidencia;
+import vista.VentanaInformeResponsable;
+import vista.VentanaOperador;
+import vista.VentanaTecnico;
+import vista.Vista33787;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las
@@ -33,13 +42,13 @@ public class SwingMain {
 	 * Launch the application
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() { // NOSONAR codigo autogenerado
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					SwingMain window = new SwingMain();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace(); // NOSONAR codigo autogenerado
+					e.printStackTrace();
 				}
 			}
 		});
@@ -58,11 +67,11 @@ public class SwingMain {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Main");
-		frame.setBounds(0, 0, 287, 185); 
+		frame.setBounds(0, 0, 400, 350);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		
+
 		JButton btnInicializarBaseDeDatos = new JButton("Inicializar Base de Datos en Blanco");
-		btnInicializarBaseDeDatos.addActionListener(new ActionListener() { //NOSONAR codigo autogenerado
+		btnInicializarBaseDeDatos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Database db = new Database();
 				db.createDatabase(false);
@@ -70,9 +79,9 @@ public class SwingMain {
 		});
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		frame.getContentPane().add(btnInicializarBaseDeDatos);
-			
+
 		JButton btnCargarDatosIniciales = new JButton("Cargar Datos Iniciales para Pruebas");
-		btnCargarDatosIniciales.addActionListener(new ActionListener() { //NOSONAR codigo autogenerado
+		btnCargarDatosIniciales.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Database db = new Database();
 				db.createDatabase(false);
@@ -81,77 +90,147 @@ public class SwingMain {
 		});
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		frame.getContentPane().add(btnCargarDatosIniciales);
-		
-		// Botón para la Historia de Claudia (Técnico - Resolución)
-	    JButton btnClau = new JButton("Historia: Claudia");
-	    btnClau.addActionListener(new ActionListener() {
-	    	public void actionPerformed (ActionEvent e) {
-	    		String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para :");
-	    		
-	    		vista.IncidenciasTecnicoProceso vL = new vista.IncidenciasTecnicoProceso(idIngresado);
-	    		IncidenciaModelo modelo = new IncidenciaModelo();
-	    		IncidenciaControlador controladorC = new IncidenciaControlador(modelo, vL, idIngresado);
-	            vL.setVisible(true);
-	    	}
-	    	
-	    });
-	    frame.getContentPane().add(btnClau);
 
-	    // Botón para la Historia de Liam (Técnico - Planificación)
-	    JButton btnLiam = new JButton("Historia: Liam");
-	    btnLiam.addActionListener(new ActionListener() {
-	    	public void actionPerformed (ActionEvent e) {
-	    		String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email de Técnico:");
-	    		
-	    		if (idIngresado == null || idIngresado.trim().isEmpty())
-	    			return;
-	    		
-	    		if (usuario.esUsuarioConRol(idIngresado, "TÉCNICO")) {
-	    			
-	    			vista.VentanaTecnico vT = new vista.VentanaTecnico();
-	    			modelo.TecnicoModelo mT = new modelo.TecnicoModelo();
-	    			
-	    			//Pasamos el id al controlador para usarlo posteriormente
-	    			new controlador.TecnicoControlador(mT, vT, idIngresado);
-	    			vT.setVisible(true);
-	    			
-	    		} else {
-	    			
-	    			JOptionPane.showMessageDialog(frame, "Acceso denegado. No se encuentra dicho técnico o no tiene permisos.",
-	    											"Error de Acceso", JOptionPane.ERROR_MESSAGE);
-	    		}
-	    	}
-	    	
-	    });
-	    frame.getContentPane().add(btnLiam);
-	    
-	    // Botón para la Historia de Hugo (Técnico - Planificación)
-	    JButton btnHugo = new JButton("Historia: Hugo");
-	    btnHugo.addActionListener(new ActionListener() {
-	    	public void actionPerformed (ActionEvent e) {
-	    			    		
-	    		vista.VentanaOperador vH = new vista.VentanaOperador();
-	    		IncidenciaModelo modelo = new IncidenciaModelo();
-	    		OperadorControlador controladorH = new OperadorControlador(vH, modelo);
-	            vH.setVisible(true);
-	    	}
-	    	
-	    });
-	    frame.getContentPane().add(btnHugo);
-	    
-	    JButton btnDani = new JButton("Historia: Dani");
-	    btnDani.addActionListener(new ActionListener() {
-	    	public void actionPerformed (ActionEvent e) {
-	    			    		
-	    		vista.RegistrarIncidencia rI = new vista.RegistrarIncidencia();
-	    		IncidenciaModelo modelo = new IncidenciaModelo();
-	    		IncidenciaControlador controladorH = new IncidenciaControlador(modelo, rI);
-	            rI.setVisible(true);
-	    	}
-	    	
-	    });
-	    frame.getContentPane().add(btnDani);
-	    
+		// Botón para la Historia de Claudia (Técnico - Resolución)
+		JButton btnResolver = new JButton("Resolver Incidencias en proceso");
+		btnResolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email para :");
+
+				IncidenciasTecnicoProceso vL = new vista.IncidenciasTecnicoProceso(idIngresado);
+				IncidenciaModelo modelo = new IncidenciaModelo();
+				IncidenciaControlador controladorC = new IncidenciaControlador(modelo, vL, idIngresado);
+				vL.setVisible(true);
+			}
+		});
+		frame.getContentPane().add(btnResolver);
+
+		// Botón para la Historia de Liam (Técnico - Planificación)
+		JButton btnPlanificar = new JButton("Planificar resolución de incidencia");
+		btnPlanificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su ID o Email de Técnico:");
+
+				if (idIngresado == null || idIngresado.trim().isEmpty())
+					return;
+
+				if (usuario.esUsuarioConRol(idIngresado, "TÉCNICO")) {
+
+					VentanaTecnico vT = new vista.VentanaTecnico();
+					TecnicoModelo mT = new modelo.TecnicoModelo();
+
+					// Pasamos el id al controlador para usarlo posteriormente
+					new TecnicoControlador(mT, vT, idIngresado);
+					vT.setVisible(true);
+
+				} else {
+
+					JOptionPane.showMessageDialog(frame,
+							"Acceso denegado. No se encuentra dicho técnico o no tiene permisos.", "Error de Acceso",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+
+		});
+		frame.getContentPane().add(btnPlanificar);
+
+		// Botón para la Historia de Hugo (Operador - Asignar)
+		JButton btnAsignar = new JButton("Asignar incidencia a técnico como operador");
+		btnAsignar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				VentanaOperador vH = new vista.VentanaOperador();
+				IncidenciaModelo modelo = new IncidenciaModelo();
+				OperadorControlador controladorH = new OperadorControlador(vH, modelo);
+				vH.setVisible(true);
+			}
+
+		});
+		frame.getContentPane().add(btnAsignar);
+
+		// Botón para la Historia de Dani (Registrar - Incidencia)
+		JButton btnRegistrarI = new JButton("Registrar una nueva incidencia");
+		btnRegistrarI.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				String idIntroducido = JOptionPane.showInputDialog(frame, "Ingrese su DNI o Email para identificarse:");
+
+				if (idIntroducido == null || idIntroducido.trim().isEmpty())
+					return;
+
+				if (usuario.esUsuario(idIntroducido)) {
+					RegistrarIncidencia vRI = new RegistrarIncidencia();
+					IncidenciaModelo mI = new IncidenciaModelo();
+					RegistrarIncidenciasControlador controladorRI = new RegistrarIncidenciasControlador(vRI, mI,
+							idIntroducido);
+					vRI.setVisible(true);
+				} else {
+					JOptionPane.showMessageDialog(frame, "Acceso denegado. No se encuentra al usuario introducido",
+							"Error de Acceso", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+
+		});
+		frame.getContentPane().add(btnRegistrarI);
+
+		// Botón para la Historia de Dani (Responsable - Informe)
+		JButton btnInforme = new JButton("Generar informe de responsable");
+		btnInforme.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String email = JOptionPane.showInputDialog(frame, "Ingrese su Email como responsable:");
+
+				if (email == null || email.trim().isEmpty())
+					return;
+
+				if (usuario.esUsuarioPorEmail(email, "RESPONSABLE")) {
+					VentanaInformeResponsable vI = new VentanaInformeResponsable(email);
+					IncidenciaModelo mI = new IncidenciaModelo();
+					UsuarioModelo mU = new UsuarioModelo();
+
+					new InformeResponsableControlador(mI, mU, vI, email);
+					vI.setVisible(true);
+
+				} else {
+
+					JOptionPane.showMessageDialog(frame,
+							"Acceso denegado. No se encuentra el email del responsable en la base de datos",
+							"Error de Acceso", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+
+		});
+		frame.getContentPane().add(btnInforme);
+
+		// Botón para la Historia de Claudia (Operador - Planificación)
+		JButton btnClasificarI = new JButton("Clasificar incidencias como operador");
+		btnClasificarI.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String emailIngresado = JOptionPane.showInputDialog(frame, "Ingrese su Email de Operador:");
+
+				if (emailIngresado == null || emailIngresado.trim().isEmpty())
+					return;
+
+				if (usuario.esUsuarioConRol(emailIngresado, "OPERADOR")) {
+
+					Modelo33787 modeloHU = new Modelo33787();
+					// Obtenemos el ID real (ej. 'O1') usando el email
+					String idReal = modeloHU.obtenerIdPorEmail(emailIngresado);
+
+					if (idReal != null) {
+						Vista33787 vistaHU = new Vista33787(idReal); // La vista mostrará 'O1'
+						new Controlador33787(modeloHU, vistaHU, idReal);
+						vistaHU.setVisible(true);
+					} else {
+						JOptionPane.showMessageDialog(frame, "No se pudo recuperar el ID del usuario.");
+					}
+
+				} else {
+					JOptionPane.showMessageDialog(frame, "Acceso denegado: El email no pertenece a un Operador.");
+				}
+			}
+		});
+		frame.getContentPane().add(btnClasificarI);
+
 	}
 
-}	
+}

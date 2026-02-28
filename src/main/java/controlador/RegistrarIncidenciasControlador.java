@@ -21,21 +21,21 @@ public class RegistrarIncidenciasControlador {
         // Configuramos el evento del botón
         this.vista.getBtnRegistrar().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                registrar();
-                vista.dispose();
+                if(registrar())
+                	vista.dispose();
             }
         });
     }
 
-    private void registrar() {
+    private boolean registrar() {
     	// Empiezo obteniendo lo que se ha introducido y hago la comprobacion pertinente
         String tipo = (String) vista.getCbTipo().getSelectedItem();
         String localizacion = vista.getTextLocalizacion().getText().trim();
         String descripcion = vista.getTextDescripcion().getText().trim();
 
-        if (localizacion.isEmpty() || descripcion.isEmpty()) {
+        if (localizacion.isEmpty() || descripcion.isEmpty() || tipo.trim() == "Sin tipo") {
             JOptionPane.showMessageDialog(vista, "Por favor, complete todos los campos para crear la incidencia.");
-            return;
+            return false;
         }
 
         // Inserto los valores dados usando la función creada en el modelo
@@ -43,8 +43,10 @@ public class RegistrarIncidenciasControlador {
 
         if (insertado) {
             JOptionPane.showMessageDialog(vista, "Incidencia registrada correctamente.");
+            return true;
         } else {
             JOptionPane.showMessageDialog(vista, "Error técnico al guardar en la base de datos.");
+            return false;
         }
     }
 }
