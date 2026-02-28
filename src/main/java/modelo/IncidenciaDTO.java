@@ -12,7 +12,7 @@ public class IncidenciaDTO {
 	// Nuevos atributos para historia de Usuario
 	private int horas_estimadas;
 	private String descripcion_trabajos;
-	private String descripción_ciudadano;
+	private String descripcionCiudadano;
 
 	// Constructor de la clase
 	public IncidenciaDTO() {
@@ -93,12 +93,12 @@ public class IncidenciaDTO {
 		this.fecha = fecha;
 	}
 
-	public String getDescripción_ciudadano() {
-		return descripción_ciudadano;
+	public String getDescripcionCiudadano() {
+		return descripcionCiudadano;
 	}
 
-	public void setDescripción_ciudadano(String descripción_ciudadano) {
-		this.descripción_ciudadano = descripción_ciudadano;
+	public void setDescripcionCiudadano(String descripcionCiudadano) {
+		this.descripcionCiudadano = descripcionCiudadano;
 	}
 
 }

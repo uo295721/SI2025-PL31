@@ -9,49 +9,43 @@ import modelo.HistorialDTO;
 
 public class VentanaHistorial extends JDialog {
 
-    private final JPanel contentPanel = new JPanel();
     private JTable tablaHistorial;
     private DefaultTableModel modeloTabla;
 
-  
-    public VentanaHistorial(JFrame padre, int idIncidencia, List<HistorialDTO> datos) {
+    public VentanaHistorial(JFrame padre, int idIncidencia) {
         super(padre, true);
-        setTitle("Historial de Incidencia #" + idIncidencia);
-        setBounds(100, 100, 600, 400);
-        
+        setTitle("Historial Detallado - Incidencia #" + idIncidencia);
+        setBounds(100, 100, 700, 400);
         getContentPane().setLayout(new BorderLayout());
-        contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        getContentPane().add(contentPanel, BorderLayout.CENTER);
-        contentPanel.setLayout(new BorderLayout(0, 0)); 
-
-        JScrollPane scrollPane = new JScrollPane();
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
-
         
-        String[] columnas = {"Fecha/Hora", "Identificador", "Descripción", "Estado"};
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        getContentPane().add(contentPanel, BorderLayout.CENTER);
+
+        String[] columnas = {"Fecha/Hora", "Usuario", "Descripción del Cambio", "Estado Nuevo"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; 
-            }
+            public boolean isCellEditable(int row, int col) { return false; }
         };
 
-        
         tablaHistorial = new JTable(modeloTabla);
-        scrollPane.setViewportView(tablaHistorial);
+        contentPanel.add(new JScrollPane(tablaHistorial), BorderLayout.CENTER);
+        tablaHistorial.getTableHeader().setReorderingAllowed(false); // Bloqueamos el movimiento de las columnas
 
-      
-        JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        // Botón cerrar
+        JButton btnCerrar = new JButton("Cerrar");
+        btnCerrar.addActionListener(e -> dispose());
+        JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnlBotones.add(btnCerrar);
+        getContentPane().add(pnlBotones, BorderLayout.SOUTH);
+        
+        setLocationRelativeTo(padre);
+    }
 
-        JButton okButton = new JButton("Cerrar");
-        okButton.addActionListener(e -> dispose()); 
-        buttonPane.add(okButton);
-
-       
-        if (datos != null) {
-            for (HistorialDTO h : datos) {
+    public void rellenarTablaHistorial(List<HistorialDTO> historial) {
+        modeloTabla.setRowCount(0);
+        if (historial != null) {
+            for (HistorialDTO h : historial) {
                 modeloTabla.addRow(new Object[] {
                     h.getFecha_modificacion(),
                     h.getId_usuario(),
@@ -60,8 +54,5 @@ public class VentanaHistorial extends JDialog {
                 });
             }
         }
-        
- 
-        setLocationRelativeTo(padre);
     }
 }

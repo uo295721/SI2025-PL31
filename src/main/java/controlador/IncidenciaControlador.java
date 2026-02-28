@@ -38,6 +38,8 @@ public class IncidenciaControlador {
     public IncidenciaControlador(IncidenciaModelo modelo, RegistrarIncidencia vista) {
         this.modelo = modelo;
         this.vistaReg = vista;
+        
+        vista.setVisible(true);
     }
 
     private void cargarTabla() {

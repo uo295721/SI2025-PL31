@@ -15,7 +15,7 @@ public class IncidenciaModelo {
     public List<IncidenciaDTO> getIncidenciasValidadas() {
     	String sql = "SELECT id_incidencia AS idIncidencia, "
                 + "tipo, "
-                + "descripcion AS descripcion, "
+                + "descripcion AS titulo, "
                 + "fecha, "
                 + "estado "
                 + "FROM Incidencia WHERE estado = 'Validada' ORDER BY fecha ASC";
@@ -40,8 +40,19 @@ public class IncidenciaModelo {
             return false;
         }
     }
+    
+    public List<Object[]> getInformeMensualIncidencias(String fechaInicio, String fechaFin) {
+        String sql = "SELECT u.nombre, COUNT(i.id_incidencia) AS total_incidencias, SUM(i.coste) AS coste_total " +
+                     "FROM Usuario u " +
+                     "JOIN Incidencia i ON u.id_usuario = i.id_tecnico " +
+                     "WHERE u.rol = 'TÉCNICO' AND i.estado = 'Resuelta' " +
+                     "AND (i.fecha >= ? AND i.fecha <= ?)" + 
+                     "GROUP BY u.nombre " +
+                     "ORDER BY u.nombre ASC";
 
-   
+        return db.executeQueryArray(sql, fechaInicio, fechaFin);
+    }
+
     public List<TecnicoDTO> obtenerListaTecnicos() {
         String sql = "SELECT id_usuario, nombre, email FROM Usuario WHERE rol = 'TÉCNICO' ORDER BY nombre";
         return db.executeQueryPojo(TecnicoDTO.class, sql);
@@ -93,6 +104,11 @@ public class IncidenciaModelo {
 
         return db.executeQueryArray(sql, idTecnico);
     }
+    
+    public List<IncidenciaDTO> getTodasLasIncidencias() {
+        String sql = "SELECT id_incidencia, descripcion, fecha, estado FROM Incidencia ORDER BY fecha DESC";
+        return db.executeQueryPojo(IncidenciaDTO.class, sql);
+    }
 
    
     public boolean marcarComoResuelta(int idIncidencia, String idTecnico, double tiempoReal, String trabajos) {
@@ -111,6 +127,15 @@ public class IncidenciaModelo {
             
             return false;
         }
+    }
+    
+    public void registrarCambioHistorial(int idInci, String emailUser, String nuevoEstado, String comentario) {
+        String sqlId = "SELECT id_usuario FROM Usuario WHERE email = ?";
+        
+        String sql = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) " +
+                     "VALUES (?, (SELECT id_usuario FROM Usuario WHERE email = ?), ?, datetime('now'), ?)";
+        
+        db.executeUpdate(sql, idInci, emailUser, nuevoEstado, comentario);
     }
 }
 

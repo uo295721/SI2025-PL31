@@ -15,7 +15,6 @@ public class VentanaOperador extends JFrame {
 	private JList<TecnicoDTO> listaTecnicos;
 	private DefaultListModel<TecnicoDTO> modeloListaTecnicos;
 	private JButton btnAsignar;
-	private JButton btnHistorial;
 	private JLabel lblEmailOperador;
 	private JTextField txtEmail; // Campo para que el operador introduzca su correo
 
@@ -71,11 +70,6 @@ public class VentanaOperador extends JFrame {
 		// Panel inferior
 		JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
-		btnHistorial = new JButton("Ver Historial");
-		btnHistorial.setEnabled(false); // Empieza bloqueado igual que el otro
-		panelInferior.add(btnHistorial);
-		
-		
 		btnAsignar = new JButton("Asignar Incidencia");
 		btnAsignar.setEnabled(false); // Empieza bloqueado también
 		btnAsignar.setFont(new Font("Arial", Font.BOLD, 13));
@@ -104,9 +98,7 @@ public class VentanaOperador extends JFrame {
 	public JButton getBtnAsignar() {
 		return btnAsignar;
 	}
-	public JButton getBtnHistorial() {
-	    return btnHistorial;
-	}
+	
 	public JLabel getLblEmailOperador() {
 		return lblEmailOperador;
 	}

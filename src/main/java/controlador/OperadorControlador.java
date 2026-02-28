@@ -29,7 +29,7 @@ public class OperadorControlador {
 	}
 
 	private void cargarDatosEnComponentes() {
-		// 1. Rellenar Tabla de Incidencias
+		// Rellenamos tabla de incidencias
 		List<IncidenciaDTO> incidencia = modelo.getIncidenciasValidadas();
 		vista.getModeloTabla().setRowCount(0);
 		for (IncidenciaDTO i : incidencia) {
@@ -41,7 +41,7 @@ public class OperadorControlador {
 							i.getEstado() });
 		}
 
-		// 2. Rellenar Lista de Técnicos
+		// Rellenamos lista de técnicos
 		List<TecnicoDTO> tecnicos = modelo.obtenerListaTecnicos();
 		vista.getModeloListaTecnicos().clear();
 		for (TecnicoDTO t : tecnicos) {
@@ -52,35 +52,40 @@ public class OperadorControlador {
 	private void configurarEventos() {
 		
 		vista.getTxtEmail().addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String emailInput = vista.getTxtEmail().getText().trim();
-				
-				// Validación del Email
-				if (emailInput.isEmpty() || !emailInput.contains("@")) {
-					JOptionPane.showMessageDialog(vista, "Por favor, introduzca un email válido.");
-					return;
-				}
-
-				// Si el email es válido:
-				emailOperador = emailInput; // Guardamos el email
-				
-				// Actualizamos la etiqueta y desbloqueamos la interfaz
-				vista.getLblEmailOperador().setText("Operador identificado: " + emailOperador);
-				
-				desbloquearInterfaz(); // Desbloqueamos la interfaz para que aparezcan los datos
-				cargarDatosEnComponentes(); // Traemos los datos de la base de datos
-				
-				// Deshabilitamos el campo de email para que no lo cambien
-				vista.getTxtEmail().setEnabled(false);
-			}
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        String emailInput = vista.getTxtEmail().getText().trim();
+		        // Comprobamos que el email contiene un formato válido
+		        if (emailInput.isEmpty() || !emailInput.contains("@")) {
+		            JOptionPane.showMessageDialog(vista, "Por favor, introduzca un email válido.");
+		            return;
+		        }
+		        // Validamos que el usuario que está intentando acceder cumple con el rol de Operador
+		        modelo.UsuarioModelo uM = new modelo.UsuarioModelo(); 
+		        
+		        if (uM.esUsuarioConRol(emailInput, "OPERADOR")) {
+		        	// Si es operador le dejamos entrar
+		            emailOperador = emailInput; 
+		            vista.getLblEmailOperador().setText("Operador identificado: " + emailOperador);
+		            
+		            desbloquearInterfaz(); 
+		            cargarDatosEnComponentes(); 
+		            vista.getTxtEmail().setEnabled(false);
+		        } else {
+		            // Si no lo es, no le dejamos hacer nada
+		            JOptionPane.showMessageDialog(vista, 
+		                "Acceso denegado: El email no corresponde a un Operador.", 
+		                "Error de Permisos", 
+		                JOptionPane.ERROR_MESSAGE);
+		            vista.getTxtEmail().setText(""); // Limpiamos el campo
+		        }
+		    }
 		});
 
 		
 		vista.getBtnAsignar().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// El controlador extrae los datos directamente de los componentes de la vista
 				int fila = vista.getTablaIncidencias().getSelectedRow();
 				TecnicoDTO tecnico = vista.getListaTecnicos().getSelectedValue();
 
@@ -89,37 +94,18 @@ public class OperadorControlador {
 					return;
 				}
 
-				// Obtener ID de la columna 0 de la fila seleccionada
 				int idIncidencia = (int) vista.getModeloTabla().getValueAt(fila, 0);
 
-				// Ejecutar lógica en el modelo
 				if (modelo.asignarTecnicoIncidencia(idIncidencia, tecnico.getIdUsuario(), emailOperador)) {
+					
+					String comentario = "Asignada al técnico: " + tecnico.getNombre();
+					modelo.registrarCambioHistorial(idIncidencia, emailOperador, "Asignada", comentario);
+					
 					JOptionPane.showMessageDialog(vista, "Asignación correcta");
 					cargarDatosEnComponentes(); 
 				}
 			}
 		});
-		vista.getBtnHistorial().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int fila = vista.getTablaIncidencias().getSelectedRow();
-
-                if (fila == -1) {
-                    JOptionPane.showMessageDialog(vista, "Seleccione primero una incidencia de la lista.");
-                    return;
-                }
-
-                // 1. Obtener ID de la fila seleccionada
-                int idIncidencia = (int) vista.getModeloTabla().getValueAt(fila, 0);
-
-                // 2. Obtener datos del modelo (la lista de cambios)
-                List<HistorialDTO> historial = modelo.obtenerHistorialIncidencia(idIncidencia);
-
-                // 3. Abrir la ventana de historial
-                VentanaHistorial vh = new VentanaHistorial(vista, idIncidencia, historial);
-                vh.setVisible(true);
-            }
-        });
 	}
 	
 	// Método que va a permitir al operador acceder a las indicendias sus respectivos técnicos
@@ -127,7 +113,6 @@ public class OperadorControlador {
 		vista.getTablaIncidencias().setEnabled(true);
 		vista.getListaTecnicos().setEnabled(true);
 		vista.getBtnAsignar().setEnabled(true);
-		vista.getBtnHistorial().setEnabled(true);
 	}
 
 }
