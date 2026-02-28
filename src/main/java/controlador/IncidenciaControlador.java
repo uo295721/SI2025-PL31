@@ -1,19 +1,22 @@
 package controlador;
 
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
+import modelo.IncidenciaDTO;
 import modelo.IncidenciaModelo;
+import modelo.UsuarioModelo;
 import vista.IncidenciasTecnicoProceso;
 import vista.RegistrarIncidencia;
+
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 public class IncidenciaControlador {
+	
     private IncidenciaModelo modelo;
     private IncidenciasTecnicoProceso vista;
     private String emailTecnico;
     private RegistrarIncidencia vistaReg;
+    private UsuarioModelo usuario = new UsuarioModelo();
 
     public IncidenciaControlador(IncidenciaModelo modelo, IncidenciasTecnicoProceso vista, String emailTecnico) {
         this.modelo = modelo;
@@ -32,7 +35,7 @@ public class IncidenciaControlador {
         // Eventos de botones
         this.vista.btnMarcarResuelta.addActionListener(e -> marcarComoResuelta());
         this.vista.btnCancelar.addActionListener(e -> limpiarFormulario());
-        this.vista.btnSalir.addActionListener(e -> System.exit(0));
+        this.vista.btnSalir.addActionListener(e -> vista.dispose());
     }
     
     public IncidenciaControlador(IncidenciaModelo modelo, RegistrarIncidencia vista) {
@@ -43,14 +46,27 @@ public class IncidenciaControlador {
     }
 
     private void cargarTabla() {
+    	
         try {
             vista.modeloTabla.setRowCount(0);
-            for (Object[] fila : modelo.obtenerIncidenciasProceso(modelo.getIdUsuarioByEmail(emailTecnico))) {
-                vista.modeloTabla.addRow(fila);
+            String idTecnico = usuario.asegurarID(emailTecnico);
+            
+            List<IncidenciaDTO> lista = modelo.obtenerIncidenciasProceso(idTecnico);
+            for (IncidenciaDTO i : lista) {
+            	Object[] fila = {
+            			i.getIdIncidencia(),
+            			i.getTipo(),
+            			i.getFecha(),
+            			i.getLocalizacion(),
+            			i.getHorasEstimadas()
+            	};
+            	vista.modeloTabla.addRow(fila);
             }
+            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(vista, "Error al cargar: " + e.getMessage());
         }
+        
     }
 
     private void rellenarFormularioDesdeTabla() {
@@ -67,8 +83,10 @@ public class IncidenciaControlador {
             int id = Integer.parseInt(vista.txtIdIncidencia.getText());
             double tReal = Double.parseDouble(vista.txtHorasReales.getText());
             String desc = vista.txtAreaTrabajos.getText();
+            
+            String idReal = usuario.getIdUsuarioByEmail(emailTecnico);
 
-            if (modelo.marcarComoResuelta(id, emailTecnico, tReal, desc)) {
+            if (modelo.marcarComoResuelta(id, idReal, tReal, desc)) {
                 JOptionPane.showMessageDialog(vista, "¡Guardado con éxito!");
                 limpiarFormulario();
                 cargarTabla();

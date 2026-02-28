@@ -1,18 +1,19 @@
 package controlador;
 
-import modelo.Modelo33787;
 import vista.Vista33787;
 import modelo.IncidenciaDTO;
+import modelo.IncidenciaModelo;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-public class Controlador33787 {
-    private Modelo33787 modelo;
+public class Clasificar_Incidencias {
+    private IncidenciaModelo modelo;
     private Vista33787 vista;
     private String idOperador; // Guardamos 'O1', no el mail
 
-    public Controlador33787(Modelo33787 modelo, Vista33787 vista, String idOperador) {
+    public Clasificar_Incidencias(IncidenciaModelo modelo, Vista33787 vista, String idOperador) {
         this.modelo = modelo;
         this.vista = vista;
         this.idOperador = idOperador;
@@ -48,11 +49,15 @@ public class Controlador33787 {
     }
 
     private void refrescarTabla() {
-        List<IncidenciaDTO> lista = modelo.getIncidenciasNuevas();
+        List<IncidenciaDTO> lista = modelo.getIncidenciasPorEstado("Nueva");
         DefaultTableModel m = (DefaultTableModel) vista.getTablaIncidencias().getModel();
         m.setRowCount(0);
         for (IncidenciaDTO i : lista) {
-            m.addRow(new Object[]{i.getIdIncidencia(), i.getFecha(), i.getDescripcionCiudadano(), i.getTipo()});
+            m.addRow(new Object[]{
+            		i.getIdIncidencia(),
+            		i.getFecha(), 
+            		i.getDescripcionCiudadano(), 
+            		i.getTipo()});
         }
     }
 }

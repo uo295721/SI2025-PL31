@@ -45,4 +45,36 @@ public class UsuarioModelo {
 		
 		return !result.isEmpty();
 	}
+	
+	public List<TecnicoDTO> obtenerTodosLosTecnicos(){
+		
+		//Filtramos por el rol exacto en la BD
+		String sql = "SELECT id_usuario, nombre, email FROM Usuario WHERE rol = 'TÉCNICO' "
+				   + "ORDER BY nombre";
+		
+		return db.executeQueryPojo(TecnicoDTO.class, sql);
+		
+	}
+	
+    public String getIdUsuarioByEmail(String email) {
+    	
+        String sql = "SELECT id_usuario FROM Usuario WHERE email = ?";
+        
+        List<Object[]> result = db.executeQueryArray(sql, email);
+        if (result.isEmpty()) {
+            return null;
+        }
+        
+        return result.get(0)[0].toString();
+    }
+	
+    public String asegurarID(String input) {
+    	
+    	if (!input.contains("@"))
+    		return input;
+    	else
+    		return getIdUsuarioByEmail(input);
+    	
+    }
+    
 }

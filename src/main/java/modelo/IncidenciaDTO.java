@@ -8,16 +8,14 @@ public class IncidenciaDTO {
 	private String descripcionCiudadano;
 	private String estado;
 	private String fecha; // Para poder ordenar
-	private String localizacion;
+	private String localización;
 	
 	// Nuevos atributos para historia de Usuario
 	private int horasEstimadas;
 	private String descripcionTrabajos;
 	
 	// Constructor de la clase
-	public IncidenciaDTO() {
-		
-	}
+	public IncidenciaDTO() {}
 	
 	public IncidenciaDTO(int idIncidencia,String tipo, String titulo, String fecha, String estado) {
 		this.idIncidencia = idIncidencia;
@@ -50,7 +48,7 @@ public class IncidenciaDTO {
 	}
 	
 	public String getLocalizacion() {
-		return localizacion;
+		return localización;
 	}
 
 	public int getHorasEstimadas() {
@@ -61,7 +59,7 @@ public class IncidenciaDTO {
 		return descripcionTrabajos;
 	}
 
-	public void setIdIncidencia(int idIncidencia) {
+	public void setId_incidencia(int idIncidencia) {
 		this.idIncidencia = idIncidencia;
 	}
 	
@@ -69,27 +67,27 @@ public class IncidenciaDTO {
 		this.tipo = tipo;
 	}
 
-	public void setTitulo(String titulo) {
-		this.descripcion = titulo;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
-	public void setDescripcionCiudadano(String descripcionCiudadano) {
-		this.descripcionCiudadano = descripcionCiudadano;
+	public void setId_ciudadano(String id) {
+		this.descripcionCiudadano = id;
 	}
 
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 	
-	public void setLocalizacion(String localizacion) {
-		this.localizacion = localizacion;
+	public void setLocalización(String localizacion) {
+		this.localización = localizacion;
 	}
 
-	public void setHorasEstimadas(int horasEstimadas) {
+	public void setHoras_estimadas(int horasEstimadas) {
 		this.horasEstimadas = horasEstimadas;
 	}
 
-	public void setDescripcionTrabajos(String descripcionTrabajos) {
+	public void setDescripcion_trabajos(String descripcionTrabajos) {
 		this.descripcionTrabajos = descripcionTrabajos;
 	}
 	public String getFecha() {

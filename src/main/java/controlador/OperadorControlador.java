@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import modelo.IncidenciaDTO;
 import modelo.IncidenciaModelo;
 import modelo.TecnicoDTO;
+import modelo.UsuarioModelo;
 import vista.VentanaOperador;
 
 
@@ -15,8 +16,10 @@ import vista.VentanaOperador;
 public class OperadorControlador {
 
 	private IncidenciaModelo modelo;
+	private UsuarioModelo usuario = new UsuarioModelo();
 	private VentanaOperador vista;
 	private String emailOperador;
+	
 
 	public OperadorControlador(VentanaOperador vista, IncidenciaModelo modelo) {
 		this.vista = vista;
@@ -27,7 +30,7 @@ public class OperadorControlador {
 
 	private void cargarDatosEnComponentes() {
 		// 1. Rellenar Tabla de Incidencias
-		List<IncidenciaDTO> incidencia  = modelo.getIncidenciasValidadas();
+		List<IncidenciaDTO> incidencia  = modelo.getIncidenciasPorEstado("Validada");
 		vista.getModeloTabla().setRowCount(0);
 		for (IncidenciaDTO i : incidencia) {
 			vista.getModeloTabla()
@@ -39,7 +42,7 @@ public class OperadorControlador {
 		}
 
 		// 2. Rellenar Lista de Técnicos
-		List<TecnicoDTO> tecnicos = modelo.obtenerListaTecnicos();
+		List<TecnicoDTO> tecnicos = usuario.obtenerTodosLosTecnicos();
 		vista.getModeloListaTecnicos().clear();
 		for (TecnicoDTO t : tecnicos) {
 			vista.getModeloListaTecnicos().addElement(t);
