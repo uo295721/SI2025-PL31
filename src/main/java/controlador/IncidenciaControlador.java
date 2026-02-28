@@ -58,7 +58,7 @@ public class IncidenciaControlador {
             			i.getTipo(),
             			i.getFecha(),
             			i.getLocalizacion(),
-            			i.getHorasEstimadas()
+            			i.getHoras_estimadas()
             	};
             	vista.modeloTabla.addRow(fila);
             }

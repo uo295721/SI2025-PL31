@@ -1,11 +1,11 @@
 package util;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import java.util.List;
 
 import controlador.Clasificar_Incidencias;
 import controlador.IncidenciaControlador;
@@ -21,6 +21,7 @@ import vista.VentanaInformeResponsable;
 import vista.VentanaOperador;
 import vista.VentanaTecnico;
 import vista.Vista33787;
+import vista.VentanaHistorial;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -229,7 +230,44 @@ public class SwingMain {
 		});
 		
 		frame.getContentPane().add(btnClasificarI);
+		
+		// Botón para la historia de Hugo (Historial)
+		JButton btnHistorial = new JButton("Visualizar historial de incidencia");
+		btnHistorial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String email = JOptionPane.showInputDialog(frame, "Ingrese su Email (Operador o Técnico):");
+				        
+				if (email == null || email.trim().isEmpty()) 
+					return;
+
+				// Validación de Rol
+				if (usuario.esUsuarioConRol(email, "OPERADOR") || usuario.esUsuarioConRol(email, "TÉCNICO")) {
+				            
+					String idStr = JOptionPane.showInputDialog(frame, "Ingrese el ID de la incidencia:");
+					if (idStr == null || idStr.trim().isEmpty()) 
+						return;
+					
+					try {
+		                int idInci = Integer.parseInt(idStr);   
+		                VentanaHistorial vH = new VentanaHistorial(frame, idInci);
+		                modelo.OperadorModelo mO = new modelo.OperadorModelo();
+		                modelo.IncidenciaModelo mI = new modelo.IncidenciaModelo();
+		                new controlador.HistorialControlador(vH, mI, idInci);             
+		                vH.setVisible(true);
+		                
+					} catch (NumberFormatException ex) {
+						JOptionPane.showMessageDialog(frame, "Error: El ID debe ser un número entero.", "ID no válido", JOptionPane.ERROR_MESSAGE);
+				    }
+				} else {
+					JOptionPane.showMessageDialog(frame, "Acceso denegado. No tiene permisos de Operador o Técnico.", "Error de Acceso", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		frame.getContentPane().add(btnHistorial);
 
 	}
 
+	public JFrame getFrame() {
+		return this.frame;
+	}
 }

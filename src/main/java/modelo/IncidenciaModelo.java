@@ -4,70 +4,23 @@ import java.util.List;
 import util.Database;
 
 public class IncidenciaModelo {
-	
+    
     private Database db = new Database();
 
     public IncidenciaModelo() {}
     
+    //CONSULTAS DE TÉCNICO
+
     public List<IncidenciaDTO> getIncidenciasAsignadasTecnico(String idTecnico) {
         String sql = "SELECT * FROM Incidencia WHERE (id_tecnico = ? OR id_tecnico = (SELECT id_usuario "
                    + "FROM Usuario WHERE email = ?)) AND estado IN ('Validada', 'Asignada') "
                    + "ORDER BY id_incidencia ASC";
         return db.executeQueryPojo(IncidenciaDTO.class, sql, idTecnico, idTecnico);
     }
-    
-    public List<IncidenciaDTO> getIncidenciasPorEstado(String estado) {
-        String sql = "SELECT * FROM Incidencia WHERE estado = ? ORDER BY fecha ASC";
-        return db.executeQueryPojo(IncidenciaDTO.class, sql, estado);
-    }
 
-    /** Para tu historia del Ciudadano */
-    public List<IncidenciaDTO> incidenciasRegistradasCiudadano(String idCiudadano) {
-        String sql = "SELECT * FROM Incidencia WHERE id_ciudadano = ? ORDER BY fecha DESC";
-        return db.executeQueryPojo(IncidenciaDTO.class, sql, idCiudadano);
-    }
-
-    /** Para el técnico cuando va a resolver */
     public List<IncidenciaDTO> obtenerIncidenciasProceso(String idTecnico) {
         String sql = "SELECT * FROM Incidencia WHERE id_tecnico = ? AND estado = 'Proceso'";
         return db.executeQueryPojo(IncidenciaDTO.class, sql, idTecnico);
-    }
-
-    /** Para el informe de Dani (Responsable) */
-    public List<Object[]> getInformeMensualIncidencias(String fechaInicio, String fechaFin) {
-        String sql = "SELECT u.nombre, COUNT(i.id_incidencia) AS total_incidencias, SUM(i.coste) AS coste_total " +
-                     "FROM Usuario u JOIN Incidencia i ON u.id_usuario = i.id_tecnico " +
-                     "WHERE u.rol = 'TÉCNICO' AND i.estado = 'Resuelta' " +
-                     "AND (i.fecha >= ? AND i.fecha <= ?) GROUP BY u.nombre ORDER BY u.nombre ASC";
-        return db.executeQueryArray(sql, fechaInicio, fechaFin);
-    }
-    
-    public boolean insertarIncidencia(String tipo, String descripcion, String localizacion, String idCiudadano) {
-        String sql = "INSERT INTO Incidencia (estado, descripcion, id_ciudadano, localización, tipo, fecha) "
-                   + "VALUES ('Nueva', ?, ?, ?, ?, datetime('now', 'localtime'))";
-        try {
-            db.executeUpdate(sql, descripcion, idCiudadano, localizacion, tipo);
-            return true;
-        } catch (Exception e) { return false; }
-    }
-
-    public void validarClasificacion(int idIncidencia, String nuevoTipo, String idOperador) {
-        String sqlU = "UPDATE Incidencia SET tipo = ?, estado = 'Validada', id_operador = ? WHERE id_incidencia = ?";
-        String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
-                    + "VALUES (?, ?, 'Validada', datetime('now','localtime'), 'Validación Operador')";
-        db.executeUpdate(sqlU, nuevoTipo, idOperador, idIncidencia);
-        db.executeUpdate(sqlH, idIncidencia, idOperador);
-    }
-
-    public boolean asignarTecnicoIncidencia(int idIncidencia, String idTecnico, String emailOperador) {
-        String sqlU = "UPDATE Incidencia SET id_tecnico = ?, estado = 'Asignada' WHERE id_incidencia = ?";
-        String sqlH = "INSERT INTO Historial (id_incidencia, estado_nuevo, fecha_modificacion, comentario) "
-                    + "VALUES (?, 'Asignada', datetime('now', 'localtime'), ?)";
-        try {
-            db.executeUpdate(sqlU, idTecnico, idIncidencia);
-            db.executeUpdate(sqlH, idIncidencia, "Asignada por: " + emailOperador);
-            return true;
-        } catch (Exception e) { return false; }
     }
 
     public void planificarIncidencia(int idIncidencia, int horas, String trabajos, String idTecnico) {
@@ -88,5 +41,73 @@ public class IncidenciaModelo {
             return true;
         } catch (Exception e) { return false; }
     }
-    
+
+    // --- CONSULTAS DE OPERADOR ---
+
+    public List<IncidenciaDTO> getIncidenciasPorEstado(String estado) {
+        String sql = "SELECT * FROM Incidencia WHERE estado = ? ORDER BY fecha ASC";
+        return db.executeQueryPojo(IncidenciaDTO.class, sql, estado);
+    }
+
+    public void validarClasificacion(int idIncidencia, String nuevoTipo, String idOperador) {
+        String sqlU = "UPDATE Incidencia SET tipo = ?, estado = 'Validada', id_operador = ? WHERE id_incidencia = ?";
+        String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
+                     + "VALUES (?, ?, 'Validada', datetime('now','localtime'), 'Validación Operador')";
+        db.executeUpdate(sqlU, nuevoTipo, idOperador, idIncidencia);
+        db.executeUpdate(sqlH, idIncidencia, idOperador);
+    }
+
+    public boolean asignarTecnicoIncidencia(int idIncidencia, String idTecnico, String emailOperador) {
+        String sqlU = "UPDATE Incidencia SET id_tecnico = ?, estado = 'Asignada' WHERE id_incidencia = ?";
+        String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
+                    + "VALUES (?, (SELECT id_usuario FROM Usuario WHERE email = ?), 'Asignada', datetime('now', 'localtime'), ?)";
+        try {
+            db.executeUpdate(sqlU, idTecnico, idIncidencia);
+            db.executeUpdate(sqlH, idIncidencia, emailOperador, "Asignada por: " + emailOperador);
+            return true;
+        } catch (Exception e) { return false; }
+    }
+
+    public boolean insertarIncidencia(String tipo, String descripcion, String localizacion, String idCiudadano) {
+        String sql = "INSERT INTO Incidencia (estado, descripcion, id_ciudadano, localización, tipo, fecha) "
+                   + "VALUES ('Nueva', ?, ?, ?, ?, datetime('now', 'localtime'))";
+        try {
+            db.executeUpdate(sql, descripcion, idCiudadano, localizacion, tipo);
+            return true;
+        } catch (Exception e) { return false; }
+    }
+
+    public List<IncidenciaDTO> incidenciasRegistradasCiudadano(String idCiudadano) {
+        String sql = "SELECT * FROM Incidencia WHERE id_ciudadano = ? ORDER BY fecha DESC";
+        return db.executeQueryPojo(IncidenciaDTO.class, sql, idCiudadano);
+    }
+
+    // --- INFORMES Y OTROS ---
+
+    public List<Object[]> getInformeMensualIncidencias(String fechaInicio, String fechaFin) {
+        String sql = "SELECT u.nombre, COUNT(i.id_incidencia) AS total_incidencias, SUM(i.coste) AS coste_total " +
+                     "FROM Usuario u JOIN Incidencia i ON u.id_usuario = i.id_tecnico " +
+                     "WHERE u.rol = 'TÉCNICO' AND i.estado = 'Resuelta' " +
+                     "AND (i.fecha >= ? AND i.fecha <= ?) GROUP BY u.nombre ORDER BY u.nombre ASC";
+        return db.executeQueryArray(sql, fechaInicio, fechaFin);
+    }
+
+    public List<HistorialDTO> obtenerHistorialIncidencia(int idIncidencia){
+        String sql = "SELECT id_modificacion, id_incidencia, id_usuario, estado_nuevo, "
+                + "fecha_modificacion, comentario FROM Historial "
+                + "WHERE id_incidencia = ? "
+                + "ORDER BY fecha_modificacion DESC";
+        return db.executeQueryPojo(HistorialDTO.class, sql, idIncidencia);
+    }
+
+    public void registrarCambioHistorial(int idInci, String emailUser, String nuevoEstado, String comentario) {
+        String sql = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) " +
+                     "VALUES (?, (SELECT id_usuario FROM Usuario WHERE email = ?), ?, datetime('now'), ?)";
+        db.executeUpdate(sql, idInci, emailUser, nuevoEstado, comentario);
+    }
+
+    public List<IncidenciaDTO> getTodasLasIncidencias() {
+        String sql = "SELECT id_incidencia, descripcion, fecha, estado FROM Incidencia ORDER BY fecha DESC";
+        return db.executeQueryPojo(IncidenciaDTO.class, sql);
+    }
 }

@@ -69,6 +69,7 @@ public class VentanaOperador extends JFrame {
 
 		// Panel inferior
 		JPanel panelInferior = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		
 		btnAsignar = new JButton("Asignar Incidencia");
 		btnAsignar.setEnabled(false); // Empieza bloqueado también
 		btnAsignar.setFont(new Font("Arial", Font.BOLD, 13));
@@ -97,7 +98,7 @@ public class VentanaOperador extends JFrame {
 	public JButton getBtnAsignar() {
 		return btnAsignar;
 	}
-
+	
 	public JLabel getLblEmailOperador() {
 		return lblEmailOperador;
 	}
