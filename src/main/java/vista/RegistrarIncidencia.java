@@ -25,7 +25,7 @@ public class RegistrarIncidencia extends JFrame {
 
 	
 	public RegistrarIncidencia() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -36,8 +36,8 @@ public class RegistrarIncidencia extends JFrame {
 		LabelTipo.setBounds(24, 27, 189, 14);
 		contentPane.add(LabelTipo);
 		
-		cBTiposIncidencia = new JComboBox();
-		cBTiposIncidencia.setModel(new DefaultComboBoxModel(new String[] {"Sin tipo", "Alumbrado", "Limpieza", "Mobiliario urbano", "Zonas verdes", "Señalización", "Calzada"}));
+		cBTiposIncidencia = new JComboBox<String>();
+		cBTiposIncidencia.setModel(new DefaultComboBoxModel<String>(new String[] {"Sin tipo", "Alumbrado", "Limpieza", "Mobiliario urbano", "Zonas verdes", "Señalización", "Calzada"}));
 		cBTiposIncidencia.setName("");
 		cBTiposIncidencia.setBounds(223, 23, 180, 22);
 		contentPane.add(cBTiposIncidencia);

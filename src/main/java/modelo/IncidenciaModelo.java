@@ -9,8 +9,6 @@ public class IncidenciaModelo {
 
     public IncidenciaModelo() {}
     
-    //CONSULTAS DE TÉCNICO
-
     public List<IncidenciaDTO> getIncidenciasAsignadasTecnico(String idTecnico) {
         String sql = "SELECT * FROM Incidencia WHERE (id_tecnico = ? OR id_tecnico = (SELECT id_usuario "
                    + "FROM Usuario WHERE email = ?)) AND estado IN ('Validada', 'Asignada') "
@@ -41,8 +39,6 @@ public class IncidenciaModelo {
             return true;
         } catch (Exception e) { return false; }
     }
-
-    // --- CONSULTAS DE OPERADOR ---
 
     public List<IncidenciaDTO> getIncidenciasPorEstado(String estado) {
         String sql = "SELECT * FROM Incidencia WHERE estado = ? ORDER BY fecha ASC";
@@ -82,8 +78,6 @@ public class IncidenciaModelo {
         return db.executeQueryPojo(IncidenciaDTO.class, sql, idCiudadano);
     }
 
-    // --- INFORMES Y OTROS ---
-
     public List<Object[]> getInformeMensualIncidencias(String fechaInicio, String fechaFin) {
         String sql = "SELECT u.nombre, COUNT(i.id_incidencia) AS total_incidencias, SUM(i.coste) AS coste_total " +
                      "FROM Usuario u JOIN Incidencia i ON u.id_usuario = i.id_tecnico " +
@@ -110,4 +104,5 @@ public class IncidenciaModelo {
         String sql = "SELECT id_incidencia, descripcion, fecha, estado FROM Incidencia ORDER BY fecha DESC";
         return db.executeQueryPojo(IncidenciaDTO.class, sql);
     }
+    
 }

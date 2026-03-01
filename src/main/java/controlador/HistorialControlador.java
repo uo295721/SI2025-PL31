@@ -2,7 +2,6 @@ package controlador;
 
 import java.util.List;
 import modelo.IncidenciaModelo;
-import modelo.OperadorModelo; 
 import modelo.HistorialDTO;
 import vista.VentanaHistorial;
 

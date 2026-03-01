@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 import modelo.IncidenciaDTO;
 import modelo.IncidenciaModelo;
-import modelo.TecnicoDTO; // Asegúrate de que este DTO siga existiendo o usa UsuarioDTO
+import modelo.TecnicoDTO;
 import modelo.UsuarioModelo;
 import vista.VentanaOperador;
 

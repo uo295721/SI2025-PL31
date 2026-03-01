@@ -9,7 +9,8 @@ import modelo.HistorialDTO;
 
 public class VentanaHistorial extends JDialog {
 
-    private JTable tablaHistorial;
+    private static final long serialVersionUID = 1L;
+	private JTable tablaHistorial;
     private DefaultTableModel modeloTabla;
 
     public VentanaHistorial(JFrame padre, int idIncidencia) {

@@ -5,7 +5,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class Vista33787 extends JFrame {
-    private JTable tablaIncidencias;
+    
+	private static final long serialVersionUID = 1L;
+	private JTable tablaIncidencias;
     private DefaultTableModel modeloTabla;
     private JComboBox<String> cbTipos;
     private JButton btnValidar;

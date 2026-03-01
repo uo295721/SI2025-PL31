@@ -5,7 +5,6 @@ import javax.swing.JFrame;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import java.util.List;
 
 import controlador.Clasificar_Incidencias;
 import controlador.IncidenciaControlador;
@@ -132,6 +131,24 @@ public class SwingMain {
 
 		});
 		frame.getContentPane().add(btnPlanificar);
+		
+		//Botón para la Historia de Liam (Ciudadano - Consultar incidencias)
+		JButton btnConsultarIncidencias = new JButton("Consultar mis incidencias (ciudadano)");
+		btnConsultarIncidencias.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String id = JOptionPane.showInputDialog(frame, "DNI o EMAIL:");
+				if (id != null  && usuario.esUsuario(id)) {
+					
+					String idReal = usuario.asegurarID(id);
+					vista.VentanaMisIncidencias vMI = new vista.VentanaMisIncidencias();
+					new controlador.ConsultaIncidenciasControlador(vMI, new IncidenciaModelo(), idReal);
+					vMI.setVisible(true);
+				}
+				
+			}
+		});
+		frame.getContentPane().add(btnConsultarIncidencias);
 
 		// Botón para la Historia de Hugo (Operador - Asignar)
 		JButton btnAsignar = new JButton("Asignar incidencia a técnico como operador");
@@ -250,7 +267,6 @@ public class SwingMain {
 					try {
 		                int idInci = Integer.parseInt(idStr);   
 		                VentanaHistorial vH = new VentanaHistorial(frame, idInci);
-		                modelo.OperadorModelo mO = new modelo.OperadorModelo();
 		                modelo.IncidenciaModelo mI = new modelo.IncidenciaModelo();
 		                new controlador.HistorialControlador(vH, mI, idInci);             
 		                vH.setVisible(true);

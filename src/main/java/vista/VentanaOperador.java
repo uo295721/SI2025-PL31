@@ -6,10 +6,10 @@ import javax.swing.table.DefaultTableModel;
 import modelo.TecnicoDTO;
 
 import java.awt.*;
-import java.util.List;
 
 public class VentanaOperador extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JTable tablaIncidencias;
 	private DefaultTableModel modeloTabla;
 	private JList<TecnicoDTO> listaTecnicos;
@@ -20,7 +20,7 @@ public class VentanaOperador extends JFrame {
 
 	public VentanaOperador() {
 		setTitle("Gestión de Incidencias - Panel de Operador");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 900, 600);
 		getContentPane().setLayout(new BorderLayout(10, 10));
 
