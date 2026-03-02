@@ -14,7 +14,9 @@ public class HistorialDTO {
     private String comentario;
 
   
-    public HistorialDTO() {}
+    public HistorialDTO() {
+    	
+    }
 
     
     public HistorialDTO(int id_modificacion, int id_incidencia, String id_usuario, 

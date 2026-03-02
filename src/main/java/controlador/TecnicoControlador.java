@@ -6,22 +6,22 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import modelo.IncidenciaDTO;
-import modelo.TecnicoModelo;
+import modelo.IncidenciaModelo;
+import modelo.UsuarioModelo;
 import vista.DialogoPlanificar;
 import vista.VentanaTecnico;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
-
 public class TecnicoControlador {
 	
-	private TecnicoModelo modeloTec1;
+	private IncidenciaModelo modeloTec1;
 	private VentanaTecnico ventanaTec1;
+	private UsuarioModelo usuario = new UsuarioModelo();
 	private String emailTecnico;
 	
-	public TecnicoControlador(TecnicoModelo modelo, VentanaTecnico vista, String email) {
+	public TecnicoControlador(IncidenciaModelo modelo, VentanaTecnico vista, String email) {
 		
 		this.modeloTec1 = modelo;
 		this.ventanaTec1 = vista;
@@ -40,15 +40,19 @@ public class TecnicoControlador {
 	}
 
 	private void listarIncidencias() {
-		List<IncidenciaDTO> incidencias = modeloTec1.getIncidenciasAsignadas(emailTecnico);
+		List<IncidenciaDTO> incidencias = modeloTec1.getIncidenciasAsignadasTecnico(emailTecnico);
 		
 		//Definimos las columnas que queremos ver
-		String[] columnas = {"ID","Título","Descripción","Estado"};
+		String[] columnas = {"ID","Título","Localización","Estado"};
 		DefaultTableModel tablaModelo = new DefaultTableModel(columnas,0);
 		
 		//Rellenamos la tabla modelo con la lista del DTO
 		for (IncidenciaDTO i : incidencias) {
-			Object[] fila = {i.getIdIncidencia(),i.getDescripcion(),i.getDescripcionCiudadano(),i.getEstado()};
+			Object[] fila = {i.getIdIncidencia(),
+							 i.getDescripcion(),
+							 i.getLocalizacion(),
+							 i.getEstado()};
+			
 			tablaModelo.addRow(fila);
 		}
 		
@@ -77,8 +81,11 @@ public class TecnicoControlador {
 					int horas = Integer.parseInt(dialogo.getTextHoras());
 					String trabajos = dialogo.getTextArea();
 					
+					//Obtenemos el ID (DNI) del técnico
+					String idTec = usuario.getIdUsuarioByEmail(emailTecnico);
+					
 					//Llamamos al modelo para guardar en la BD
-					modeloTec1.planificarIncidencia(idIncidencia, horas, trabajos, emailTecnico);
+					modeloTec1.planificarIncidencia(idIncidencia, horas, trabajos, idTec);
 					
 					dialogo.dispose(); //Cerramos el diálogo
 					listarIncidencias(); //Actualizamos la tabla Principal
@@ -94,5 +101,6 @@ public class TecnicoControlador {
 		dialogo.setVisible(true);
 		
 	}
+
 	
 }

@@ -25,7 +25,7 @@ public class IncidenciasTecnicoProceso extends JFrame {
         // --- Nuevo Tamaño solicitado ---
         setSize(750, 600);
         setTitle("Gestión de Incidencias Urbanas");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(5, 5));
 
         // 1. CABECERA
