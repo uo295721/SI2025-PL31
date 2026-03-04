@@ -3,14 +3,14 @@ package controlador;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import modelo.IncidenciaDTO;
 import modelo.IncidenciaModelo;
 import modelo.UsuarioModelo;
-import vista.DialogoPlanificar;
 import vista.VentanaTecnico;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -30,16 +30,13 @@ public class TecnicoControlador {
 		//Cargamos los datos en la tabla al iniciar
 		listarIncidencias();
 		
-		//Asignamos un evento al botón "Planificar incidencia de la ventana principal"
-		this.ventanaTec1.getBtnPlanificar().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				gestionarAperturaDialogo();
-			}
-		});
+		this.configurarSeleccionTabla();
+		this.configurarBotonGuardar();
 		
 	}
 
 	private void listarIncidencias() {
+		
 		List<IncidenciaDTO> incidencias = modeloTec1.getIncidenciasAsignadasTecnico(emailTecnico);
 		
 		//Definimos las columnas que queremos ver
@@ -61,46 +58,79 @@ public class TecnicoControlador {
 		
 	}
 	
-	private void gestionarAperturaDialogo() {
+	private void configurarSeleccionTabla() {
+		ventanaTec1.getTablaIncidencias().getSelectionModel().addListSelectionListener(
+		new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				
+				if (!e.getValueIsAdjusting()) {
+					if (ventanaTec1.getFilaSeleccionada() != -1)
+						ventanaTec1.activarCampos();
+					else
+						ventanaTec1.desactivarCampos();
+				}
+				
+			}
+		});
+	}
+	
+	private void configurarBotonGuardar() {
 		
-		int fila = ventanaTec1.getFilaSeleccionada();
-		
-		if (fila == -1) {
-			JOptionPane.showMessageDialog(ventanaTec1, "Seleccione una incidencia.");
-			return;
-		}
-		
-		int idIncidencia = (int) ventanaTec1.getTablaIncidencias().getValueAt(fila, 0);
-		DialogoPlanificar dialogo = new DialogoPlanificar();
-		dialogo.setModal(true);
-		
-		//Configuramos el JButton 'Aceptar' utilizando los getters
-		dialogo.getBtnAceptar().addActionListener(new ActionListener() {
+		ventanaTec1.getBtnGuardar().addActionListener(new ActionListener() {
+			
+			@Override
 			public void actionPerformed(ActionEvent e) {
+
+				int fila = ventanaTec1.getFilaSeleccionada();
+				if (fila == -1) {
+					JOptionPane.showMessageDialog(ventanaTec1, "Seleccione una incidencia de la tabla.");
+					return;
+				}
+					
 				try {
-					int horas = Integer.parseInt(dialogo.getTextHoras());
-					String trabajos = dialogo.getTextArea();
+					//Recogemos los datos del ID de la incidencia en la tabla
+					int idIncidencia = (int) ventanaTec1.getTablaIncidencias().getValueAt(fila, 0);
 					
-					//Obtenemos el ID (DNI) del técnico
+					//Extraemos los datos de planificación
+					String horasEstimadas = ventanaTec1.getTxtHoras().getText().trim();
+					String descp = ventanaTec1.getTxtAreaTrabajos().getText().trim();
+					
+					if (horasEstimadas.isEmpty() || descp.isEmpty()) {
+						JOptionPane.showMessageDialog(ventanaTec1, "Debe rellenar las horas y la descripción");
+						return;
+					}
+					
+					int horas = Integer.parseInt(horasEstimadas);
+					if (horas <= 0) {
+						JOptionPane.showMessageDialog(ventanaTec1, 
+								"Las horas estimadas deben ser un número mayor de cero.",
+								"Error de validación", JOptionPane.WARNING_MESSAGE);
+						return;
+					}
+					
 					String idTec = usuario.getIdUsuarioByEmail(emailTecnico);
+					modeloTec1.planificarIncidencia(idIncidencia, horas, descp, idTec);
 					
-					//Llamamos al modelo para guardar en la BD
-					modeloTec1.planificarIncidencia(idIncidencia, horas, trabajos, idTec);
+					String resumen = "Planificación guardada con éxito.\n"
+								   + "--- Resumen de la Operación ---\n"
+								   + "• ID Incidencia: " + idIncidencia + "\n"
+					               + "• Horas asignadas: " + horas + " h\n"
+					               + "• Descripción: " + descp + "\n\n"
+					               + "La incidencia ha pasado al estado 'En proceso'.";
 					
-					dialogo.dispose(); //Cerramos el diálogo
-					listarIncidencias(); //Actualizamos la tabla Principal
-					JOptionPane.showMessageDialog(ventanaTec1, "Planificación guardada con éxito.");
-				} catch (NumberFormatException ex) {
-					JOptionPane.showMessageDialog(dialogo, "Por favor, introduce un número de horas válido.");
+					JOptionPane.showMessageDialog(ventanaTec1, resumen, 
+							"Confirmación de Planificación",JOptionPane.INFORMATION_MESSAGE);
+					ventanaTec1.desactivarCampos();
+					listarIncidencias();
+					
+							
+				} catch(NumberFormatException ex) {
+					JOptionPane.showMessageDialog(ventanaTec1, "Por favor, introduzca un número de horas válido");
 				}
 			}
 		});
 		
-		//El JButton 'Cancelar' se encarga únicamente de cerrar
-		dialogo.getBtnCancelar().addActionListener(e -> dialogo.dispose());
-		dialogo.setVisible(true);
-		
 	}
-
 	
 }
