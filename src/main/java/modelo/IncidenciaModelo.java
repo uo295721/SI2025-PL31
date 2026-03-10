@@ -49,8 +49,10 @@ public class IncidenciaModelo {
     }
     
     public List<IncidenciaDTO> getIncidenciasParaControlCalidad(String especialidad){
-    	String sql = "SELECT id_incidencia, descripcion, localización, tipo, estado, fecha "
-    			   + "FROM Incidencia WHERE estado = 'Resuelta' and tipo = ?";
+    	String sql = "SELECT i.id_incidencia, i.descripcion, i.localización, i.fecha, t.nombre as tipo " +
+                     "FROM Incidencia i " +
+                     "JOIN TipoIncidencia t ON i.id_tipo = t.id_tipo " +
+                     "WHERE t.nombre = ? AND i.estado = 'Resuelta'";
     	return db.executeQueryPojo(IncidenciaDTO.class, sql, especialidad);
     }
     
