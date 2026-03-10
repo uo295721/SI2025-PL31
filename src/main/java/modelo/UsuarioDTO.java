@@ -16,7 +16,6 @@ public class UsuarioDTO {
         this.rol = rol;
     }
 
-    // Getters y Setters con nombres que DbUtils reconoce
     public String getIdUsuario() { return id_usuario; }
     public void setId_usuario(String id_usuario) { this.id_usuario = id_usuario; }
 

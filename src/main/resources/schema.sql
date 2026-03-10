@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS "Historial";
 DROP TABLE IF EXISTS "Incidencia";
 DROP TABLE IF EXISTS "Usuario";
+DROP TABLE IF EXISTS "Zona";
 
 CREATE TABLE "Usuario" (
     "id_usuario"    TEXT NOT NULL UNIQUE,
@@ -36,4 +37,10 @@ CREATE TABLE "Historial" (
     "comentario"    TEXT,
     PRIMARY KEY("id_modificacion"),
     CONSTRAINT "incidencia" FOREIGN KEY("id_incidencia") REFERENCES "Incidencia"("id_incidencia") ON DELETE CASCADE
+);
+
+CREATE TABLE "Zona" (
+    "id_zona"    TEXT NOT NULL UNIQUE,
+    "nombre"    TEXT NOT NULL UNIQUE,
+    PRIMARY KEY("id_zona")
 );

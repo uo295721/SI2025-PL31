@@ -35,3 +35,12 @@ VALUES
 (8, 104, 'C2', 'Nueva', '2026-02-19 07:00:00', 'Incidencia de fontanería registrada.'),
 (9, 105, 'C2', 'Nueva', '2026-02-19 07:15:00', 'Aviso de socavón recibido.'),
 (10, 106, 'T1', 'Resuelta', '2026-02-19 20:00:00', 'Reparación finalizada con éxito.');
+
+INSERT INTO "Zona" ("id_zona", "nombre") VALUES 
+('Z1', 'Sin zona'),
+('Z2', 'Zona Residencial-1'),
+('Z3', 'Zona Residencial-2'),
+('Z4', 'Zona Portuaria-1'),
+('Z5', 'Zona Portuaria-2'),
+('Z6', 'Zona Central-1'),
+('Z7', 'Zona Central-2');

@@ -2,31 +2,59 @@ package controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
+import java.util.List;
 
+import javax.swing.JOptionPane;
 import modelo.IncidenciaModelo;
+import modelo.ZonaDTO;
+import modelo.ZonaModelo;
 import vista.RegistrarIncidencia;
 
 public class RegistrarIncidenciasControlador {
 
     private RegistrarIncidencia vista;
-    private IncidenciaModelo modelo;
+    private IncidenciaModelo modeloI;
+    private ZonaModelo modeloZ;
     private String idCiudadano; // Guardamos el DNI del usuario logueado
 
-    public RegistrarIncidenciasControlador(RegistrarIncidencia vista, IncidenciaModelo modelo, String idCiudadano) {
+    public RegistrarIncidenciasControlador(RegistrarIncidencia vista, IncidenciaModelo modeloIncidencia, ZonaModelo modeloZona, String idCiudadano) {
         this.vista = vista;
-        this.modelo = modelo;
+        this.modeloI = modeloIncidencia;
+        this.modeloZ = modeloZona;
         this.idCiudadano = idCiudadano;
 
         // Configuramos el evento del botón
         this.vista.getBtnRegistrar().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(registrar())
+
+                if(registrar() && cargarComboZonas()) {
                 	vista.dispose();
+                } else if(!registrar()) {
+                	JOptionPane.showMessageDialog(vista, "Error técnico al registrar la incidencia.");
+                } else {
+                	JOptionPane.showMessageDialog(vista, "Error: no se encontraron zonas que cargar en la base da datos.");
+                }
             }
         });
     }
 
+    private boolean cargarComboZonas() {
+        List<ZonaDTO> zonas = modeloZ.obtenerZonas();
+
+        //Vacio la lista para eliminar posibles errores aunque no sea necesario
+        vista.getcBLocalizacion().removeAllItems();
+        
+        if(zonas.isEmpty()) return false;
+        
+        //Meto el nombre de cada zona a la lista
+        for (ZonaDTO z : zonas) {
+        	String nombre = z.getNombre();
+            vista.getcBLocalizacion().addItem(nombre);
+        }
+        
+        return true;
+    }
+    
     private boolean registrar() {
     	// Empiezo obteniendo lo que se ha introducido y hago la comprobacion pertinente
         String tipo = (String) vista.getCbTipo().getSelectedItem();
@@ -39,7 +67,7 @@ public class RegistrarIncidenciasControlador {
         }
 
         // Inserto los valores dados usando la función creada en el modelo
-        boolean insertado = modelo.insertarIncidencia(tipo, descripcion, localizacion, idCiudadano);
+        boolean insertado = modeloI.insertarIncidencia(tipo, descripcion, localizacion, idCiudadano);
 
         if (insertado) {
         	String resumen = "Incidencia registrada con éxito!\n"
@@ -48,7 +76,7 @@ public class RegistrarIncidenciasControlador {
 		               + "• Tipo de incidencia: " + tipo + " \n"
 		               + "• Localización: " + localizacion + "\n"
 		               + "• Descripción: " + descripcion + "\n\n"
-		               + "La incidencia ha pasado al estado 'En proceso'.";
+		               + "La incidencia ha pasado al estado 'Nueva'.";
 		
         	JOptionPane.showMessageDialog(vista, resumen, 
 				"Confirmación de Registro",JOptionPane.INFORMATION_MESSAGE);

@@ -72,11 +72,10 @@ public class RegistrarIncidencia extends JFrame {
 		contentPane.add(textDescripcion);
 		
 		cBLocalizacion = new JComboBox<String>();
-		cBLocalizacion.setModel(new DefaultComboBoxModel<String>(new String[] {"Sin zona", "Zona Residencial-1", "Zona Residencial-2", "Zona Portuaria-1", "Zona Portuaria-2", "Zona Central-1", "Zona Central-2"}));
+		cBLocalizacion.setModel(new DefaultComboBoxModel<String>());
 		cBLocalizacion.setName("");
 		cBLocalizacion.setBounds(168, 76, 180, 22);
 		contentPane.add(cBLocalizacion);
-
 	}
 
 
