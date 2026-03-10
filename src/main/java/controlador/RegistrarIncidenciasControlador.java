@@ -23,16 +23,16 @@ public class RegistrarIncidenciasControlador {
         this.modeloZ = modeloZona;
         this.idCiudadano = idCiudadano;
 
+        if (!cargarComboZonas()) {
+            JOptionPane.showMessageDialog(vista, "Error: no se pudieron cargar las zonas.");
+        }
+        
         // Configuramos el evento del botón
         this.vista.getBtnRegistrar().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                if(registrar() && cargarComboZonas()) {
+                if(registrar()) {
                 	vista.dispose();
-                } else if(!registrar()) {
-                	JOptionPane.showMessageDialog(vista, "Error técnico al registrar la incidencia.");
-                } else {
-                	JOptionPane.showMessageDialog(vista, "Error: no se encontraron zonas que cargar en la base da datos.");
                 }
             }
         });
@@ -59,9 +59,10 @@ public class RegistrarIncidenciasControlador {
     	// Empiezo obteniendo lo que se ha introducido y hago la comprobacion pertinente
         String tipo = (String) vista.getCbTipo().getSelectedItem();
         String localizacion = (String) vista.getcBLocalizacion().getSelectedItem();
+        int zona = vista.getcBLocalizacion().getSelectedIndex();
         String descripcion = vista.getTextDescripcion().getText().trim();
 
-        if (localizacion.trim() == "Sin zona" || descripcion.isEmpty() || tipo.trim() == "Sin tipo") {
+        if (zona == 0 || descripcion.isEmpty() || tipo.trim() == "Sin tipo") {
             JOptionPane.showMessageDialog(vista, "Por favor, complete todos los campos para crear la incidencia.");
             return false;
         }

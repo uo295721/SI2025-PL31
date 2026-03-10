@@ -20,7 +20,10 @@ public class IncidenciaModelo {
     }
 
     public List<IncidenciaDTO> obtenerIncidenciasProceso(String idTecnico) {
-        String sql = "SELECT * FROM Incidencia WHERE id_tecnico = ? AND estado = 'Proceso'";
+    	String sql = "SELECT i.*, t.nombre as tipo " +
+                "FROM Incidencia i " +
+                "JOIN TipoIncidencia t ON i.id_tipo = t.id_tipo " +
+                "WHERE i.id_tecnico = ? AND i.estado = 'Proceso'";
         return db.executeQueryPojo(IncidenciaDTO.class, sql, idTecnico);
     }
 
@@ -48,12 +51,13 @@ public class IncidenciaModelo {
         return db.executeQueryPojo(IncidenciaDTO.class, sql, estado);
     }
     
-    public List<IncidenciaDTO> getIncidenciasParaControlCalidad(String especialidad){
-    	String sql = "SELECT i.id_incidencia, i.descripcion, i.localización, i.fecha, t.nombre as tipo " +
+    public List<IncidenciaDTO> getIncidenciasParaControlCalidad(String especialidad) {
+        String sql = "SELECT i.id_incidencia, i.descripcion, i.localizacion, i.fecha, t.nombre as tipo " +
                      "FROM Incidencia i " +
                      "JOIN TipoIncidencia t ON i.id_tipo = t.id_tipo " +
                      "WHERE t.nombre = ? AND i.estado = 'Resuelta'";
-    	return db.executeQueryPojo(IncidenciaDTO.class, sql, especialidad);
+        
+        return db.executeQueryPojo(IncidenciaDTO.class, sql, especialidad);
     }
     
     public void archivarIncidencia(List<Integer> listaIds) {
@@ -63,7 +67,7 @@ public class IncidenciaModelo {
     }
 
     public void validarClasificacion(int idIncidencia, String nuevoTipo, String idOperador) {
-        String sqlU = "UPDATE Incidencia SET tipo = ?, estado = 'Validada', id_operador = ? WHERE id_incidencia = ?";
+        String sqlU = "UPDATE Incidencia SET id_tipo = ?, estado = 'Validada', id_operador = ? WHERE id_incidencia = ?";
         String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
                      + "VALUES (?, ?, 'Validada', datetime('now','localtime'), 'Validación Operador')";
         db.executeUpdate(sqlU, nuevoTipo, idOperador, idIncidencia);
@@ -82,7 +86,7 @@ public class IncidenciaModelo {
     }
 
     public boolean insertarIncidencia(String tipo, String descripcion, String localizacion, String idCiudadano) {
-        String sql = "INSERT INTO Incidencia (estado, descripcion, id_ciudadano, localización, tipo, fecha) "
+        String sql = "INSERT INTO Incidencia (estado, descripcion, id_ciudadano, localizacion, id_tipo, fecha) "
                    + "VALUES ('Nueva', ?, ?, ?, ?, datetime('now', 'localtime'))";
         try {
             db.executeUpdate(sql, descripcion, idCiudadano, localizacion, tipo);
@@ -91,7 +95,12 @@ public class IncidenciaModelo {
     }
 
     public List<IncidenciaDTO> incidenciasRegistradasCiudadano(String idCiudadano) {
-        String sql = "SELECT * FROM Incidencia WHERE id_ciudadano = ? ORDER BY fecha DESC";
+        String sql = "SELECT i.id_incidencia, i.estado, i.descripcion, i.id_ciudadano, " +
+                     "i.localizacion, i.fecha, i.fecha_resolucion, t.nombre as tipo " +
+                     "FROM Incidencia i " +
+                     "JOIN TipoIncidencia t ON i.id_tipo = t.id_tipo " +
+                     "WHERE i.id_ciudadano = ? " +
+                     "ORDER BY i.fecha DESC";
         return db.executeQueryPojo(IncidenciaDTO.class, sql, idCiudadano);
     }
 

@@ -5,6 +5,17 @@ DROP TABLE IF EXISTS "TipoIncidencia";
 DROP TABLE IF EXISTS "Zona";
 DROP TABLE IF EXISTS "TareaDiaria";
 
+CREATE TABLE "TipoIncidencia" (
+    "id_tipo" INTEGER PRIMARY KEY,
+    "nombre" TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE "Zona" (
+    "id_zona"    TEXT NOT NULL UNIQUE,
+    "nombre"    TEXT NOT NULL UNIQUE,
+    PRIMARY KEY("id_zona")
+);
+
 CREATE TABLE "Usuario" (
     "id_usuario"    TEXT NOT NULL UNIQUE,
     "nombre"    TEXT,
@@ -21,8 +32,7 @@ CREATE TABLE "Incidencia" (
     "id_incidencia" INTEGER NOT NULL UNIQUE,
     "descripcion"   TEXT,
     "id_ciudadano"    TEXT NOT NULL,
-    "localización"  TEXT,
-    "zona" TEXT,
+    "localizacion"  TEXT,
     "id_tipo" INTEGER NOT NULL,
     "fecha" TEXT NOT NULL,
     "fecha_resolucion" TEXT,
@@ -32,7 +42,7 @@ CREATE TABLE "Incidencia" (
     "horas_estimadas"   INTEGER,
     "descripcion_trabajos"  TEXT,
     PRIMARY KEY("id_incidencia"),
-    FOREIGN KEY("zona") REFERENCES "Zona"("nombre"),
+    FOREIGN KEY("localizacion") REFERENCES "Zona"("nombre"),
     FOREIGN KEY("id_tipo") REFERENCES "TipoIncidencia"("id_tipo")
 );
 
@@ -44,7 +54,7 @@ CREATE TABLE "Historial" (
     "fecha_modificacion"    TEXT,
     "comentario"    TEXT,
     PRIMARY KEY("id_modificacion"),
-    FOREIGN KEY("id_usuario") REFERENCES "Usuario"("id_usuario")
+    FOREIGN KEY("id_usuario") REFERENCES "Usuario"("id_usuario"),
     CONSTRAINT "incidencia" FOREIGN KEY("id_incidencia") REFERENCES "Incidencia"("id_incidencia") ON DELETE CASCADE
 );
 
@@ -55,17 +65,6 @@ CREATE TABLE "TareaDiaria" (
     "fecha" TEXT,
     "descripcion_tarea" TEXT,
     "horas_dedicadas" REAL,
-    FOREIGN KEY("id_tecnico") REFERENCES "Usuario"("id_usuario")
+    FOREIGN KEY("id_tecnico") REFERENCES "Usuario"("id_usuario"),
     FOREIGN KEY("id_incidencia") REFERENCES "Incidencia"("id_incidencia")
-);
-
-CREATE TABLE "TipoIncidencia" (
-    "id_tipo" INTEGER PRIMARY KEY,
-    "nombre" TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE "Zona" (
-    "id_zona"    TEXT NOT NULL UNIQUE,
-    "nombre"    TEXT NOT NULL UNIQUE,
-    PRIMARY KEY("id_zona")
 );
