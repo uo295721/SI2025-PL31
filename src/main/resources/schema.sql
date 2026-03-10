@@ -8,6 +8,7 @@ CREATE TABLE "Usuario" (
     "apellidos" TEXT,
     "email" TEXT UNIQUE,
     "rol"   TEXT,
+    "especialidad" TEXT,
     PRIMARY KEY("id_usuario")
 );
 
@@ -17,8 +18,10 @@ CREATE TABLE "Incidencia" (
     "descripcion"   TEXT,
     "id_ciudadano"    TEXT NOT NULL,
     "localización"  TEXT,
+    "zona" TEXT,
     "tipo"  TEXT NOT NULL,
     "fecha" TEXT NOT NULL,
+    "fecha_resolucion" TEXT,
     "id_operador"   TEXT,
     "id_tecnico"    TEXT,
     "coste" NUMERIC,

@@ -67,7 +67,7 @@ public class UsuarioModelo {
         
         return result.get(0)[0].toString();
     }
-	
+    	
     public String asegurarID(String input) {
     	
     	if (!input.contains("@"))
@@ -92,4 +92,10 @@ public class UsuarioModelo {
         }
     }
     
+    public UsuarioDTO buscarResponsable(String id) {
+    	String sql = "SELECT id_usuario, nombre, email, especialidad, rol "
+    			   + "FROM Usuario WHERE (email = ? or id_usuario = ?) AND rol = 'RESPONSABLE'";
+    	List<UsuarioDTO> res = db.executeQueryPojo(UsuarioDTO.class, sql, id, id);
+    	return res.isEmpty() ? null : res.get(0);
+    }
 }

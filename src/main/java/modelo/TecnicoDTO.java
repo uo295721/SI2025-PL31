@@ -8,7 +8,11 @@ public class TecnicoDTO extends UsuarioDTO{
 
 
 	public TecnicoDTO(String id, String nombre, String email) {
-		super(id, nombre, email, "Técnico");
+		super(id, nombre, email, "Técnico",null);
+	}
+	
+	public TecnicoDTO(String id, String nombre, String email, String especialidad) {
+		super(id, nombre, email, "Técnico", especialidad);
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import vista.IncidenciasTecnicoProceso;
 import vista.RegistrarIncidencia;
 import vista.VentanaInformeResponsable;
 import vista.VentanaOperador;
+import vista.VentanaResponsable;
 import vista.VentanaTecnico;
 import vista.Vista33787;
 import vista.VentanaHistorial;
@@ -149,6 +150,27 @@ public class SwingMain {
 			}
 		});
 		frame.getContentPane().add(btnConsultarIncidencias);
+		
+		//Botón para la Historia de Liam (Responsable - Cierre de Incidencias)
+		JButton btnCierreResponsable = new JButton("Control de calidad (Responsable)");
+		btnCierreResponsable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su DNI o EMAIL de Responsable:");
+				if (idIngresado == null || idIngresado.trim().isEmpty())
+					return;
+				if (usuario.esUsuarioConRol(idIngresado, "RESPONSABLE")) {
+					VentanaResponsable vR = new VentanaResponsable();
+					new controlador.ResponsableControlador(vR, idIngresado);
+					
+					vR.setVisible(true);
+					vR.setLocationRelativeTo(null);
+				} else {
+					JOptionPane.showMessageDialog(frame, "Acceso denegado. No se encuentra al responsable "
+							+ "o no tiene permisos.", "Error de acceso", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		frame.getContentPane().add(btnCierreResponsable);
 
 		// Botón para la Historia de Hugo (Operador - Asignar)
 		JButton btnAsignar = new JButton("Asignar incidencia a técnico como operador");
