@@ -6,14 +6,16 @@ public class UsuarioDTO {
     private String nombre;
     private String email;
     private String rol;
+    private String especialidad;
 
     public UsuarioDTO() {}
 
-    public UsuarioDTO(String id, String nombre, String email, String rol) {
+    public UsuarioDTO(String id, String nombre, String email, String rol, String especialidad) {
         this.id_usuario = id;
         this.nombre = nombre;
         this.email = email;
         this.rol = rol;
+        this.especialidad = especialidad;
     }
 
     // Getters y Setters con nombres que DbUtils reconoce
@@ -28,4 +30,7 @@ public class UsuarioDTO {
 
     public String getRol() { return rol; }
     public void setRol(String rol) { this.rol = rol; }
+    
+    public String getEspecialidad() { return especialidad; }
+    public void setEspecialidad(String especialidad) { this.especialidad = especialidad; }
 }

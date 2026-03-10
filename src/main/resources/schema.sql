@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS "Historial";
 DROP TABLE IF EXISTS "Incidencia";
 DROP TABLE IF EXISTS "Usuario";
+DROP TABLE IF EXISTS "TipoIncidencia";
 
 CREATE TABLE "Usuario" (
     "id_usuario"    TEXT NOT NULL UNIQUE,
@@ -8,7 +9,9 @@ CREATE TABLE "Usuario" (
     "apellidos" TEXT,
     "email" TEXT UNIQUE,
     "rol"   TEXT,
-    PRIMARY KEY("id_usuario")
+    "id_tipo" INTEGER,
+    PRIMARY KEY("id_usuario"),
+    FOREIGN KEY("id_tipo") REFERENCES "TipoIncidencia"("id_tipo")
 );
 
 CREATE TABLE "Incidencia" (
@@ -17,14 +20,17 @@ CREATE TABLE "Incidencia" (
     "descripcion"   TEXT,
     "id_ciudadano"    TEXT NOT NULL,
     "localización"  TEXT,
-    "tipo"  TEXT NOT NULL,
+    "zona" TEXT,
+    "id_tipo" INTEGER NOT NULL,
     "fecha" TEXT NOT NULL,
+    "fecha_resolucion" TEXT,
     "id_operador"   TEXT,
     "id_tecnico"    TEXT,
     "coste" NUMERIC,
     "horas_estimadas"   INTEGER,
     "descripcion_trabajos"  TEXT,
-    PRIMARY KEY("id_incidencia")
+    PRIMARY KEY("id_incidencia"),
+    FOREIGN KEY("id_tipo") REFERENCES "TipoIncidencia"("id_tipo")
 );
 
 CREATE TABLE "Historial" (
@@ -38,6 +44,7 @@ CREATE TABLE "Historial" (
     CONSTRAINT "incidencia" FOREIGN KEY("id_incidencia") REFERENCES "Incidencia"("id_incidencia") ON DELETE CASCADE
 );
 
+
 CREATE TABLE IF NOT EXISTS "TareaDiaria" (
     id_tarea INTEGER PRIMARY KEY AUTOINCREMENT,
     id_incidencia INTEGER,
@@ -46,4 +53,9 @@ CREATE TABLE IF NOT EXISTS "TareaDiaria" (
     descripcion_tarea TEXT,
     horas_dedicadas REAL,
     FOREIGN KEY(id_incidencia) REFERENCES Incidencia(id_incidencia)
+);
+
+CREATE TABLE "TipoIncidencia" (
+    "id_tipo" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "nombre" TEXT NOT NULL UNIQUE
 );

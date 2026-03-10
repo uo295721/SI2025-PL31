@@ -47,6 +47,20 @@ public class IncidenciaModelo {
         String sql = "SELECT * FROM Incidencia WHERE estado = ? ORDER BY fecha ASC";
         return db.executeQueryPojo(IncidenciaDTO.class, sql, estado);
     }
+    
+    public List<IncidenciaDTO> getIncidenciasParaControlCalidad(String especialidad){
+    	String sql = "SELECT i.id_incidencia, i.descripcion, i.localización, i.fecha, t.nombre as tipo " +
+                     "FROM Incidencia i " +
+                     "JOIN TipoIncidencia t ON i.id_tipo = t.id_tipo " +
+                     "WHERE t.nombre = ? AND i.estado = 'Resuelta'";
+    	return db.executeQueryPojo(IncidenciaDTO.class, sql, especialidad);
+    }
+    
+    public void archivarIncidencia(List<Integer> listaIds) {
+    	String sql = "UPDATE Incidencia SET estado = 'Cerrada' WHERE id_incidencia = ?";
+    	for (int i : listaIds)
+    		db.executeUpdate(sql, i);
+    }
 
     public void validarClasificacion(int idIncidencia, String nuevoTipo, String idOperador) {
         String sqlU = "UPDATE Incidencia SET tipo = ?, estado = 'Validada', id_operador = ? WHERE id_incidencia = ?";

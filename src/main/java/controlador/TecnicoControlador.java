@@ -115,10 +115,8 @@ public class TecnicoControlador {
 				}
 					
 				try {
-					//Recogemos los datos del ID de la incidencia en la tabla
 					int idIncidencia = (int) ventanaTec1.getTablaIncidencias().getValueAt(fila, 0);
 					
-					//Extraemos los datos de planificación
 					String horasEstimadas = ventanaTec1.getTxtHoras().getText().trim();
 					String descp = ventanaTec1.getTxtAreaTrabajos().getText().trim();
 					
