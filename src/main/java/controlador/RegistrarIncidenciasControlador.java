@@ -30,10 +30,10 @@ public class RegistrarIncidenciasControlador {
     private boolean registrar() {
     	// Empiezo obteniendo lo que se ha introducido y hago la comprobacion pertinente
         String tipo = (String) vista.getCbTipo().getSelectedItem();
-        String localizacion = vista.getTextLocalizacion().getText().trim();
+        String localizacion = (String) vista.getcBLocalizacion().getSelectedItem();
         String descripcion = vista.getTextDescripcion().getText().trim();
 
-        if (localizacion.isEmpty() || descripcion.isEmpty() || tipo.trim() == "Sin tipo") {
+        if (localizacion.trim() == "Sin zona" || descripcion.isEmpty() || tipo.trim() == "Sin tipo") {
             JOptionPane.showMessageDialog(vista, "Por favor, complete todos los campos para crear la incidencia.");
             return false;
         }
