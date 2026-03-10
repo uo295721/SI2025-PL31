@@ -15,6 +15,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
+import java.awt.Font;
 
 public class VentanaTecnico extends JFrame {
 
@@ -24,6 +25,9 @@ public class VentanaTecnico extends JFrame {
 	private JTextField txtHoras;
 	private JTextArea txtAreaTrabajos;
 	private JButton btnGuardar;
+	private JButton btnGestionarTareas;
+
+	
 
 	/**
 	 * Create the frame.
@@ -80,6 +84,11 @@ public class VentanaTecnico extends JFrame {
 		btnGuardar = new JButton("Guardar Planificación");
 		btnGuardar.setBounds(380, 145, 180, 29);
 		panelPlanificacion.add(btnGuardar);
+		
+        btnGestionarTareas = new JButton("Gestionar Tareas Diarias");
+        btnGestionarTareas.setBounds(20, 145, 200, 29); 
+        panelPlanificacion.add(btnGestionarTareas);
+		
 
 		desactivarCampos();
 	}
@@ -121,4 +130,8 @@ public class VentanaTecnico extends JFrame {
 	public int getFilaSeleccionada() {
 		return tablaIncidencias.getSelectedRow();
 	}
+	public JButton getBtnGestionarTareas() {
+		return btnGestionarTareas;
+	}
+
 }

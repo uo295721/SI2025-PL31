@@ -107,8 +107,12 @@ public class IncidenciaModelo {
         String sql = "SELECT id_incidencia, descripcion, fecha, estado FROM Incidencia ORDER BY fecha DESC";
         return db.executeQueryPojo(IncidenciaDTO.class, sql);
     }
-    public List<IncidenciaDTO> getTodasIncidencias() {
-        String sql = "SELECT id_incidencia, descripcion, fecha, estado FROM Incidencia ORDER BY id_incidencia DESC";
-        return db.executeQueryPojo(IncidenciaDTO.class, sql);
-    }
+   public void registrarTareaDiaria(int idInci, String idTec, String fecha, String desc, double horas) {
+	   String sql = "INSERT INTO TareaDiaria (id_incidencia, id_tecnico, fecha, descripcion_tarea, horas_dedicadas) VALUES (?, ?, ?, ?, ?)";
+	    db.executeUpdate(sql, idInci, idTec, fecha, desc, horas);
+   }
+   public List<Object[]> getTareasPorIncidencia(int idInci) {
+	    String sql = "SELECT fecha, descripcion_tarea, horas_dedicadas FROM TareaDiaria WHERE id_incidencia = ? ORDER BY fecha DESC";
+	    return db.executeQueryArray(sql, idInci);
+	}
 }

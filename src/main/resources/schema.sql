@@ -37,3 +37,13 @@ CREATE TABLE "Historial" (
     PRIMARY KEY("id_modificacion"),
     CONSTRAINT "incidencia" FOREIGN KEY("id_incidencia") REFERENCES "Incidencia"("id_incidencia") ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS "TareaDiaria" (
+    id_tarea INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_incidencia INTEGER,
+    id_tecnico TEXT,
+    fecha TEXT,
+    descripcion_tarea TEXT,
+    horas_dedicadas REAL,
+    FOREIGN KEY(id_incidencia) REFERENCES Incidencia(id_incidencia)
+);

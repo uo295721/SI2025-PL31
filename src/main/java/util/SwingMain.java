@@ -220,48 +220,43 @@ public class SwingMain {
 		// Botón para la historia de Hugo (Historial) - Versión Final con Selector
 		JButton btnHistorial = new JButton("Visualizar historial de incidencia");
 		btnHistorial.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        String email = JOptionPane.showInputDialog(frame, "Ingrese su Email (Operador o Técnico):");
-		                        
-		        if (email == null || email.trim().isEmpty()) 
-		            return;
+			public void actionPerformed(ActionEvent e) {
+				String email = JOptionPane.showInputDialog(frame, "Ingrese su Email (Operador o Técnico):");
 
-		        if (usuario.esUsuarioConRol(email, "OPERADOR") || usuario.esUsuarioConRol(email, "TÉCNICO")) {
-		            
-		            IncidenciaModelo mI = new IncidenciaModelo();
-		            // Obtenemos la lista de incidencias desde el método que acabas de crear
-		            java.util.List<modelo.IncidenciaDTO> listaIncidencias = mI.getTodasIncidencias(); 
+				if (email == null || email.trim().isEmpty())
+					return;
 
-		            if (listaIncidencias.isEmpty()) {
-		                JOptionPane.showMessageDialog(frame, "No hay incidencias registradas.");
-		                return;
-		            }
+				if (usuario.esUsuarioConRol(email, "OPERADOR") || usuario.esUsuarioConRol(email, "TÉCNICO")) {
 
-		            // Mostramos el selector (evita que el usuario tenga que escribir el ID)
-		            Object seleccion = JOptionPane.showInputDialog(
-		                frame,
-		                "Seleccione la incidencia para ver su historial:",
-		                "Consulta de Historial",
-		                JOptionPane.QUESTION_MESSAGE,
-		                null,
-		                listaIncidencias.toArray(), 
-		                listaIncidencias.get(0)
-		            );
+					IncidenciaModelo mI = new IncidenciaModelo();
+					// Obtenemos la lista de incidencias desde el método que acabas de crear
+					java.util.List<modelo.IncidenciaDTO> listaIncidencias = mI.getTodasLasIncidencias();
 
-		            if (seleccion != null) {
-		                modelo.IncidenciaDTO inciSeleccionada = (modelo.IncidenciaDTO) seleccion;
-		                int idInci = inciSeleccionada.getIdIncidencia();
-		                
-		                // Abrimos la ventana de historial con el ID obtenido del objeto seleccionado
-		                VentanaHistorial vH = new VentanaHistorial(frame, idInci);
-		                new controlador.HistorialControlador(vH, mI, idInci);             
-		                vH.setVisible(true);
-		            }
-		            
-		        } else {
-		            JOptionPane.showMessageDialog(frame, "Acceso denegado. Rol no autorizado.", "Error", JOptionPane.WARNING_MESSAGE);
-		        }
-		    }
+					if (listaIncidencias.isEmpty()) {
+						JOptionPane.showMessageDialog(frame, "No hay incidencias registradas.");
+						return;
+					}
+
+					// Mostramos el selector (evita que el usuario tenga que escribir el ID)
+					Object seleccion = JOptionPane.showInputDialog(frame,
+							"Seleccione la incidencia para ver su historial:", "Consulta de Historial",
+							JOptionPane.QUESTION_MESSAGE, null, listaIncidencias.toArray(), listaIncidencias.get(0));
+
+					if (seleccion != null) {
+						modelo.IncidenciaDTO inciSeleccionada = (modelo.IncidenciaDTO) seleccion;
+						int idInci = inciSeleccionada.getIdIncidencia();
+
+						// Abrimos la ventana de historial con el ID obtenido del objeto seleccionado
+						VentanaHistorial vH = new VentanaHistorial(frame, idInci);
+						new controlador.HistorialControlador(vH, mI, idInci);
+						vH.setVisible(true);
+					}
+
+				} else {
+					JOptionPane.showMessageDialog(frame, "Acceso denegado. Rol no autorizado.", "Error",
+							JOptionPane.WARNING_MESSAGE);
+				}
+			}
 		});
 		frame.getContentPane().add(btnHistorial);
 

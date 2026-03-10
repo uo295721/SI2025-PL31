@@ -11,6 +11,7 @@ import modelo.IncidenciaDTO;
 import modelo.IncidenciaModelo;
 import modelo.UsuarioModelo;
 import vista.VentanaTecnico;
+import vista.VentanaTareasDiarias;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -32,6 +33,7 @@ public class TecnicoControlador {
 		
 		this.configurarSeleccionTabla();
 		this.configurarBotonGuardar();
+		this.configurarBotonTareas();
 		
 	}
 
@@ -74,6 +76,30 @@ public class TecnicoControlador {
 			}
 		});
 	}
+	
+	private void configurarBotonTareas() {
+        ventanaTec1.getBtnGestionarTareas().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int fila = ventanaTec1.getFilaSeleccionada();
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(ventanaTec1, "Seleccione una incidencia de la tabla");
+                    return;
+                }
+
+                int idIncidencia = (int) ventanaTec1.getTablaIncidencias().getValueAt(fila, 0);
+                String idTec = usuario.getIdUsuarioByEmail(emailTecnico);
+
+                VentanaTareasDiarias vTareas = new VentanaTareasDiarias();
+                vTareas.setModal(true);
+                vTareas.setLocationRelativeTo(ventanaTec1);
+
+                new TareasDiariasControlador(vTareas, modeloTec1, idIncidencia, idTec);
+
+                vTareas.setVisible(true);
+            } 
+        });   
+    }
 	
 	private void configurarBotonGuardar() {
 		
