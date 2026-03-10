@@ -2,6 +2,9 @@ package modelo;
 
 import java.util.List;
 import util.Database;
+import modelo.IncidenciaDTO;
+import java.util.ArrayList;
+
 
 public class IncidenciaModelo {
     
@@ -104,5 +107,8 @@ public class IncidenciaModelo {
         String sql = "SELECT id_incidencia, descripcion, fecha, estado FROM Incidencia ORDER BY fecha DESC";
         return db.executeQueryPojo(IncidenciaDTO.class, sql);
     }
-    
+    public List<IncidenciaDTO> getTodasIncidencias() {
+        String sql = "SELECT id_incidencia, descripcion, fecha, estado FROM Incidencia ORDER BY id_incidencia DESC";
+        return db.executeQueryPojo(IncidenciaDTO.class, sql);
+    }
 }
