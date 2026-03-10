@@ -10,6 +10,7 @@ import controlador.Clasificar_Incidencias;
 import controlador.IncidenciaControlador;
 import controlador.InformeResponsableControlador;
 import controlador.OperadorControlador;
+import controlador.RechazoIncidenciaControlador;
 import controlador.RegistrarIncidenciasControlador;
 import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
@@ -20,6 +21,7 @@ import vista.VentanaInformeResponsable;
 import vista.VentanaOperador;
 import vista.VentanaTecnico;
 import vista.Vista33787;
+import vista.VistaRechazoOperador;
 import vista.VentanaHistorial;
 
 import java.awt.event.ActionListener;
@@ -280,6 +282,27 @@ public class SwingMain {
 			}
 		});
 		frame.getContentPane().add(btnHistorial);
+		
+		JButton btnRechazoClaudia = new JButton("Rechazar Incidencias (Claudia)");
+		btnRechazoClaudia.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String idIngresado = JOptionPane.showInputDialog(frame, "Email/Nombre Operador:");
+		        if (idIngresado != null && !idIngresado.trim().isEmpty()) {
+		            if (usuario.esUsuarioConRol(idIngresado, "OPERADOR")) {
+		                // Instancia de la VISTA
+		                vista.VistaRechazoOperador v = new vista.VistaRechazoOperador(idIngresado);
+		                // Instancia del MODELO
+		                modelo.IncidenciaModelo m = new modelo.IncidenciaModelo();
+		                // Llamada al CONTROLADOR
+		                new controlador.RechazoIncidenciaControlador(v, m, idIngresado);
+		                v.setVisible(true);
+		            } else {
+		                JOptionPane.showMessageDialog(frame, "No es un operador válido.");
+		            }
+		        }
+		    }
+		});
+		frame.getContentPane().add(btnRechazoClaudia);
 
 	}
 

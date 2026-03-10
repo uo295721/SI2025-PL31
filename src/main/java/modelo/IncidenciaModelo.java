@@ -105,4 +105,23 @@ public class IncidenciaModelo {
         return db.executeQueryPojo(IncidenciaDTO.class, sql);
     }
     
+    public boolean rechazarIncidencia(int idIncidencia, String idOperador, String motivoRechazo) {
+        String sqlU = "UPDATE Incidencia SET estado = 'Rechazada por Operador' WHERE id_incidencia = ?";
+        String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
+                    + "VALUES (?, (SELECT id_usuario FROM Usuario WHERE email = ? OR nombre = ? LIMIT 1), 'Rechazada por Operador', datetime('now'), ?)";
+        try {
+            db.executeUpdate(sqlU, idIncidencia);
+            db.executeUpdate(sqlH, idIncidencia, idOperador, idOperador, "Motivo: " + motivoRechazo);
+            return true;
+        } catch (Exception e) { return false; }
+    }
+    
+    public void validarIncidenciaSimple(int idIncidencia, String idOperador) {
+        String sqlU = "UPDATE Incidencia SET estado = 'Validada' WHERE id_incidencia = ?";
+        String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
+                    + "VALUES (?, (SELECT id_usuario FROM Usuario WHERE email = ? OR nombre = ? LIMIT 1), 'Validada', datetime('now'), 'Confirmación rápida')";
+        db.executeUpdate(sqlU, idIncidencia);
+        db.executeUpdate(sqlH, idIncidencia, idOperador, idOperador);
+    }
+    
 }
