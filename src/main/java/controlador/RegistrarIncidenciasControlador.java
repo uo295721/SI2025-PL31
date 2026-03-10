@@ -42,7 +42,16 @@ public class RegistrarIncidenciasControlador {
         boolean insertado = modelo.insertarIncidencia(tipo, descripcion, localizacion, idCiudadano);
 
         if (insertado) {
-            JOptionPane.showMessageDialog(vista, "Incidencia registrada correctamente.");
+        	String resumen = "Incidencia registrada con éxito!\n"
+					   + "--- Resumen de la Operación ---\n"
+					   + "• Usuario asociado: " + idCiudadano + "\n"
+		               + "• Tipo de incidencia: " + tipo + " \n"
+		               + "• Localización: " + localizacion + "\n"
+		               + "• Descripción: " + descripcion + "\n\n"
+		               + "La incidencia ha pasado al estado 'En proceso'.";
+		
+        	JOptionPane.showMessageDialog(vista, resumen, 
+				"Confirmación de Registro",JOptionPane.INFORMATION_MESSAGE);
             return true;
         } else {
             JOptionPane.showMessageDialog(vista, "Error técnico al guardar en la base de datos.");
