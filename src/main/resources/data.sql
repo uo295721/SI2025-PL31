@@ -27,6 +27,14 @@ VALUES
 INSERT INTO "Historial" ("id_modificacion", "id_incidencia", "id_usuario", "estado_nuevo", "fecha_modificacion", "comentario")
 VALUES 
 (1, 101, 'O1', 'Validada', '2026-02-19 10:00:00', 'Incidencia recibida y validada correctamente.'),
+(2, 103, 'C1', 'Nueva', '2026-02-19 09:00:00', 'Registrada por ciudadano.'),
+(3, 103, 'O1', 'Asignada', '2026-02-19 11:30:00', 'Asignada a Ana García para reparación urgente.'),
+(4, 108, 'O2', 'Validada', '2026-02-21 08:45:00', 'Validación de desperfectos en pavimento.'),
+(5, 107, 'O1', 'Validada', '2026-02-20 12:00:00', 'Validado para reparación de mobiliario.'),
+(6, 102, 'C2', 'Nueva', '2026-02-19 08:30:00', 'Reportado por ciudadano.'),
+(7, 102, 'O1', 'Proceso', '2026-02-19 14:00:00', 'Iniciada reparación por el equipo técnico.'),
+(8, 104, 'C2', 'Nueva', '2026-02-19 07:00:00', 'Incidencia de fontanería registrada.'),
+(9, 105, 'C2', 'Nueva', '2026-02-19 07:15:00', 'Aviso de socavón recibido.'),
 (10, 106, 'T1', 'Resuelta', '2026-02-19 20:00:00', 'Reparación finalizada con éxito.');
 
 INSERT INTO "TipoIncidencia" ("nombre") VALUES
@@ -34,3 +42,12 @@ INSERT INTO "TipoIncidencia" ("nombre") VALUES
 ('Mobiliario'),
 ('Fontanería'),
 ('Obras');
+
+INSERT INTO "Zona" ("id_zona", "nombre") VALUES 
+('Z1', 'Sin zona'),
+('Z2', 'Zona Residencial-1'),
+('Z3', 'Zona Residencial-2'),
+('Z4', 'Zona Portuaria-1'),
+('Z5', 'Zona Portuaria-2'),
+('Z6', 'Zona Central-1'),
+('Z7', 'Zona Central-2');

@@ -14,6 +14,7 @@ import controlador.RegistrarIncidenciasControlador;
 import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
 import modelo.UsuarioModelo;
+import modelo.ZonaModelo;
 import vista.IncidenciasTecnicoProceso;
 import vista.RegistrarIncidencia;
 import vista.VentanaInformeResponsable;
@@ -143,7 +144,7 @@ public class SwingMain {
 
 					String idReal = usuario.asegurarID(id);
 					vista.VentanaMisIncidencias vMI = new vista.VentanaMisIncidencias();
-					new controlador.ConsultaIncidenciasControlador(vMI, new IncidenciaModelo(), idReal);
+					new controlador.ConsultaIncidenciasControlador(vMI, new IncidenciaModelo(), new ZonaModelo(), idReal);
 					vMI.setVisible(true);
 				}
 
@@ -199,8 +200,8 @@ public class SwingMain {
 				if (usuario.esUsuario(idIntroducido)) {
 					RegistrarIncidencia vRI = new RegistrarIncidencia();
 					IncidenciaModelo mI = new IncidenciaModelo();
-					RegistrarIncidenciasControlador controladorRI = new RegistrarIncidenciasControlador(vRI, mI,
-							idIntroducido);
+					ZonaModelo mZ = new ZonaModelo();
+					RegistrarIncidenciasControlador controladorRI = new RegistrarIncidenciasControlador(vRI, mI, mZ, idIntroducido);
 					vRI.setVisible(true);
 				} else {
 					JOptionPane.showMessageDialog(frame, "Acceso denegado. No se encuentra al usuario introducido",

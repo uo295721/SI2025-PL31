@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 
 import modelo.IncidenciaDTO;
 import modelo.IncidenciaModelo;
+import modelo.ZonaModelo;
 import vista.RegistrarIncidencia;
 import vista.VentanaMisIncidencias;
 
@@ -19,11 +20,12 @@ public class ConsultaIncidenciasControlador {
 
 	private VentanaMisIncidencias ventana;
 	private IncidenciaModelo incidencias;
+	private ZonaModelo zona;
 	private String idCiudadano;
 	
-	public ConsultaIncidenciasControlador(VentanaMisIncidencias ventana, IncidenciaModelo incidencias,
-											String idCiudadano) {
+	public ConsultaIncidenciasControlador(VentanaMisIncidencias ventana, IncidenciaModelo incidencias, ZonaModelo zona, String idCiudadano) {
 		this.ventana = ventana;
+		this.zona = zona;
 		this.incidencias = incidencias;
 		this.idCiudadano = idCiudadano;
 		
@@ -37,7 +39,7 @@ public class ConsultaIncidenciasControlador {
 		    public void actionPerformed(ActionEvent e) {
 		        RegistrarIncidencia ventanaReg = new RegistrarIncidencia();
 		        
-		        new RegistrarIncidenciasControlador(ventanaReg, incidencias, idCiudadano);
+		        new RegistrarIncidenciasControlador(ventanaReg, incidencias, zona, idCiudadano);
 		        
 		        //Necesito que se introduzca la incidencia en la tabla asi que uso un listener de la ventana
 		        ventanaReg.addWindowListener(new WindowAdapter() {

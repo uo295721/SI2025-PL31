@@ -18,8 +18,8 @@ public class RegistrarIncidencia extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JComboBox<String> cBTiposIncidencia;
+	private JComboBox<String> cBLocalizacion;
 	private JTextArea textDescripcion;
-	private JTextArea textLocalizacion;
 	private JButton buttonCancelar;
 	private JButton buttonRegistrar;
 
@@ -50,7 +50,7 @@ public class RegistrarIncidencia extends JFrame {
 		buttonCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cBTiposIncidencia.setSelectedIndex(0);
-		        textLocalizacion.setText("");
+		        cBLocalizacion.setSelectedIndex(0);
 		        textDescripcion.setText("");
 		        dispose();
 			}
@@ -63,7 +63,7 @@ public class RegistrarIncidencia extends JFrame {
 		contentPane.add(buttonRegistrar);
 		
 		JLabel LabelLocalizacion = new JLabel("Introduzca localización:");
-		LabelLocalizacion.setBounds(24, 66, 147, 14);
+		LabelLocalizacion.setBounds(24, 80, 147, 14);
 		contentPane.add(LabelLocalizacion);
 		
 		textDescripcion = new JTextArea();
@@ -71,11 +71,11 @@ public class RegistrarIncidencia extends JFrame {
 		textDescripcion.setBounds(24, 139, 379, 78);
 		contentPane.add(textDescripcion);
 		
-		textLocalizacion = new JTextArea();
-		textLocalizacion.setBorder(new LineBorder(new Color(0, 0, 0)));
-		textLocalizacion.setBounds(165, 66, 238, 51);
-		contentPane.add(textLocalizacion);
-
+		cBLocalizacion = new JComboBox<String>();
+		cBLocalizacion.setModel(new DefaultComboBoxModel<String>());
+		cBLocalizacion.setName("");
+		cBLocalizacion.setBounds(168, 76, 180, 22);
+		contentPane.add(cBLocalizacion);
 	}
 
 
@@ -89,16 +89,6 @@ public class RegistrarIncidencia extends JFrame {
 	}
 
 
-	public JTextArea getTextLocalizacion() {
-		return textLocalizacion;
-	}
-
-
-	public void setTextLocalizacion(JTextArea textLocalizacion) {
-		this.textLocalizacion = textLocalizacion;
-	}
-
-
 	public JComboBox<String> getCbTipo() {
 		return cBTiposIncidencia;
 	}
@@ -108,6 +98,13 @@ public class RegistrarIncidencia extends JFrame {
 		return buttonRegistrar;
 	}
 
+	public JComboBox<String> getcBLocalizacion() {
+		return cBLocalizacion;
+	}
 
+
+	public void setcBLocalizacion(JComboBox<String> cBLocalizacion) {
+		this.cBLocalizacion = cBLocalizacion;
+	}
 	
 }
