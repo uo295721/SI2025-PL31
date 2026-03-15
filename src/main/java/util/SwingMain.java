@@ -283,7 +283,7 @@ public class SwingMain {
 		});
 		frame.getContentPane().add(btnHistorial);
 		
-		JButton btnRechazoClaudia = new JButton("Rechazar Incidencias (Claudia)");
+		JButton btnRechazoClaudia = new JButton("Rechazar Incidencias");
 		btnRechazoClaudia.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        String idIngresado = JOptionPane.showInputDialog(frame, "Email/Nombre Operador:");
