@@ -9,6 +9,64 @@ public class IncidenciaModelo {
 
     public IncidenciaModelo() {}
     
+    /**
+     * Obtiene el ID real del usuario (ej. 'O1', 'T2') a partir de su email.
+     */
+    public String obtenerIdPorEmail(String email) {
+        String sql = "SELECT id_usuario FROM Usuario WHERE LOWER(email) = LOWER(?)";
+        List<Object[]> result = db.executeQueryArray(sql, email);
+        if (result != null && !result.isEmpty()) {
+            return result.get(0)[0].toString();
+        }
+        return null;
+    }
+
+    /**
+     * Obtiene el Nombre del usuario a partir de su email para mostrar en la Vista.
+     */
+    public String obtenerNombrePorEmail(String email) {
+        String sql = "SELECT nombre FROM Usuario WHERE LOWER(email) = LOWER(?)";
+        List<Object[]> result = db.executeQueryArray(sql, email);
+        if (result != null && !result.isEmpty()) {
+            return result.get(0)[0].toString();
+        }
+        return email;
+    }
+
+    /**
+     * Valida una incidencia rápidamente.
+     * Actualiza el estado y el id_operador en la tabla Incidencia.
+     */
+    public void validarIncidenciaSimple(int idIncidencia, String emailOperador) {
+        String idReal = obtenerIdPorEmail(emailOperador);
+        
+        String sqlU = "UPDATE Incidencia SET estado = 'Validada', id_operador = ? WHERE id_incidencia = ?";
+        String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
+                    + "VALUES (?, ?, 'Validada', datetime('now','localtime'), 'Validación rápida por operador')";
+        
+        db.executeUpdate(sqlU, idReal, idIncidencia);
+        db.executeUpdate(sqlH, idIncidencia, idReal);
+    }
+
+    /**
+     * Rechaza una incidencia con un motivo obligatorio.
+     * Guarda el ID real del operador que realiza la acción.
+     */
+    public boolean rechazarIncidencia(int idIncidencia, String emailOperador, String motivoRechazo) {
+        String idReal = obtenerIdPorEmail(emailOperador);
+        
+        String sqlU = "UPDATE Incidencia SET estado = 'Rechazada por Operador', id_operador = ? WHERE id_incidencia = ?";
+        String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
+                    + "VALUES (?, ?, 'Rechazada por Operador', datetime('now','localtime'), ?)";
+        try {
+            db.executeUpdate(sqlU, idReal, idIncidencia);
+            db.executeUpdate(sqlH, idIncidencia, idReal, "Motivo: " + motivoRechazo);
+            return true;
+        } catch (Exception e) { 
+            return false; 
+        }
+    }
+
     public List<IncidenciaDTO> getIncidenciasAsignadasTecnico(String idTecnico) {
         String sql = "SELECT * FROM Incidencia WHERE (id_tecnico = ? OR id_tecnico = (SELECT id_usuario "
                    + "FROM Usuario WHERE email = ?)) AND estado IN ('Validada', 'Asignada') "
@@ -104,24 +162,4 @@ public class IncidenciaModelo {
         String sql = "SELECT id_incidencia, descripcion, fecha, estado FROM Incidencia ORDER BY fecha DESC";
         return db.executeQueryPojo(IncidenciaDTO.class, sql);
     }
-    
-    public boolean rechazarIncidencia(int idIncidencia, String idOperador, String motivoRechazo) {
-        String sqlU = "UPDATE Incidencia SET estado = 'Rechazada por Operador' WHERE id_incidencia = ?";
-        String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
-                    + "VALUES (?, (SELECT id_usuario FROM Usuario WHERE email = ? OR nombre = ? LIMIT 1), 'Rechazada por Operador', datetime('now'), ?)";
-        try {
-            db.executeUpdate(sqlU, idIncidencia);
-            db.executeUpdate(sqlH, idIncidencia, idOperador, idOperador, "Motivo: " + motivoRechazo);
-            return true;
-        } catch (Exception e) { return false; }
-    }
-    
-    public void validarIncidenciaSimple(int idIncidencia, String idOperador) {
-        String sqlU = "UPDATE Incidencia SET estado = 'Validada' WHERE id_incidencia = ?";
-        String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
-                    + "VALUES (?, (SELECT id_usuario FROM Usuario WHERE email = ? OR nombre = ? LIMIT 1), 'Validada', datetime('now'), 'Confirmación rápida')";
-        db.executeUpdate(sqlU, idIncidencia);
-        db.executeUpdate(sqlH, idIncidencia, idOperador, idOperador);
-    }
-    
 }

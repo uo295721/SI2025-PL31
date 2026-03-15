@@ -15,117 +15,81 @@ public class VistaRechazoOperador extends JFrame {
     private JPanel pnlRechazo;
 
     public VistaRechazoOperador(String nombreOperador) {
-        // Configuración básica de la ventana
-        setTitle("Gestión de Validación y Rechazo de Incidencias");
+        setTitle("Gestión de Incidencias - Operador");
         setSize(900, 650);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(15, 15));
 
-        // --- PANEL NORTE: Cabecera ---
-        JPanel pnlNorte = new JPanel();
-        pnlNorte.setLayout(new BoxLayout(pnlNorte, BoxLayout.Y_AXIS));
-        pnlNorte.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-
-        lblSesion = new JLabel("Sesion iniciada como: " + nombreOperador);
+        // Cabecera
+        JPanel pnlNorte = new JPanel(new GridLayout(2, 1));
+        pnlNorte.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
+        lblSesion = new JLabel("Sesión iniciada como: " + nombreOperador);
         lblSesion.setFont(new Font("Arial", Font.BOLD, 14));
-        
-        JLabel lblSubtitulo = new JLabel("Incidencias en estado: Nueva");
-        lblSubtitulo.setFont(new Font("Arial", Font.PLAIN, 13));
-
         pnlNorte.add(lblSesion);
-        pnlNorte.add(Box.createVerticalStrut(5));
-        pnlNorte.add(lblSubtitulo);
-        pnlNorte.add(Box.createVerticalStrut(10));
-        pnlNorte.add(new JSeparator());
-        
+        pnlNorte.add(new JLabel("Incidencias en estado: Nueva (Pendientes de validar o rechazar)"));
         add(pnlNorte, BorderLayout.NORTH);
 
-        // --- PANEL CENTRO: Tabla de Incidencias ---
-        // Columnas según tu dibujo: ID, Titulo, Responsable, Categoria, Accion
+        // Tabla Central
         String[] columnas = {"ID", "Título", "Responsable", "Categoría", "Acción"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             private static final long serialVersionUID = 1L;
-            @Override 
-            public boolean isCellEditable(int r, int c) { return false; }
+            @Override public boolean isCellEditable(int r, int c) { return false; }
         };
-        
         tablaIncidencias = new JTable(modeloTabla);
         tablaIncidencias.setRowHeight(30);
-        tablaIncidencias.getTableHeader().setReorderingAllowed(false);
-        
-        JScrollPane scrollTabla = new JScrollPane(tablaIncidencias);
-        scrollTabla.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        add(scrollTabla, BorderLayout.CENTER);
+        tablaIncidencias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        add(new JScrollPane(tablaIncidencias), BorderLayout.CENTER);
 
-        // --- PANEL SUR: Área de Gestión de Rechazo (El recuadro de tu dibujo) ---
+        // Panel de Gestión de Rechazo (Sur)
         pnlRechazo = new JPanel(new BorderLayout(10, 10));
         pnlRechazo.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(10, 20, 20, 20),
-                BorderFactory.createTitledBorder("Gestión de Incidencia Seleccionada")
+                BorderFactory.createTitledBorder("Área de gestión de rechazo")
         ));
-        pnlRechazo.setBackground(new Color(245, 245, 245));
-        pnlRechazo.setVisible(false); // Oculto hasta que se pulse "Rechazar"
+        pnlRechazo.setVisible(false); // Oculto inicialmente
 
-        // Texto informativo del área
-        lblAreaRechazo = new JLabel("Área de gestión de rechazo : #");
+        lblAreaRechazo = new JLabel("Motivo rechazo incidencia #: ");
         lblAreaRechazo.setFont(new Font("Arial", Font.BOLD, 13));
-        
-        JPanel pnlInputRechazo = new JPanel(new BorderLayout(5, 5));
-        pnlInputRechazo.setOpaque(false);
-        pnlInputRechazo.add(new JLabel("Motivo rechazo:"), BorderLayout.NORTH);
         
         txtMotivo = new JTextArea(4, 50);
         txtMotivo.setLineWrap(true);
         txtMotivo.setWrapStyleWord(true);
-        JScrollPane scrollMotivo = new JScrollPane(txtMotivo);
-        pnlInputRechazo.add(scrollMotivo, BorderLayout.CENTER);
-
-        // Botones de acción del panel inferior
-        JPanel pnlBotonesInferiores = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        pnlBotonesInferiores.setOpaque(false);
         
+        JPanel pnlBotonesAccion = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnConfirmar = new JButton("Confirmar y notificar");
-        btnConfirmar.setBackground(new Color(200, 230, 201)); // Verde suave
-        
+        btnConfirmar.setBackground(new Color(190, 230, 190));
         btnCancelar = new JButton("Cancelar");
-        btnCancelar.setBackground(new Color(255, 205, 210)); // Rojo suave
-        
-        pnlBotonesInferiores.add(btnConfirmar);
-        pnlBotonesInferiores.add(btnCancelar);
+        pnlBotonesAccion.add(btnConfirmar);
+        pnlBotonesAccion.add(btnCancelar);
 
         pnlRechazo.add(lblAreaRechazo, BorderLayout.NORTH);
-        pnlRechazo.add(pnlInputRechazo, BorderLayout.CENTER);
-        pnlRechazo.add(pnlBotonesInferiores, BorderLayout.SOUTH);
+        pnlRechazo.add(new JScrollPane(txtMotivo), BorderLayout.CENTER);
+        pnlRechazo.add(pnlBotonesAccion, BorderLayout.SOUTH);
 
         add(pnlRechazo, BorderLayout.SOUTH);
-
-        // Centrar ventana
         setLocationRelativeTo(null);
     }
 
-    // --- MÉTODOS DE UTILIDAD PARA EL CONTROLADOR ---
-    
-    public void mostrarPanelRechazo(String id) {
-        lblAreaRechazo.setText("Área de gestión de rechazo : #" + id);
+    public void mostrarPanelRechazo(int id) {
+        lblAreaRechazo.setText("Área de gestión de rechazo - Incidencia: #" + id);
         pnlRechazo.setVisible(true);
+        txtMotivo.setText("");
         txtMotivo.requestFocus();
-        this.revalidate();
-        this.repaint();
+        revalidate();
+        repaint();
     }
 
     public void ocultarPanelRechazo() {
         pnlRechazo.setVisible(false);
         txtMotivo.setText("");
-        this.revalidate();
-        this.repaint();
+        revalidate();
+        repaint();
     }
 
-    // --- GETTERS ---
-    
+    // Getters
     public JTable getTablaIncidencias() { return tablaIncidencias; }
     public DefaultTableModel getModeloTabla() { return modeloTabla; }
     public JTextArea getTxtMotivo() { return txtMotivo; }
     public JButton getBtnConfirmar() { return btnConfirmar; }
     public JButton getBtnCancelar() { return btnCancelar; }
-    public JPanel getPnlRechazo() { return pnlRechazo; }
 }
