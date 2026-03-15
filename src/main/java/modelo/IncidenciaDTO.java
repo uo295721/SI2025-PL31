@@ -104,4 +104,8 @@ public class IncidenciaDTO {
 		this.descripcionCiudadano = descripcionCiudadano;
 	}
 
+	@Override
+	public String toString() {
+	    return "ID: " + idIncidencia + " - " + descripcion;
+	}
 }

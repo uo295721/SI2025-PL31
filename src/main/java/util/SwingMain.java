@@ -15,10 +15,12 @@ import controlador.RegistrarIncidenciasControlador;
 import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
 import modelo.UsuarioModelo;
+import modelo.ZonaModelo;
 import vista.IncidenciasTecnicoProceso;
 import vista.RegistrarIncidencia;
 import vista.VentanaInformeResponsable;
 import vista.VentanaOperador;
+import vista.VentanaResponsable;
 import vista.VentanaTecnico;
 import vista.Vista33787;
 import vista.VistaRechazoOperador;
@@ -133,24 +135,45 @@ public class SwingMain {
 
 		});
 		frame.getContentPane().add(btnPlanificar);
-		
-		//Botón para la Historia de Liam (Ciudadano - Consultar incidencias)
+
+		// Botón para la Historia de Liam (Ciudadano - Consultar incidencias)
 		JButton btnConsultarIncidencias = new JButton("Consultar mis incidencias (ciudadano)");
 		btnConsultarIncidencias.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				String id = JOptionPane.showInputDialog(frame, "DNI o EMAIL:");
-				if (id != null  && usuario.esUsuario(id)) {
-					
+				if (id != null && usuario.esUsuario(id)) {
+
 					String idReal = usuario.asegurarID(id);
 					vista.VentanaMisIncidencias vMI = new vista.VentanaMisIncidencias();
-					new controlador.ConsultaIncidenciasControlador(vMI, new IncidenciaModelo(), idReal);
+					new controlador.ConsultaIncidenciasControlador(vMI, new IncidenciaModelo(), new ZonaModelo(), idReal);
 					vMI.setVisible(true);
 				}
-				
+
 			}
 		});
 		frame.getContentPane().add(btnConsultarIncidencias);
+		
+		//Botón para la Historia de Liam (Responsable - Cierre de Incidencias)
+		JButton btnCierreResponsable = new JButton("Control de calidad (Responsable)");
+		btnCierreResponsable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String idIngresado = JOptionPane.showInputDialog(frame, "Ingrese su DNI o EMAIL de Responsable:");
+				if (idIngresado == null || idIngresado.trim().isEmpty())
+					return;
+				if (usuario.esUsuarioConRol(idIngresado, "RESPONSABLE")) {
+					VentanaResponsable vR = new VentanaResponsable();
+					new controlador.ResponsableControlador(vR, idIngresado);
+					
+					vR.setVisible(true);
+					vR.setLocationRelativeTo(null);
+				} else {
+					JOptionPane.showMessageDialog(frame, "Acceso denegado. No se encuentra al responsable "
+							+ "o no tiene permisos.", "Error de acceso", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		frame.getContentPane().add(btnCierreResponsable);
 
 		// Botón para la Historia de Hugo (Operador - Asignar)
 		JButton btnAsignar = new JButton("Asignar incidencia a técnico como operador");
@@ -179,8 +202,8 @@ public class SwingMain {
 				if (usuario.esUsuario(idIntroducido)) {
 					RegistrarIncidencia vRI = new RegistrarIncidencia();
 					IncidenciaModelo mI = new IncidenciaModelo();
-					RegistrarIncidenciasControlador controladorRI = new RegistrarIncidenciasControlador(vRI, mI,
-							idIntroducido);
+					ZonaModelo mZ = new ZonaModelo();
+					RegistrarIncidenciasControlador controladorRI = new RegistrarIncidenciasControlador(vRI, mI, mZ, idIntroducido);
 					vRI.setVisible(true);
 				} else {
 					JOptionPane.showMessageDialog(frame, "Acceso denegado. No se encuentra al usuario introducido",
@@ -219,65 +242,44 @@ public class SwingMain {
 		});
 		frame.getContentPane().add(btnInforme);
 
-		// Botón para la Historia de Claudia (Operador - Planificación)
-		JButton btnClasificarI = new JButton("Clasificar incidencias como operador");
-		btnClasificarI.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String emailIngresado = JOptionPane.showInputDialog(frame, "Ingrese su Email de Operador:");
-
-				if (emailIngresado == null || emailIngresado.trim().isEmpty())
-					return;
-
-				if (usuario.esUsuarioConRol(emailIngresado, "OPERADOR")) {
-
-					
-					// Obtenemos el ID real (ej. 'O1') usando el email
-					String idReal = usuario.getIdUsuarioByEmail(emailIngresado);
-
-					if (idReal != null) {
-						Vista33787 vistaHU = new Vista33787(idReal); // La vista mostrará 'O1'
-						new Clasificar_Incidencias(new IncidenciaModelo(), vistaHU, idReal);
-						vistaHU.setVisible(true);
-					} else {
-						JOptionPane.showMessageDialog(frame, "No se pudo recuperar el ID del usuario.");
-					}
-
-				} else {
-					JOptionPane.showMessageDialog(frame, "Acceso denegado: El email no pertenece a un Operador.");
-				}
-			}
-		});
-		
-		frame.getContentPane().add(btnClasificarI);
-		
-		// Botón para la historia de Hugo (Historial)
+		// Botón para la historia de Hugo (Historial) - Versión Final con Selector
 		JButton btnHistorial = new JButton("Visualizar historial de incidencia");
 		btnHistorial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String email = JOptionPane.showInputDialog(frame, "Ingrese su Email (Operador o Técnico):");
-				        
-				if (email == null || email.trim().isEmpty()) 
+
+				if (email == null || email.trim().isEmpty())
 					return;
 
-				// Validación de Rol
 				if (usuario.esUsuarioConRol(email, "OPERADOR") || usuario.esUsuarioConRol(email, "TÉCNICO")) {
-				            
-					String idStr = JOptionPane.showInputDialog(frame, "Ingrese el ID de la incidencia:");
-					if (idStr == null || idStr.trim().isEmpty()) 
+
+					IncidenciaModelo mI = new IncidenciaModelo();
+					// Obtenemos la lista de incidencias desde el método que acabas de crear
+					java.util.List<modelo.IncidenciaDTO> listaIncidencias = mI.getTodasLasIncidencias();
+
+					if (listaIncidencias.isEmpty()) {
+						JOptionPane.showMessageDialog(frame, "No hay incidencias registradas.");
 						return;
-					
-					try {
-		                int idInci = Integer.parseInt(idStr);   
-		                VentanaHistorial vH = new VentanaHistorial(frame, idInci);
-		                modelo.IncidenciaModelo mI = new modelo.IncidenciaModelo();
-		                new controlador.HistorialControlador(vH, mI, idInci);             
-		                vH.setVisible(true);
-		                
-					} catch (NumberFormatException ex) {
-						JOptionPane.showMessageDialog(frame, "Error: El ID debe ser un número entero.", "ID no válido", JOptionPane.ERROR_MESSAGE);
-				    }
+					}
+
+					// Mostramos el selector (evita que el usuario tenga que escribir el ID)
+					Object seleccion = JOptionPane.showInputDialog(frame,
+							"Seleccione la incidencia para ver su historial:", "Consulta de Historial",
+							JOptionPane.QUESTION_MESSAGE, null, listaIncidencias.toArray(), listaIncidencias.get(0));
+
+					if (seleccion != null) {
+						modelo.IncidenciaDTO inciSeleccionada = (modelo.IncidenciaDTO) seleccion;
+						int idInci = inciSeleccionada.getIdIncidencia();
+
+						// Abrimos la ventana de historial con el ID obtenido del objeto seleccionado
+						VentanaHistorial vH = new VentanaHistorial(frame, idInci);
+						new controlador.HistorialControlador(vH, mI, idInci);
+						vH.setVisible(true);
+					}
+
 				} else {
-					JOptionPane.showMessageDialog(frame, "Acceso denegado. No tiene permisos de Operador o Técnico.", "Error de Acceso", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(frame, "Acceso denegado. Rol no autorizado.", "Error",
+							JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
