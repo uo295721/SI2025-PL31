@@ -99,14 +99,25 @@ public class UsuarioModelo {
     	return res.isEmpty() ? null : res.get(0);
     }
     
-    public List<TecnicoDTO> obtenerTecnicosOrdenadosPorCarga() {
-        String sql = "SELECT u.id_usuario, u.nombre, COUNT(i.id_incidencia) AS carga " +
+    public List<TecnicoDTO> obtenerTecnicosCargaPorEspecialidad(int idTipoFiltro) {
+        String sql = "SELECT u.id_usuario, u.nombre, u.apellidos, " +
+                     "(SELECT GROUP_CONCAT(t.nombre, ', ') " +
+                     " FROM Tecnico_Especialidad te " +
+                     " JOIN TipoIncidencia t ON te.id_tipo = t.id_tipo " +
+                     " WHERE te.id_usuario = u.id_usuario) as especialidad, " +
+                     "(SELECT COUNT(i.id_incidencia) " +
+                     " FROM Incidencia i " +
+                     " WHERE i.id_tecnico = u.id_usuario " +
+                     " AND i.estado IN ('Asignada', 'Proceso')) as carga " +
                      "FROM Usuario u " +
-                     "LEFT JOIN Incidencia i ON u.id_usuario = i.id_tecnico " +
-                     "AND i.estado IN ('Asignada', 'Proceso') " +
-                     "WHERE u.rol = 'TÉCNICO' " +
-                     "GROUP BY u.id_usuario, u.nombre " +
+                     "WHERE u.rol = 'TÉCNICO' " + 
+                     (idTipoFiltro != -1 ? "AND u.id_usuario IN (SELECT id_usuario FROM Tecnico_Especialidad WHERE id_tipo = ?) " : "") + 
                      "ORDER BY carga ASC";
-        return db.executeQueryPojo(TecnicoDTO.class, sql);
+
+        if (idTipoFiltro != -1) {
+            return db.executeQueryPojo(TecnicoDTO.class, sql, idTipoFiltro);
+        } else {
+            return db.executeQueryPojo(TecnicoDTO.class, sql);
+        }
     }
 }

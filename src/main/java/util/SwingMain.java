@@ -65,7 +65,7 @@ public class SwingMain {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Main");
-		frame.setBounds(0, 0, 400, 350);
+		frame.setBounds(0, 0, 400, 400);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		JButton btnInicializarBaseDeDatos = new JButton("Inicializar Base de Datos en Blanco");
