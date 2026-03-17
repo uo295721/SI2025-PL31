@@ -4,10 +4,12 @@ public class IncidenciaDTO {
 
 	private int idIncidencia;
 	private String tipo;
+	private int id_tipo;
 	private String descripcion;
 	private String estado;
 	private String fecha; // Para poder ordenar
 	private String localización;
+	
 
 	// Nuevos atributos para historia de Usuario
 	private int horas_estimadas;
@@ -115,5 +117,13 @@ public class IncidenciaDTO {
 	@Override
 	public String toString() {
 	    return "ID: " + idIncidencia + " - " + descripcion;
+	}
+
+	public int getId_tipo() {
+		return id_tipo;
+	}
+
+	public void setId_tipo(int id_tipo) {
+		this.id_tipo = id_tipo;
 	}
 }

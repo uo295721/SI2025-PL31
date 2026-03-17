@@ -46,7 +46,7 @@ public class IncidenciaModelo {
     }
 
     public List<IncidenciaDTO> getIncidenciasPorEstado(String estado) {
-        String sql = "SELECT * FROM Incidencia WHERE estado = ? ORDER BY fecha ASC";
+        String sql = "SELECT id_incidencia, descripcion, fecha, estado, id_tipo FROM Incidencia WHERE estado = ? ORDER BY fecha ASC";
         return db.executeQueryPojo(IncidenciaDTO.class, sql, estado);
     }
     
@@ -137,6 +137,19 @@ public class IncidenciaModelo {
 	    String sql = "SELECT fecha, descripcion_tarea, horas_dedicadas FROM TareaDiaria WHERE id_incidencia = ? ORDER BY fecha DESC";
 	    return db.executeQueryArray(sql, idInci);
 	}
+   public List<Object[]> getTecnicosFiltradosPorEspecialidad(int idTipoIncidencia) {
+	    String sql = "SELECT u.id_usuario, u.nombre, u.apellidos, GROUP_CONCAT(ti.nombre, ', ') as todas_especialidades " +
+	                 "FROM Usuario u " +
+	                 "JOIN Tecnico_Especialidad te ON u.id_usuario = te.id_usuario " +
+	                 "JOIN TipoIncidencia ti ON te.id_tipo = ti.id_tipo " +
+	                 "WHERE UPPER(u.rol) = 'TÉCNICO' " + 
+	                 "AND u.id_usuario IN (SELECT id_usuario FROM Tecnico_Especialidad WHERE id_tipo = ?) " +
+	                 "GROUP BY u.id_usuario " +
+	                 "ORDER BY u.apellidos ASC";
+
+	    return db.executeQueryArray(sql, idTipoIncidencia);
+	}
+
    /**
     * Obtiene el ID real del usuario (ej. 'O1', 'T2') a partir de su email.
     */
