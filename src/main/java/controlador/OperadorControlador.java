@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import modelo.IncidenciaDTO;
 import modelo.IncidenciaModelo;
@@ -25,24 +27,20 @@ public class OperadorControlador {
 	}
 
 	private void cargarDatosEnComponentes() {
-		// 1. Rellenar Tabla: Usamos el método unificado por estado
-		List<IncidenciaDTO> incidencia = modelo.getIncidenciasPorEstado("Validada");
-		vista.getModeloTabla().setRowCount(0);
-		for (IncidenciaDTO i : incidencia) {
-			vista.getModeloTabla().addRow(new Object[] {
-					i.getIdIncidencia(),
-					i.getDescripcion(),
-					i.getFecha(),
-					i.getEstado() 
-			});
-		}
+	 
+	    List<IncidenciaDTO> incidencia = modelo.getIncidenciasPorEstado("Validada");
+	    vista.getModeloTabla().setRowCount(0);
+	    for (IncidenciaDTO i : incidencia) {
+	        vista.getModeloTabla().addRow(new Object[] {
+	                i.getIdIncidencia(),
+	                i.getDescripcion(),
+	                i.getFecha(),
+	                i.getEstado(), 
+	                i.getId_tipo() 
+	        });
+	    }
 
-		// 2. Rellenar Técnicos: Pedimos la lista al modelo de usuarios
-		List<TecnicoDTO> tecnicos = usuario.obtenerTodosLosTecnicos();
-		vista.getModeloListaTecnicos().clear();
-		for (TecnicoDTO t : tecnicos) {
-			vista.getModeloListaTecnicos().addElement(t);
-		}
+	    vista.getModeloListaTecnicos().clear();
 	}
 
 	private void configurarEventos() {
@@ -74,34 +72,60 @@ public class OperadorControlador {
 				}
 			}
 		});
+		
+		vista.getTablaIncidencias().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    filtrarTecnicosPorEspecialidad();
+                }
+            }
+        });
 
 		// Evento de Asignación
 		vista.getBtnAsignar().addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int fila = vista.getTablaIncidencias().getSelectedRow();
-				TecnicoDTO tecnico = vista.getListaTecnicos().getSelectedValue();
+				String tecnicoTexto = vista.getListaTecnicos().getSelectedValue();
 
-				if (fila == -1 || tecnico == null) {
+				if (fila == -1 || tecnicoTexto == null) {
 					JOptionPane.showMessageDialog(vista, "Seleccione incidencia y técnico");
 					return;
 				}
 
 				int idIncidencia = (int) vista.getModeloTabla().getValueAt(fila, 0);
-
+				String idTecnico = tecnicoTexto.split(" - ")[0];
 				// Ejecutamos la asignación en el modelo
-				if (modelo.asignarTecnicoIncidencia(idIncidencia, tecnico.getIdUsuario(), emailOperador)) {
-					
-					// Registramos el cambio en el historial
-					String comentario = "Asignada al técnico: " + tecnico.getNombre();
-					modelo.registrarCambioHistorial(idIncidencia, emailOperador, "Asignada", comentario);
-					
-					JOptionPane.showMessageDialog(vista, "Asignación correcta");
-					cargarDatosEnComponentes(); 
-				}
-			}
+				if (modelo.asignarTecnicoIncidencia(idIncidencia, idTecnico, emailOperador)) {
+		            // El historial ahora usa el texto que ve el operador
+		            String comentario = "Asignada a: " + tecnicoTexto;
+		            modelo.registrarCambioHistorial(idIncidencia, emailOperador, "Asignada", comentario);
+		            
+		            JOptionPane.showMessageDialog(vista, "Asignación correcta");
+		            cargarDatosEnComponentes(); 
+		        }
+		    }
 		});
 	}
+	private void filtrarTecnicosPorEspecialidad() {
+        int fila = vista.getTablaIncidencias().getSelectedRow();
+        if (fila == -1) return;
+
+        int idTipo = (int) vista.getModeloTabla().getValueAt(fila, 4);
+        List<Object[]> tecnicos = modelo.getTecnicosFiltradosPorEspecialidad(idTipo);
+
+        vista.getModeloListaTecnicos().clear();
+        if (tecnicos.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, 
+                "No hay personal cualificado disponible para este tipo de incidencia.", 
+                "Aviso de Personal", JOptionPane.WARNING_MESSAGE);
+        } else {
+            for (Object[] t : tecnicos) {
+                String item = t[0] + " - " + t[2] + ", " + t[1] + " (" + t[3] + ")";
+                vista.getModeloListaTecnicos().addElement(item);
+            }
+        }
+    }
 	
 	private void desbloquearInterfaz() {
 		vista.getTablaIncidencias().setEnabled(true);
