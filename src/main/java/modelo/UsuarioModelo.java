@@ -69,12 +69,10 @@ public class UsuarioModelo {
     }
     	
     public String asegurarID(String input) {
-    	
     	if (!input.contains("@"))
     		return input;
     	else
     		return getIdUsuarioByEmail(input);
-    	
     }
     
     public CiudadanoDTO loginCiudadano(String identificador) {
@@ -84,7 +82,7 @@ public class UsuarioModelo {
         // Ejecutamos la query. 
         List<CiudadanoDTO> ciudadanos = db.executeQueryPojo(CiudadanoDTO.class, sql, identificador, identificador);
         
-        //  Comprobamos si encontró a alguien
+        //  Miramos si hay algun ciudadano almacenado
         if (ciudadanos.isEmpty()) {
             return null; // Si no existe
         } else {
@@ -97,9 +95,18 @@ public class UsuarioModelo {
                      "FROM Usuario u " +
                      "JOIN TipoIncidencia t ON u.id_tipo = t.id_tipo " +
                      "WHERE (u.email = ? OR u.id_usuario = ?) AND u.rol = 'RESPONSABLE'";
-   
-    	// El resto del código se mantiene igual
     	List<UsuarioDTO> res = db.executeQueryPojo(UsuarioDTO.class, sql, id, id);
     	return res.isEmpty() ? null : res.get(0);
+    }
+    
+    public List<TecnicoDTO> obtenerTecnicosOrdenadosPorCarga() {
+        String sql = "SELECT u.id_usuario, u.nombre, COUNT(i.id_incidencia) AS carga " +
+                     "FROM Usuario u " +
+                     "LEFT JOIN Incidencia i ON u.id_usuario = i.id_tecnico " +
+                     "AND i.estado IN ('Asignada', 'Proceso') " +
+                     "WHERE u.rol = 'TÉCNICO' " +
+                     "GROUP BY u.id_usuario, u.nombre " +
+                     "ORDER BY carga ASC";
+        return db.executeQueryPojo(TecnicoDTO.class, sql);
     }
 }

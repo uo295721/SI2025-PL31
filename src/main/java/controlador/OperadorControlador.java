@@ -37,12 +37,7 @@ public class OperadorControlador {
 			});
 		}
 
-		// 2. Rellenar Técnicos: Pedimos la lista al modelo de usuarios
-		List<TecnicoDTO> tecnicos = usuario.obtenerTodosLosTecnicos();
-		vista.getModeloListaTecnicos().clear();
-		for (TecnicoDTO t : tecnicos) {
-			vista.getModeloListaTecnicos().addElement(t);
-		}
+		actualizarListaTecnicosConCarga();
 	}
 
 	private void configurarEventos() {
@@ -107,5 +102,13 @@ public class OperadorControlador {
 		vista.getTablaIncidencias().setEnabled(true);
 		vista.getListaTecnicos().setEnabled(true);
 		vista.getBtnAsignar().setEnabled(true);
+	}
+	
+	private void actualizarListaTecnicosConCarga() {
+	    List<TecnicoDTO> tecnicos = usuario.obtenerTecnicosOrdenadosPorCarga();
+	    vista.getModeloListaTecnicos().clear();
+	    for (TecnicoDTO t : tecnicos) {
+	        vista.getModeloListaTecnicos().addElement(t);
+	    }
 	}
 }
