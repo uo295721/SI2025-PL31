@@ -2,7 +2,6 @@ package modelo;
 
 import java.util.List;
 import util.Database;
-import modelo.IncidenciaDTO;
 import java.util.ArrayList;
 
 
@@ -208,4 +207,39 @@ public class IncidenciaModelo {
            return false; 
        }
    }
+   
+   public List<IncidenciaDTO> getEstadisticasFiltradas(String fechaInicio, String fechaFin, String tipo,
+		   												String zona, String estado){
+	   StringBuilder sql = new StringBuilder("SELECT i.id_incidencia, i.fecha, i.estado, " +
+		        		"CASE " +
+		        		"  WHEN i.fecha_resolucion IS NULL THEN 'En curso' " +
+		        		"  ELSE CAST(julianday(i.fecha_resolucion) - julianday(i.fecha) AS INTEGER) || ' días' " +
+		        		"END as tiempoResolucion, " +
+		        		"t.nombre as tipo " +
+		        		"FROM Incidencia i " +
+		        		"JOIN TipoIncidencia t ON i.id_tipo = t.id_tipo " +
+		        		"WHERE i.fecha >= ? AND i.fecha <= ?");
+	   
+	   List<Object> parametros = new ArrayList<>();
+	   parametros.add(fechaInicio);
+	   parametros.add(fechaFin);
+	   
+	   if (tipo != null & !tipo.equals("Todos")) {
+		   sql.append(" AND t.nombre = ?");
+	        parametros.add(tipo);
+	    }
+	    if (zona != null && !zona.equals("Todas")) {
+	        sql.append(" AND i.localizacion = ?");
+	        parametros.add(zona);
+	    }
+	    if (estado != null && !estado.equals("Todos")) {
+	        sql.append(" AND i.estado = ?");
+	        parametros.add(estado);
+	    }
+	    
+	    sql.append(" ORDER BY i.fecha DESC");
+	    
+	    return db.executeQueryPojo(IncidenciaDTO.class, sql.toString(), parametros.toArray());
+	}
+   
 }

@@ -15,9 +15,9 @@ public class IncidenciaDTO {
 	private int horas_estimadas;
 	private String descripcion_trabajos;
 	private String descripcionCiudadano;
+	private String tiempoResolucion;
 
 	// Constructor de la clase
-
 	public IncidenciaDTO() {}
 	
 	public IncidenciaDTO(int idIncidencia, String tipo, String titulo, String fecha, String estado) {
@@ -56,6 +56,10 @@ public class IncidenciaDTO {
 
 	public String getDescripcion_trabajos() {
 		return descripcion_trabajos;
+	}
+	
+	public String getTiempoResolucion() {
+		return tiempoResolucion;
 	}
 
 	public void setId_incidencia(int idIncidencia) {
@@ -106,6 +110,10 @@ public class IncidenciaDTO {
 		this.descripcionCiudadano = descripcionCiudadano;
 	}
 
+	public void setTiempoResolucion(String resol) {
+		this.tiempoResolucion = resol;
+	}
+	
 	@Override
 	public String toString() {
 	    return "ID: " + idIncidencia + " - " + descripcion;
