@@ -3,6 +3,7 @@ DELETE FROM "Incidencia";
 DELETE FROM "Usuario";
 DELETE FROM "TipoIncidencia";
 DELETE FROM "Zona";
+DELETE FROM "Tecnico_Especialidad";
 
 INSERT INTO "TipoIncidencia" ("id_tipo", "nombre") VALUES
 (1, 'Electricidad'),
@@ -53,3 +54,6 @@ VALUES
 (9, 105, 'C2', 'Nueva', '2026-02-19 07:15:00', 'Aviso de socavón recibido.'),
 (10, 106, 'T1', 'Resuelta', '2026-02-19 20:00:00', 'Reparación finalizada con éxito.');
 
+INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T1', 1);
+INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T2', 2);
+INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T1', 3);

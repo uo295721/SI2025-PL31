@@ -68,3 +68,10 @@ CREATE TABLE "TareaDiaria" (
     FOREIGN KEY("id_tecnico") REFERENCES "Usuario"("id_usuario"),
     FOREIGN KEY("id_incidencia") REFERENCES "Incidencia"("id_incidencia")
 );
+CREATE TABLE IF NOT EXISTS "Tecnico_Especialidad" (
+    "id_usuario" TEXT NOT NULL,
+    "id_tipo" INTEGER NOT NULL,
+    PRIMARY KEY("id_usuario", "id_tipo"),
+    FOREIGN KEY("id_usuario") REFERENCES "Usuario"("id_usuario"),
+    FOREIGN KEY("id_tipo") REFERENCES "TipoIncidencia"("id_tipo")
+);
