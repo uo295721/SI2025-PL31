@@ -23,6 +23,7 @@ CREATE TABLE "Usuario" (
     "email" TEXT UNIQUE,
     "rol"   TEXT,
     "id_tipo" INTEGER,
+    "precio_hora" REAL DEFAULT 9.0,
     PRIMARY KEY("id_usuario"),
     FOREIGN KEY("id_tipo") REFERENCES "TipoIncidencia"("id_tipo")
 );

@@ -78,21 +78,50 @@ public class IncidenciaControlador {
         }
     }
 
+    // --- LÓGICA AMPLIADA HU 33954 ---
     private void marcarComoResuelta() {
         try {
+            if (vista.txtIdIncidencia.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(vista, "Seleccione una incidencia primero.");
+                return;
+            }
+
             int id = Integer.parseInt(vista.txtIdIncidencia.getText());
-            double tReal = Double.parseDouble(vista.txtHorasReales.getText());
+            double horasReales = Double.parseDouble(vista.txtHorasReales.getText());
+            double costeMateriales = Double.parseDouble(vista.txtCosteMateriales.getText());
             String desc = vista.txtAreaTrabajos.getText();
             
             String idReal = usuario.getIdUsuarioByEmail(emailTecnico);
 
-            if (modelo.marcarComoResuelta(id, idReal, tReal, desc)) {
-                JOptionPane.showMessageDialog(vista, "¡Guardado con éxito!");
-                limpiarFormulario();
-                cargarTabla();
+            // 1. Obtener precio/hora del técnico
+            double precioHora = modelo.getPrecioHoraTecnico(idReal);
+
+            // 2. Calcular coste total: (Horas * Precio/Hora) + Materiales
+            double costeTotal = (horasReales * precioHora) + costeMateriales;
+
+            // 3. Mostrar cálculo al usuario para validación
+            String resumen = String.format(
+                "Cálculo de Resolución:\n" +
+                "- Horas Reales: %.2f h\n" +
+                "- Tarifa Técnico: %.2f €/h\n" +
+                "- Coste Materiales: %.2f €\n\n" +
+                "COSTE TOTAL: %.2f €\n\n" +
+                "¿Desea confirmar la resolución?", 
+                horasReales, precioHora, costeMateriales, costeTotal);
+
+            int confirm = JOptionPane.showConfirmDialog(vista, resumen, "Confirmación Financiera", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                if (modelo.marcarComoResueltaConCoste(id, idReal, horasReales, costeTotal, desc)) {
+                    JOptionPane.showMessageDialog(vista, "¡Incidencia resuelta y costes registrados!");
+                    limpiarFormulario();
+                    cargarTabla();
+                }
             }
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(vista, "Error: Ingrese valores numéricos válidos en Horas y Materiales.");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(vista, "Error: Datos inválidos o no seleccionados.");
+            JOptionPane.showMessageDialog(vista, "Error crítico: " + ex.getMessage());
         }
     }
 
@@ -101,6 +130,7 @@ public class IncidenciaControlador {
         vista.txtTituloIncidencia.setText("");
         vista.txtHorasEstimadas.setText("");
         vista.txtHorasReales.setText("");
+        vista.txtCosteMateriales.setText(""); // NUEVO
         vista.txtAreaTrabajos.setText("");
         vista.tablaIncidencias.clearSelection();
     }

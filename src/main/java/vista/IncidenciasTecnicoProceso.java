@@ -17,14 +17,14 @@ public class IncidenciasTecnicoProceso extends JFrame {
     public JTextField txtTituloIncidencia = new JTextField();
     public JTextField txtHorasEstimadas = new JTextField();
     public JTextField txtHorasReales = new JTextField();
+    public JTextField txtCosteMateriales = new JTextField(); // NUEVO CAMPO HU 33954
     public JTextArea txtAreaTrabajos = new JTextArea(3, 20);
     public JButton btnMarcarResuelta = new JButton("Marcar como resuelta");
     public JButton btnCancelar = new JButton("Cancelar");
 
     public IncidenciasTecnicoProceso(String nombreTecnico) {
-        // --- Nuevo Tamaño solicitado ---
-        setSize(750, 600);
-        setTitle("Gestión de Incidencias Urbanas");
+        setSize(750, 650); // Aumentado ligeramente para el nuevo campo
+        setTitle("Gestión de Incidencias Urbanas - Resolución");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(5, 5));
 
@@ -41,12 +41,10 @@ public class IncidenciasTecnicoProceso extends JFrame {
         pnlCuerpo.setLayout(new BoxLayout(pnlCuerpo, BoxLayout.Y_AXIS));
         pnlCuerpo.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
-        // Título del listado a la IZQUIERDA
         JPanel pnlTituloLista = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnlTituloLista.add(new JLabel("Listado de incidencias en proceso:"));
         pnlCuerpo.add(pnlTituloLista);
 
-        // Tabla
         String[] columnas = {"ID", "Título", "Fecha", "Localización", "Horas Est."};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
@@ -56,9 +54,9 @@ public class IncidenciasTecnicoProceso extends JFrame {
         scroll.setPreferredSize(new Dimension(700, 120));
         pnlCuerpo.add(scroll);
 
-        // Formulario (GridLayout 4x2)
-        JPanel pnlForm = new JPanel(new GridLayout(4, 2, 8, 8));
-        pnlForm.setBorder(new TitledBorder("Detalles de Resolución"));
+        // Formulario (Aumentado a 5x2 para incluir materiales)
+        JPanel pnlForm = new JPanel(new GridLayout(5, 2, 8, 8));
+        pnlForm.setBorder(new TitledBorder("Detalles de Resolución y Costes"));
         
         txtIdIncidencia.setEditable(false);
         txtTituloIncidencia.setEditable(false);
@@ -68,11 +66,11 @@ public class IncidenciasTecnicoProceso extends JFrame {
         pnlForm.add(new JLabel("Título:")); pnlForm.add(txtTituloIncidencia);
         pnlForm.add(new JLabel("Tiempo Estimado:")); pnlForm.add(txtHorasEstimadas);
         pnlForm.add(new JLabel("Tiempo Real (h):")); pnlForm.add(txtHorasReales);
+        pnlForm.add(new JLabel("Coste Materiales (€):")); pnlForm.add(txtCosteMateriales); // NUEVO
         
         pnlCuerpo.add(Box.createVerticalStrut(10));
         pnlCuerpo.add(pnlForm);
 
-        // Descripción
         JPanel pnlDesc = new JPanel(new BorderLayout());
         pnlDesc.add(new JLabel("Descripción de trabajos:"), BorderLayout.NORTH);
         pnlDesc.add(new JScrollPane(txtAreaTrabajos), BorderLayout.CENTER);

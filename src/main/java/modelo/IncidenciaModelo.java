@@ -195,4 +195,32 @@ public class IncidenciaModelo {
            return false; 
        }
    }
+
+   // --- NUEVOS MÉTODOS HU 33954 ---
+
+   /**
+    * Obtiene el precio por hora del técnico.
+    */
+   public double getPrecioHoraTecnico(String idTecnico) {
+       String sql = "SELECT precio_hora FROM Usuario WHERE id_usuario = ? OR email = ?";
+       List<Object[]> result = db.executeQueryArray(sql, idTecnico, idTecnico);
+       if (result != null && !result.isEmpty() && result.get(0)[0] != null) {
+           return Double.parseDouble(result.get(0)[0].toString());
+       }
+       return 0.0;
+   }
+
+   /**
+    * Registra la resolución con el coste total calculado.
+    */
+   public boolean marcarComoResueltaConCoste(int idInci, String idTec, double horas, double coste, String trabajos) {
+       String sqlU = "UPDATE Incidencia SET estado = 'Resuelta', descripcion_trabajos = ?, coste = ? WHERE id_incidencia = ?";
+       String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
+                    + "VALUES (?, ?, 'Resuelta', datetime('now','localtime'), ?)";
+       try {
+           db.executeUpdate(sqlU, trabajos, coste, idInci);
+           db.executeUpdate(sqlH, idInci, idTec, "Cerrada con coste total: " + coste + "€");
+           return true;
+       } catch (Exception e) { return false; }
+   }
 }
