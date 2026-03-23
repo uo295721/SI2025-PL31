@@ -6,11 +6,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import controlador.Clasificar_Incidencias;
 import controlador.IncidenciaControlador;
 import controlador.InformeResponsableControlador;
 import controlador.OperadorControlador;
-import controlador.RechazoIncidenciaControlador;
 import controlador.RegistrarIncidenciasControlador;
 import controlador.TecnicoControlador;
 import modelo.IncidenciaModelo;
@@ -22,8 +20,6 @@ import vista.VentanaInformeResponsable;
 import vista.VentanaOperador;
 import vista.VentanaResponsable;
 import vista.VentanaTecnico;
-import vista.Vista33787;
-import vista.VistaRechazoOperador;
 import vista.VentanaHistorial;
 
 import java.awt.event.ActionListener;
@@ -69,7 +65,7 @@ public class SwingMain {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("Main");
-		frame.setBounds(0, 0, 400, 350);
+		frame.setBounds(0, 0, 400, 400);
 		frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		JButton btnInicializarBaseDeDatos = new JButton("Inicializar Base de Datos en Blanco");
@@ -174,6 +170,15 @@ public class SwingMain {
 			}
 		});
 		frame.getContentPane().add(btnCierreResponsable);
+		
+		//Botón para la Historia de Liam(Generar Informes de Incidencias)
+		JButton btnEstadisticas = new JButton("Estadísticas e Informes (Público)");
+		btnEstadisticas.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        new controlador.InformesControlador(new vista.VentanaInformes());
+		    }
+		});
+		frame.getContentPane().add(btnEstadisticas);
 
 		// Botón para la Historia de Hugo (Operador - Asignar)
 		JButton btnAsignar = new JButton("Asignar incidencia a técnico como operador");
