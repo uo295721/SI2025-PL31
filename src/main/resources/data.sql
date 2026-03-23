@@ -20,14 +20,14 @@ INSERT INTO "Zona" ("id_zona", "nombre") VALUES
 ('Z6', 'Zona Central-1'),
 ('Z7', 'Zona Central-2');
 
-INSERT INTO "Usuario" ("id_usuario", "nombre", "apellidos", "email", "rol", "id_tipo") VALUES 
-('T1', 'Ana', 'García', 'ana.tecnico@oviedo.es', 'TÉCNICO', 1),
-('T2', 'Carlos', 'Pérez', 'carlos.tecnico@oviedo.es', 'TÉCNICO', 2),
-('C1', 'Diego', 'Otero', 'diego.ciudadano@oviedo.es', 'CIUDADANO', NULL),
-('C2', 'Marco', 'Diaz', 'marco.ciudadano@oviedo.es', 'CIUDADANO', NULL),
-('R1', 'Ines', 'Canteli', 'ines.responsable@oviedo.es', 'RESPONSABLE', 1),
-('O1', 'Omar', 'Lobo', 'omar.operador@oviedo.es', 'OPERADOR', NULL),
-('O2', 'Marco', 'Estrada', 'marco.operador@oviedo.es', 'OPERADOR', NULL);
+INSERT INTO "Usuario" ("id_usuario", "nombre", "apellidos", "email", "rol", "id_tipo","precio_hora") VALUES 
+('T1', 'Ana', 'García', 'ana.tecnico@oviedo.es', 'TÉCNICO', 1,8.5),
+('T2', 'Carlos', 'Pérez', 'carlos.tecnico@oviedo.es', 'TÉCNICO', 2, 9.5),
+('C1', 'Diego', 'Otero', 'diego.ciudadano@oviedo.es', 'CIUDADANO', NULL, NULL),
+('C2', 'Marco', 'Diaz', 'marco.ciudadano@oviedo.es', 'CIUDADANO', NULL, NULL),
+('R1', 'Ines', 'Canteli', 'ines.responsable@oviedo.es', 'RESPONSABLE', 1, NULL),
+('O1', 'Omar', 'Lobo', 'omar.operador@oviedo.es', 'OPERADOR', NULL, NULL),
+('O2', 'Marco', 'Estrada', 'marco.operador@oviedo.es', 'OPERADOR', NULL, NULL);
 
 INSERT INTO "Incidencia" 
 ("estado", "id_incidencia", "descripcion", "id_ciudadano", "localizacion", "id_tipo", "fecha", "fecha_resolucion", "id_operador", "id_tecnico", "coste", "horas_estimadas") 
