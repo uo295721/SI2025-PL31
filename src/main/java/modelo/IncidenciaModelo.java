@@ -224,7 +224,7 @@ public class IncidenciaModelo {
 	   parametros.add(fechaInicio);
 	   parametros.add(fechaFin);
 	   
-	   if (tipo != null & !tipo.equals("Todos")) {
+	   if (tipo != null && !tipo.equals("Todos")) {
 		   sql.append(" AND t.nombre = ?");
 	        parametros.add(tipo);
 	    }
