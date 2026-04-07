@@ -58,14 +58,15 @@ public class ConsultaIncidenciasControlador {
 	 * Habilita el botón de reapertura solo si la incidencia está Rechazada o Cerrada.
 	 */
 	private void actualizarEstadoBotonReabrir() {
-		int fila = ventana.getTablaIncidencias().getSelectedRow();
-		if (fila != -1) {
-			String estado = ventana.getTablaIncidencias().getValueAt(fila, 4).toString();
-			boolean puedeReabrir = estado.equals("Rechazada por Operador") || estado.equals("Cerrada");
-			ventana.getBtnReabrir().setEnabled(puedeReabrir);
-		} else {
-			ventana.getBtnReabrir().setEnabled(false);
-		}
+	    int fila = ventana.getTablaIncidencias().getSelectedRow();
+	    if (fila != -1) {
+	        String estado = ventana.getTablaIncidencias().getValueAt(fila, 4).toString();
+	        // Cambiado aquí también para que coincida con la BBDD
+	        boolean puedeReabrir = estado.equals("Rechazada") || estado.equals("Cerrada");
+	        ventana.getBtnReabrir().setEnabled(puedeReabrir);
+	    } else {
+	        ventana.getBtnReabrir().setEnabled(false);
+	    }
 	}
 
 	/**
