@@ -40,6 +40,8 @@ VALUES
 ('Nueva', 104, 'Fuga de agua en Calle Uría', 'C2', 'Zona Central-1', 3, '2026-02-19', NULL, 'O2', 'T2', 100, 5),
 ('Nueva', 105, 'Socavón en calzada', 'C2', 'Zona Central-2', 4, '2026-02-19', NULL, 'O2', 'T1', 100, 5),
 ('Resuelta', 106, 'Semáforo fundido', 'C2', 'Zona Central-1', 1, '2026-02-19', '2026-02-19', 'O1', 'T1', 220, 8);
+('Rechazada', 110, 'Pintada en monumento histórico', 'C1', 'Zona Central-1', 2, '2026-03-01', NULL, 'O1', NULL, 0, 0),
+('Cerrada', 111, 'Limpieza de rastrojo en solares', 'C2', 'Zona Residencial-2', 4, '2026-03-05', '2026-03-10', 'O2', 'T2', 300, 10)
 
 INSERT INTO "Historial" ("id_modificacion", "id_incidencia", "id_usuario", "estado_nuevo", "fecha_modificacion", "comentario")
 VALUES 
@@ -53,6 +55,8 @@ VALUES
 (8, 104, 'C2', 'Nueva', '2026-02-19 07:00:00', 'Incidencia de fontanería registrada.'),
 (9, 105, 'C2', 'Nueva', '2026-02-19 07:15:00', 'Aviso de socavón recibido.'),
 (10, 106, 'T1', 'Resuelta', '2026-02-19 20:00:00', 'Reparación finalizada con éxito.');
+(11, 110, 'O1', 'Rechazada por Operador', '2026-03-02 09:00:00', 'No es competencia municipal, corresponde a Patrimonio.'),
+(12, 111, 'R1', 'Cerrada', '2026-03-10 15:00:00', 'Control de calidad superado. Incidencia archivada.')
 
 INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T1', 1);
 INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T2', 2);

@@ -99,15 +99,16 @@ public class IncidenciaModelo {
 	}
 
 	public boolean rechazarIncidencia(int idIncidencia, String emailOperador, String motivoRechazo) {
-		String idReal = obtenerIdPorEmail(emailOperador);
-		String sqlU = "UPDATE Incidencia SET estado = 'Rechazada por Operador', id_operador = ? WHERE id_incidencia = ?";
-		String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
-				+ "VALUES (?, ?, 'Rechazada por Operador', datetime('now','localtime'), ?)";
-		try {
-			db.executeUpdate(sqlU, idReal, idIncidencia);
-			db.executeUpdate(sqlH, idIncidencia, idReal, "Motivo: " + motivoRechazo);
-			return true;
-		} catch (Exception e) { return false; }
+	    String idReal = obtenerIdPorEmail(emailOperador);
+	    // Cambiado 'Rechazada por Operador' por 'Rechazada'
+	    String sqlU = "UPDATE Incidencia SET estado = 'Rechazada', id_operador = ? WHERE id_incidencia = ?";
+	    String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
+	            + "VALUES (?, ?, 'Rechazada', datetime('now','localtime'), ?)";
+	    try {
+	        db.executeUpdate(sqlU, idReal, idIncidencia);
+	        db.executeUpdate(sqlH, idIncidencia, idReal, "Motivo: " + motivoRechazo);
+	        return true;
+	    } catch (Exception e) { return false; }
 	}
 
 	public boolean asignarTecnicoIncidencia(int idIncidencia, String idTecnico, String emailOperador) {

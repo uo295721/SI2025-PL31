@@ -42,8 +42,8 @@ public class VentanaMisIncidencias extends JFrame {
 		
 		cbEstados = new JComboBox<String>();
 		cbEstados.setModel(new DefaultComboBoxModel<String>(new String[] {
-				"Todas", "Nueva", "Validada", "Asignada", "En curso", "Resuelta", "Rechazada por Operador", "Cerrada"
-		}));
+			    "Todas", "Nueva", "Validada", "Asignada", "En curso", "Resuelta", "Rechazada", "Cerrada"
+			}));
 		panelFiltro.add(cbEstados);
 		
 		JScrollPane scrollPane = new JScrollPane();
