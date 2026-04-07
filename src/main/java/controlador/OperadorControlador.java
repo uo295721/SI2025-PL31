@@ -15,6 +15,8 @@ import vista.VentanaOperador;
 
 public class OperadorControlador {
 
+	private static final int CARGA_MAXIMA = 3;
+	
 	private IncidenciaModelo modelo;
 	private UsuarioModelo usuario = new UsuarioModelo(); // Centralizado
 	private VentanaOperador vista;
@@ -94,7 +96,7 @@ public class OperadorControlador {
 				
 				int cargaActual = (int) vista.getModeloTablaTecnicos().getValueAt(filaTecnico, 3);
 
-				if (cargaActual >= 3) {
+				if (cargaActual >= CARGA_MAXIMA) {
 					JOptionPane.showMessageDialog(vista,
 							"El técnico " + nombreTecnico + " ya tiene el máximo de incidencias permitidas (3).",
 							"Bloqueo de carga", JOptionPane.WARNING_MESSAGE);
