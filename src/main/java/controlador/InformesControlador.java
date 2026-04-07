@@ -2,6 +2,9 @@ package controlador;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -50,8 +53,12 @@ public class InformesControlador {
 	}
 	
 	private void ejecutarInforme() {
-		String fechaInicio = ventanaInformes.txtFechaInicio.getText();
-		String fechaFin = ventanaInformes.txtFechaFin.getText();
+		String fechaInicio = ventanaInformes.txtFechaInicio.getText().trim();
+		String fechaFin = ventanaInformes.txtFechaFin.getText().trim();
+		
+		if (!fechasValidas(fechaInicio,fechaFin))
+			return;
+		
         String tipo = ventanaInformes.cBTipos.getSelectedItem().toString();
         String zona = ventanaInformes.cBZonas.getSelectedItem().toString();
         String estado = ventanaInformes.cBEstados.getSelectedItem().toString();
@@ -125,6 +132,30 @@ public class InformesControlador {
 		} else {
 			ventanaInformes.lblMediaGlobal.setText("Tiempo Medio de Resolución (conjunto filtrado): N/A");
 		}	
+	}
+	
+	private boolean fechasValidas(String fechaInicio, String fechaFin) {
+		try {
+			if (fechaInicio.isEmpty() || fechaFin.isEmpty()) {
+				JOptionPane.showMessageDialog(ventanaInformes, "Por favor, introduzca ambas fechas.",
+															   "Error de formato",JOptionPane.WARNING_MESSAGE);
+				return false;
+			}
+			
+			LocalDate inicio = LocalDate.parse(fechaInicio);
+			LocalDate fin = LocalDate.parse(fechaFin);
+			
+			if (inicio.isAfter(fin)) {
+				JOptionPane.showMessageDialog(ventanaInformes, "La fecha de inicio no puede ser posterior a la fecha de fin",
+															   "Error lógico",JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+			return true;
+		}catch(DateTimeParseException e) {
+			JOptionPane.showMessageDialog(ventanaInformes, "Formato de fechas incorrecto. Usa: AAAA-MM-DD (ej: 2026-01-01)",
+														   "Error de formato",JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
 	}
 	
 }
