@@ -4,6 +4,7 @@ DELETE FROM "Usuario";
 DELETE FROM "TipoIncidencia";
 DELETE FROM "Zona";
 DELETE FROM "Tecnico_Especialidad";
+DELETE FROM "Asignacion_Incidencia";
 
 INSERT INTO "TipoIncidencia" ("id_tipo", "nombre") VALUES
 (1, 'Electricidad'),
@@ -60,3 +61,8 @@ INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T1', 1);
 INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T2', 2);
 INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T1', 3);
 INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T3', 1);
+
+INSERT INTO "Asignacion_Incidencia" ("id_incidencia", "id_tecnico") VALUES 
+(103, 'T1'), 
+(102, 'T1'), 
+(104, 'T2'); 

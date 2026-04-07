@@ -86,11 +86,23 @@ public class OperadorControlador {
                     JOptionPane.showMessageDialog(vista, "Seleccione una incidencia y al menos un técnico.");
                     return;
                 }
+                
+                for (int filaIdx : filasTecnicos) {
+                	int cargaActual = (int) vista.getModeloTablaTecnicos().getValueAt(filaIdx, 3); // Conseguimos el valor de la carga actual de cada técnico
+                	String nombreTecnico = vista.getModeloTablaTecnicos().getValueAt(filaIdx, 1).toString();
+                	
+                	if (cargaActual >= 3) {
+                		JOptionPane.showMessageDialog(vista, "No se puede realizar la asignación de la tarea.\nEl técnico "+ nombreTecnico + 
+                		" ya tiene el máximo de incidencias asignadas (3).",	"Carga excedida", JOptionPane.WARNING_MESSAGE);
+                		return;
+                	}
+                }
 
                 int idIncidencia = (int) vista.getModeloTabla().getValueAt(filaIncidencia, 0);
+                int idTipo = (int) vista.getModeloTabla().getValueAt(filaIncidencia, 4); 
                 List<String> idsSeleccionados = new ArrayList<>();
 
-                // Recorremos todos los técnicos seleccionados (Ctrl + Clic)
+                // Recorremos todos los técnicos seleccionados (Ctrl + Click)
                 for (int filaIdx : filasTecnicos) {
                     String idTecnico = vista.getModeloTablaTecnicos().getValueAt(filaIdx, 0).toString();
                     idsSeleccionados.add(idTecnico);
@@ -103,7 +115,7 @@ public class OperadorControlador {
                     
                     // Refrescamos la vista para que desaparezca la incidencia ya asignada
                     cargarDatosEnComponentes();
-                    vista.getModeloTablaTecnicos().setRowCount(0);
+                    actualizarListaTecnicos(idTipo);
                 } else {
                     JOptionPane.showMessageDialog(vista, "Error al realizar la asignación múltiple.", "Error", JOptionPane.ERROR_MESSAGE);
                 }

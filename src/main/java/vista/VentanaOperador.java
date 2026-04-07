@@ -70,8 +70,8 @@ public class VentanaOperador extends JFrame {
 		scrollTecnicos.setBorder(BorderFactory.createTitledBorder("2. Seleccione Técnico Especialista (Mantenga Ctrl para varios)"));
 		panelDerecha.add(scrollTecnicos, BorderLayout.CENTER);
 		
-		//Hago lo siguiente para no mostrar la columna vacía
-		//Mejora la estética de la tabla y se muestra con mas claridad la información
+		// Hago lo siguiente para no mostrar la columna vacía
+		// Mejora la estética de la tabla y se muestra con mas claridad la información
 		tablaTecnicos.getColumnModel().getColumn(0).setMinWidth(0);
 		tablaTecnicos.getColumnModel().getColumn(0).setMaxWidth(0);
 		tablaTecnicos.getColumnModel().getColumn(0).setPreferredWidth(0);
