@@ -80,26 +80,34 @@ public class OperadorControlador {
 
 // Evento de Asignación
 		vista.getBtnAsignar().addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
-				int fila = vista.getTablaIncidencias().getSelectedRow();
-				String tecnicoTexto = vista.getListaTecnicos().getSelectedValue();
+				int filaIncidencia = vista.getTablaIncidencias().getSelectedRow();
+				int filaTecnico = vista.getTablaTecnicos().getSelectedRow();
 
-				if (fila == -1 || tecnicoTexto == null) {
+				if (filaIncidencia == -1 || filaTecnico == -1) {
 					JOptionPane.showMessageDialog(vista, "Seleccione incidencia y técnico");
 					return;
 				}
 
-				int idIncidencia = (int) vista.getModeloTabla().getValueAt(fila, 0);
-				String idTecnico = tecnicoTexto.split(" - ")[0];
-// Ejecutamos la asignación en el modelo
-				if (modelo.asignarTecnicoIncidencia(idIncidencia, idTecnico, emailOperador)) {
+				String idTecnico = vista.getModeloTablaTecnicos().getValueAt(filaTecnico, 0).toString();
+				String nombreTecnico = vista.getModeloTablaTecnicos().getValueAt(filaTecnico, 1).toString();
+				
+				int cargaActual = (int) vista.getModeloTablaTecnicos().getValueAt(filaTecnico, 3);
 
-					String comentario = "Asignada a: " + tecnicoTexto;
-					modelo.registrarCambioHistorial(idIncidencia, emailOperador, "Asignada", comentario);
-					JOptionPane.showMessageDialog(vista, "Asignación correcta");
-					cargarDatosEnComponentes();
+				if (cargaActual >= 3) {
+					JOptionPane.showMessageDialog(vista,
+							"El técnico " + nombreTecnico + " ya tiene el máximo de incidencias permitidas (3).",
+							"Bloqueo de carga", JOptionPane.WARNING_MESSAGE);
+					return;
 				}
+				
+				int idIncidencia = (int) vista.getModeloTabla().getValueAt(filaIncidencia, 0);
+		        
+				if (modelo.asignarTecnicoIncidencia(idIncidencia, idTecnico, emailOperador)) {
+		            modelo.registrarCambioHistorial(idIncidencia, emailOperador, "Asignada", "Asignada a: " + nombreTecnico);
+		            JOptionPane.showMessageDialog(vista, "La incidencia se ha asignado correctamente.");
+		            cargarDatosEnComponentes();
+		        }
 			}
 		});
 	}
@@ -117,29 +125,22 @@ public class OperadorControlador {
 
 	private void desbloquearInterfaz() {
 		vista.getTablaIncidencias().setEnabled(true);
-		vista.getListaTecnicos().setEnabled(true);
+		vista.getTablaTecnicos().setEnabled(true);
 		vista.getBtnAsignar().setEnabled(true);
 	}
 
 	private void actualizarListaTecnicos(int idTipo) {
-	    List<TecnicoDTO> tecnicos = usuario.obtenerTecnicosCargaPorEspecialidad(idTipo);
-	    vista.getModeloListaTecnicos().clear();
-	    
-	    if (tecnicos.isEmpty()) {
-	        JOptionPane.showMessageDialog(vista, 
-	            "No hay personal cualificado disponible.", 
-	            "Aviso", JOptionPane.WARNING_MESSAGE);
-	    } else {
-	        for (TecnicoDTO t : tecnicos) {
-	            String item = String.format("%s - %s %s (Carga: %d) - Esp: %s",
-	                t.getIdUsuario(), 
-	                t.getNombre(), 
-	                t.getApellidos(), 
-	                t.getCarga(), 
-	                t.getEspecialidad());
-	            
-	            vista.getModeloListaTecnicos().addElement(item);
-	        }
-	    }
+		List<TecnicoDTO> tecnicos = usuario.obtenerTecnicosCargaPorEspecialidad(idTipo);
+		vista.getModeloTablaTecnicos().setRowCount(0);
+
+		if (tecnicos.isEmpty()) {
+			JOptionPane.showMessageDialog(vista, "No hay personal cualificado disponible.", "Aviso", JOptionPane.WARNING_MESSAGE);
+		} else {
+			for (TecnicoDTO t : tecnicos) {
+				Object[] fila = { t.getIdUsuario(), t.getNombre() + " " + t.getApellidos(), t.getEspecialidad(),
+						t.getCarga() };
+				vista.getModeloTablaTecnicos().addRow(fila);
+			}
+		}
 	}
 }

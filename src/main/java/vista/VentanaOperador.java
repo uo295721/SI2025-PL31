@@ -9,8 +9,8 @@ public class VentanaOperador extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTable tablaIncidencias;
 	private DefaultTableModel modeloTabla;
-	private JList<String> listaTecnicos;
-	private DefaultListModel<String> modeloListaTecnicos;
+	private JTable tablaTecnicos;
+	private DefaultTableModel modeloTablaTecnicos;
 	private JButton btnAsignar;
 	private JLabel lblEmailOperador;
 	private JTextField txtEmail;
@@ -54,17 +54,29 @@ public class VentanaOperador extends JFrame {
 
 		// Panel Derecha
 		JPanel panelDerecha = new JPanel(new BorderLayout());
-		panelDerecha.setPreferredSize(new Dimension(350, 0));
+		panelDerecha.setPreferredSize(new Dimension(450, 0)); // Un poco más ancho para la tabla
 
-		modeloListaTecnicos = new DefaultListModel<>();
-		listaTecnicos = new JList<>(modeloListaTecnicos);
-		listaTecnicos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listaTecnicos.setEnabled(false);
-
-		JScrollPane scrollLista = new JScrollPane(listaTecnicos);
-		scrollLista.setBorder(BorderFactory.createTitledBorder("2. Técnicos Especialistas"));
-		panelDerecha.add(scrollLista, BorderLayout.CENTER);
-
+		String[] columnasTec = { "ID", "Técnico", "Especialidad", "Carga" };
+		modeloTablaTecnicos = new DefaultTableModel(columnasTec, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		tablaTecnicos = new JTable(modeloTablaTecnicos);
+		tablaTecnicos.setEnabled(false);
+		tablaTecnicos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		JScrollPane scrollTecnicos = new JScrollPane(tablaTecnicos);
+		scrollTecnicos.setBorder(BorderFactory.createTitledBorder("2. Seleccione Técnico Especialista"));
+		panelDerecha.add(scrollTecnicos, BorderLayout.CENTER);
+		
+		//Hago lo siguiente para no mostrar la columna vacía
+		//Mejora la estética de la tabla y se muestra con mas claridad la información
+		tablaTecnicos.getColumnModel().getColumn(0).setMinWidth(0);
+		tablaTecnicos.getColumnModel().getColumn(0).setMaxWidth(0);
+		tablaTecnicos.getColumnModel().getColumn(0).setPreferredWidth(0);
+		
 		getContentPane().add(panelDerecha, BorderLayout.EAST);
 
 		// Panel inferior
@@ -87,12 +99,12 @@ public class VentanaOperador extends JFrame {
 		return modeloTabla;
 	}
 
-	public JList<String> getListaTecnicos() {
-		return listaTecnicos;
+	public JTable getTablaTecnicos() {
+		return tablaTecnicos;
 	}
 
-	public DefaultListModel<String> getModeloListaTecnicos() {
-		return modeloListaTecnicos;
+	public DefaultTableModel getModeloTablaTecnicos() {
+		return modeloTablaTecnicos;
 	}
 
 	public JButton getBtnAsignar() {
