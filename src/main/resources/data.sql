@@ -23,6 +23,7 @@ INSERT INTO "Zona" ("id_zona", "nombre") VALUES
 INSERT INTO "Usuario" ("id_usuario", "nombre", "apellidos", "email", "rol", "id_tipo") VALUES 
 ('T1', 'Ana', 'García', 'ana.tecnico@oviedo.es', 'TÉCNICO', 1),
 ('T2', 'Carlos', 'Pérez', 'carlos.tecnico@oviedo.es', 'TÉCNICO', 2),
+('T3', 'Emil', 'Bauer', 'emil.bauer@oviedo.es', 'TÉCNICO', 1),
 ('C1', 'Diego', 'Otero', 'diego.ciudadano@oviedo.es', 'CIUDADANO', NULL),
 ('C2', 'Marco', 'Diaz', 'marco.ciudadano@oviedo.es', 'CIUDADANO', NULL),
 ('R1', 'Ines', 'Canteli', 'ines.responsable@oviedo.es', 'RESPONSABLE', 1),
@@ -58,3 +59,4 @@ VALUES
 INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T1', 1);
 INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T2', 2);
 INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T1', 3);
+INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T3', 1);

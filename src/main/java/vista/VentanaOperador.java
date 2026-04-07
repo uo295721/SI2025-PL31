@@ -18,7 +18,7 @@ public class VentanaOperador extends JFrame {
 	public VentanaOperador() {
 		setTitle("Gestión de Incidencias - Panel de Operador");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 950, 600); // Un poco más ancha para las especialidades
+		setBounds(100, 100, 950, 600); 
 		getContentPane().setLayout(new BorderLayout(10, 10));
 
 		// Panel superior
@@ -42,11 +42,10 @@ public class VentanaOperador extends JFrame {
 			}
 		};
 		tablaIncidencias = new JTable(modeloTabla);
-		tablaIncidencias.setEnabled(false);
+		tablaIncidencias.setEnabled(true);
+		tablaIncidencias.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tablaIncidencias.getTableHeader().setReorderingAllowed(false);
 
-		// tablaIncidencias.getColumnModel().getColumn(4).setMinWidth(0);
-		// tablaIncidencias.getColumnModel().getColumn(4).setMaxWidth(0);
 
 		JScrollPane scrollTabla = new JScrollPane(tablaIncidencias);
 		scrollTabla.setBorder(BorderFactory.createTitledBorder("1. Seleccione una Incidencia Validada"));
@@ -54,9 +53,9 @@ public class VentanaOperador extends JFrame {
 
 		// Panel Derecha
 		JPanel panelDerecha = new JPanel(new BorderLayout());
-		panelDerecha.setPreferredSize(new Dimension(450, 0)); // Un poco más ancho para la tabla
+		panelDerecha.setPreferredSize(new Dimension(450, 0)); 
 
-		String[] columnasTec = { "ID", "Técnico", "Especialidad", "Carga" };
+		String[] columnasTec = { "ID", "Técnico", "Especialidad", "Carga Activa" };
 		modeloTablaTecnicos = new DefaultTableModel(columnasTec, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -64,11 +63,11 @@ public class VentanaOperador extends JFrame {
 			}
 		};
 		tablaTecnicos = new JTable(modeloTablaTecnicos);
-		tablaTecnicos.setEnabled(false);
-		tablaTecnicos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tablaTecnicos.setEnabled(true);
+		tablaTecnicos.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); // Habilito la selección múltiple
 		
 		JScrollPane scrollTecnicos = new JScrollPane(tablaTecnicos);
-		scrollTecnicos.setBorder(BorderFactory.createTitledBorder("2. Seleccione Técnico Especialista"));
+		scrollTecnicos.setBorder(BorderFactory.createTitledBorder("2. Seleccione Técnico Especialista (Mantenga Ctrl para varios)"));
 		panelDerecha.add(scrollTecnicos, BorderLayout.CENTER);
 		
 		//Hago lo siguiente para no mostrar la columna vacía

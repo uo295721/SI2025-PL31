@@ -262,4 +262,49 @@ public class IncidenciaModelo {
 			return false;
 		}
 	}
+	
+	public List<Object[]> getTecnicosDisponiblesPorCarga(int idTipoIncidencia) {
+	    String sql = "SELECT u.id_usuario, u.nombre || ' ' || u.apellidos as nombreCompleto, " +
+	                 " (SELECT COUNT(*) FROM Asignacion_Incidencia ai " +
+	                 "  JOIN Incidencia i ON ai.id_incidencia = i.id_incidencia " +
+	                 "  WHERE ai.id_tecnico = u.id_usuario " +
+	                 "  AND i.estado NOT IN ('Resuelta', 'Cerrada', 'Rechazada por Operador')) as carga " +
+	                 "FROM Usuario u " +
+	                 "JOIN Tecnico_Especialidad te ON u.id_usuario = te.id_usuario " +
+	                 "WHERE u.rol = 'TÉCNICO' AND te.id_tipo = ? " +
+	                 "ORDER BY carga ASC, u.nombre ASC";
+	    
+	    return db.executeQueryArray(sql, idTipoIncidencia);
+	}
+	
+	public boolean asignarVariosTecnicos(int idIncidencia, List<String> idsTecnicos, String emailOperador) {
+	    String idOperador = obtenerIdPorEmail(emailOperador);
+	    
+	    String sqlDelete = "DELETE FROM Asignacion_Incidencia WHERE id_incidencia = ?";
+	    
+	    String sqlAsignar = "INSERT INTO Asignacion_Incidencia (id_incidencia, id_tecnico) VALUES (?, ?)";
+	    
+	    String sqlUpdateInci = "UPDATE Incidencia SET estado = 'Asignada' WHERE id_incidencia = ?";
+
+	    String sqlHistorial = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) " +
+	                          "VALUES (?, ?, 'Asignada', datetime('now','localtime'), ?)";
+
+	    try {
+	        db.executeUpdate(sqlDelete, idIncidencia);
+
+	        for (String idTec : idsTecnicos) {
+	            db.executeUpdate(sqlAsignar, idIncidencia, idTec);
+	        }
+	        db.executeUpdate(sqlUpdateInci, idIncidencia);
+	        String comentario = "Asignación realizada a " + idsTecnicos.size() + " técnicos por " + emailOperador;
+	        db.executeUpdate(sqlHistorial, idIncidencia, idOperador, comentario);
+
+	        return true;
+	    } catch (Exception e) {
+	        System.err.println("Error al asignar técnicos: " + e.getMessage());
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
 }
