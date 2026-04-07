@@ -1,20 +1,15 @@
 package controlador;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
-
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
 import modelo.IncidenciaDTO;
 import modelo.IncidenciaModelo;
 import modelo.ZonaModelo;
 import vista.RegistrarIncidencia;
 import vista.VentanaMisIncidencias;
-
-
 
 public class ConsultaIncidenciasControlador {
 
@@ -32,59 +27,95 @@ public class ConsultaIncidenciasControlador {
 		this.inicializarTabla();
 		this.cargarDatos();
 		
+		// Listener para el filtro
 		this.ventana.getCbEstados().addActionListener(e -> cargarDatos());
 		
-		
-		this.ventana.getBtnNuevaIncidencia().addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        RegistrarIncidencia ventanaReg = new RegistrarIncidencia();
-		        
-		        new RegistrarIncidenciasControlador(ventanaReg, incidencias, zona, idCiudadano);
-		        
-		        //Necesito que se introduzca la incidencia en la tabla asi que uso un listener de la ventana
-		        ventanaReg.addWindowListener(new WindowAdapter() {
-		            public void windowClosed(WindowEvent e) {
-		            	/**En cuanto la ventana se cierre (dispose)
-		                 * recargamos los datos de la tabla para que
-		                 * aparezca la nueva incidencia creada*/
-		                cargarDatos(); 
-		                System.out.println("Tabla de incidencias actualizada tras el registro.");
-		            }
-		        });
-		        
-		        ventanaReg.setVisible(true);
-		        
-		    }
+		// Listener para habilitar/deshabilitar el botón de reabrir según selección
+		this.ventana.getTablaIncidencias().getSelectionModel().addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting()) {
+				actualizarEstadoBotonReabrir();
+			}
 		});
+
+		// Acción del botón Reabrir
+		this.ventana.getBtnReabrir().addActionListener(e -> reabrirSeleccionada());
+		
+		// Acción de Nueva Incidencia
+		this.ventana.getBtnNuevaIncidencia().addActionListener(e -> {
+			RegistrarIncidencia ventanaReg = new RegistrarIncidencia();
+			new RegistrarIncidenciasControlador(ventanaReg, incidencias, zona, idCiudadano);
+			ventanaReg.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosed(WindowEvent e) {
+					cargarDatos(); 
+				}
+			});
+			ventanaReg.setVisible(true);
+		});
+	}
+
+	/**
+	 * Habilita el botón de reapertura solo si la incidencia está Rechazada o Cerrada.
+	 */
+	private void actualizarEstadoBotonReabrir() {
+		int fila = ventana.getTablaIncidencias().getSelectedRow();
+		if (fila != -1) {
+			String estado = ventana.getTablaIncidencias().getValueAt(fila, 4).toString();
+			boolean puedeReabrir = estado.equals("Rechazada por Operador") || estado.equals("Cerrada");
+			ventana.getBtnReabrir().setEnabled(puedeReabrir);
+		} else {
+			ventana.getBtnReabrir().setEnabled(false);
+		}
+	}
+
+	/**
+	 * Lógica de la HU: Solicita motivo obligatorio y reabre la incidencia.
+	 */
+	private void reabrirSeleccionada() {
+		int fila = ventana.getTablaIncidencias().getSelectedRow();
+		if (fila == -1) return;
+
+		int idInci = (int) ventana.getTablaIncidencias().getValueAt(fila, 0);
+		
+		// Solicitar motivo obligatorio
+		String motivo = JOptionPane.showInputDialog(ventana, 
+				"Indique el motivo detallado de la reapertura (OBLIGATORIO):", 
+				"Reabrir Incidencia #" + idInci, JOptionPane.QUESTION_MESSAGE);
+
+		// Validar obligatoriedad
+		if (motivo == null) return; // Canceló el diálogo
+		
+		if (motivo.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(ventana, "Error: El motivo de reapertura no puede estar vacío.", 
+					"Campo Obligatorio", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		// Ejecutar cambio en el modelo
+		if (incidencias.reabrirIncidencia(idInci, idCiudadano, motivo)) {
+			JOptionPane.showMessageDialog(ventana, "La incidencia se ha reabierto correctamente y pasa a estado 'Nueva'.");
+			cargarDatos();
+		} else {
+			JOptionPane.showMessageDialog(ventana, "Error técnico al intentar reabrir la incidencia.");
+		}
 	}
 	
 	private void inicializarTabla() {
-		
 		String[] columnas = {"ID","Tipo","Descripción","Fecha","Estado"};
-		
 		DefaultTableModel tablaModelo = new DefaultTableModel(columnas,0) {
-			public boolean isCellEditable(int fila, int columna) {
-				return false;
-			}
+			@Override
+			public boolean isCellEditable(int fila, int columna) { return false; }
 		};
-		
-		//Aplicamos la tabla modelo que acabamos de crear a la del paquete Vista
 		ventana.getTablaIncidencias().setModel(tablaModelo);
 	}
 	
 	private void cargarDatos() {
-		
 		DefaultTableModel tablaModelo = (DefaultTableModel) ventana.getTablaIncidencias().getModel();
 		tablaModelo.setRowCount(0);
-		
 		String filtradoEstado = (String) ventana.getCbEstados().getSelectedItem();
-		
 		List<IncidenciaDTO> listaIncidencias = incidencias.incidenciasRegistradasCiudadano(idCiudadano);
 		
-		//Recorremos la lista añadiendo solo las que cumplan el estado
 		for (IncidenciaDTO iDTO : listaIncidencias) {
-			
-			//Comprobamos el estado
 			if (filtradoEstado.equals("Todas") || iDTO.getEstado().equals(filtradoEstado)) {
 				Object[] fila = {
 						iDTO.getIdIncidencia(),
@@ -93,12 +124,8 @@ public class ConsultaIncidenciasControlador {
 						iDTO.getFecha(),
 						iDTO.getEstado()
 				};
-				
-			tablaModelo.addRow(fila);
-				
+				tablaModelo.addRow(fila);
 			}
 		}
-		
 	}
-	
 }
