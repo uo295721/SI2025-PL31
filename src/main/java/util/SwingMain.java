@@ -171,6 +171,17 @@ public class SwingMain {
 		});
 		frame.getContentPane().add(btnCierreResponsable);
 		
+		//Botón para la historia de Liam(Exportar Historial de Incidencias en formato JSON)
+		JButton btnExportarHistorial = new JButton("Exportar Historial  Completo Incidencia (JSON)");
+		btnExportarHistorial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				vista.VentanaExportarHistorial ventanaHistorial = new vista.VentanaExportarHistorial(frame);
+				new controlador.ExportarHistorialControlador(ventanaHistorial);
+				ventanaHistorial.setVisible(true);
+			}
+		});
+		frame.getContentPane().add(btnExportarHistorial);
+		
 		//Botón para la Historia de Liam(Generar Informes de Incidencias)
 		JButton btnEstadisticas = new JButton("Estadísticas e Informes (Público)");
 		btnEstadisticas.addActionListener(new ActionListener() {
