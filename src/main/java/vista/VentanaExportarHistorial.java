@@ -12,7 +12,7 @@ public class VentanaExportarHistorial extends JDialog {
     public VentanaExportarHistorial(Frame padre) {
         super(padre, "Configurar Exportación de Historial", true);
         setLayout(new BorderLayout(10, 10));
-        setSize(400, 300);
+        setSize(500, 300);
         setLocationRelativeTo(padre);
 
         JPanel panelFiltros = new JPanel(new GridLayout(4, 2, 10, 10));

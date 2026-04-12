@@ -88,9 +88,11 @@ public class TecnicoControlador {
                 }
 
                 int idIncidencia = (int) ventanaTec1.getTablaIncidencias().getValueAt(fila, 0);
+                String tituloIncidencia = ventanaTec1.getTablaIncidencias().getValueAt(fila,1).toString();
                 String idTec = usuario.getIdUsuarioByEmail(emailTecnico);
 
                 VentanaTareasDiarias vTareas = new VentanaTareasDiarias();
+                vTareas.setLblIncidenciaInfo("#" + idIncidencia + " - " + tituloIncidencia);
                 vTareas.setModal(true);
                 vTareas.setLocationRelativeTo(ventanaTec1);
 
