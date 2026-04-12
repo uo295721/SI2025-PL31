@@ -2,7 +2,6 @@ package modelo;
 
 import java.util.List;
 import util.Database;
-import modelo.IncidenciaDTO;
 import java.util.ArrayList;
 
 public class IncidenciaModelo {
@@ -233,11 +232,6 @@ public class IncidenciaModelo {
 		return db.executeQueryArray(sql, idInci);
 	}
 
-	// --- NUEVOS MÉTODOS HU 33954 ---
-
-	/**
-	 * Obtiene el precio por hora del técnico.
-	 */
 	public double getPrecioHoraTecnico(String idTecnico) {
 		String sql = "SELECT precio_hora FROM Usuario WHERE id_usuario = ? OR email = ?";
 		List<Object[]> result = db.executeQueryArray(sql, idTecnico, idTecnico);
@@ -247,9 +241,6 @@ public class IncidenciaModelo {
 		return 0.0;
 	}
 
-	/**
-	 * Registra la resolución con el coste total calculado.
-	 */
 	public boolean marcarComoResueltaConCoste(int idInci, String idTec, double horas, double coste, String trabajos) {
 		String sqlU = "UPDATE Incidencia SET estado = 'Resuelta', descripcion_trabajos = ?, coste = ? WHERE id_incidencia = ?";
 		String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
@@ -263,6 +254,43 @@ public class IncidenciaModelo {
 		}
 	}
 	
+	public List<IncidenciaDTO> getIncidenciasConHistorialParaExportar(String fInicio, String fFin, String tipo, String zona){
+		StringBuilder sqlBuilder = new StringBuilder("SELECT i.id_incidencia, i.descripcion, i.localizacion, "
+												   + "i.fecha, i.id_ciudadano as descripcionCiudadano, t.nombre as tipo "
+												   + "FROM incidencia i "
+												   + "JOIN TipoIncidencia t ON i.id_tipo = t.id_tipo WHERE 1=1");
+		List<Object> parametros = new ArrayList<>();
+		if (fInicio != null && !fInicio.trim().isEmpty()) {
+			sqlBuilder.append(" AND i.fecha >= ?");
+			parametros.add(fInicio);
+		}
+		
+		if (fFin != null && !fFin.trim().isEmpty()) {
+			sqlBuilder.append(" AND i.fecha <= ?");
+			parametros.add(fFin);
+		}
+		
+		if (tipo != null && !tipo.equals("Todos")) {
+	        sqlBuilder.append(" AND t.nombre = ?");
+	        parametros.add(tipo);
+	    }
+		
+	    if (zona != null && !zona.equals("Todas")) {
+	        sqlBuilder.append(" AND i.localizacion = ?");
+	        parametros.add(zona);
+	    }
+	    
+	    sqlBuilder.append(" ORDER BY i.fecha ASC");
+	    
+	    List<IncidenciaDTO> lista = db.executeQueryPojo(IncidenciaDTO.class, sqlBuilder.toString(), parametros.toArray());
+	    
+	    for (IncidenciaDTO i : lista) {
+	    	i.setHistorial(obtenerHistorialIncidencia(i.getIdIncidencia()));
+	    }
+	    
+	    return lista;
+	}
+
 	public List<Object[]> getTecnicosDisponiblesPorCarga(int idTipoIncidencia) {
 	    String sql = "SELECT u.id_usuario, u.nombre || ' ' || u.apellidos as nombreCompleto, " +
 	                 " (SELECT COUNT(*) FROM Asignacion_Incidencia ai " +
@@ -308,6 +336,5 @@ public class IncidenciaModelo {
 	        e.printStackTrace();
 	        return false;
 	    }
-	}
-	
+	}	
 }

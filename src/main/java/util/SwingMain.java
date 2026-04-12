@@ -1,7 +1,6 @@
 package util;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -82,7 +81,16 @@ public class SwingMain {
         b1.addActionListener(e -> { new Database().createDatabase(false); JOptionPane.showMessageDialog(frame, "DB inicializada."); });
         JButton b2 = new JButton("Cargar Datos Iniciales");
         b2.addActionListener(e -> { Database db = new Database(); db.createDatabase(false); db.loadDatabase(); JOptionPane.showMessageDialog(frame, "Datos cargados."); });
-        p.add(b1); p.add(b2); p.add(botonVolver());
+        
+        // ---> Botón recuperado de tu rama HEAD que faltaba en el nuevo diseño <---
+        JButton b3 = new JButton("Exportar Historial Completo (JSON)");
+        b3.addActionListener(e -> {
+            vista.VentanaExportarHistorial ventanaHistorial = new vista.VentanaExportarHistorial(frame);
+            new controlador.ExportarHistorialControlador(ventanaHistorial);
+            ventanaHistorial.setVisible(true);
+        });
+
+        p.add(b1); p.add(b2); p.add(b3); p.add(botonVolver());
         return p;
     }
 
@@ -208,5 +216,9 @@ public class SwingMain {
         JButton btn = new JButton("<< VOLVER");
         btn.addActionListener(e -> cardLayout.show(panelContenedor, "MENU_INICIAL"));
         return btn;
+    }
+
+    public JFrame getFrame() {
+        return this.frame;
     }
 }
