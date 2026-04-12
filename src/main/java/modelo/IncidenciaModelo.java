@@ -262,4 +262,52 @@ public class IncidenciaModelo {
 			return false;
 		}
 	}
+	
+	public List<Object[]> getTecnicosDisponiblesPorCarga(int idTipoIncidencia) {
+	    String sql = "SELECT u.id_usuario, u.nombre || ' ' || u.apellidos as nombreCompleto, " +
+	                 " (SELECT COUNT(*) FROM Asignacion_Incidencia ai " +
+	                 "  JOIN Incidencia i ON ai.id_incidencia = i.id_incidencia " +
+	                 "  WHERE ai.id_tecnico = u.id_usuario " +
+	                 "  AND i.estado NOT IN ('Resuelta', 'Cerrada', 'Rechazada por Operador')) as carga " +
+	                 "FROM Usuario u " +
+	                 "JOIN Tecnico_Especialidad te ON u.id_usuario = te.id_usuario " +
+	                 "WHERE u.rol = 'TÉCNICO' AND te.id_tipo = ? " +
+	                 "ORDER BY carga ASC";
+	    
+	    return db.executeQueryArray(sql, idTipoIncidencia);
+	}
+	
+	public boolean asignarVariosTecnicos(int idIncidencia, List<String> idsTecnicos, String emailOperador) {
+	    String idOperador = obtenerIdPorEmail(emailOperador);
+	    
+	    // SQLs
+	    String sqlDelete = "DELETE FROM Asignacion_Incidencia WHERE id_incidencia = ?";
+	    String sqlAsignar = "INSERT INTO Asignacion_Incidencia (id_incidencia, id_tecnico) VALUES (?, ?)";
+	    String sqlUpdateInci = "UPDATE Incidencia SET estado = 'Asignada', id_tecnico = NULL WHERE id_incidencia = ?";
+	    String sqlHistorial = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) " +
+	                          "VALUES (?, ?, 'Asignada', datetime('now','localtime'), ?)";
+
+	    try {
+	        // 1. Limpiamos asignaciones previas de esta incidencia
+	        db.executeUpdate(sqlDelete, idIncidencia);
+
+	        // 2. Insertamos los nuevos técnicos
+	        for (String idTec : idsTecnicos) {
+	            db.executeUpdate(sqlAsignar, idIncidencia, idTec);
+	        }
+
+	        // 3. Actualizamos la incidencia (ponemos id_tecnico a NULL porque ahora mandan los múltiples)
+	        db.executeUpdate(sqlUpdateInci, idIncidencia);
+
+	        // 4. Historial
+	        String comentario = "Asignada a " + idsTecnicos.size() + " técnicos por " + emailOperador;
+	        db.executeUpdate(sqlHistorial, idIncidencia, idOperador, comentario);
+
+	        return true;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
 }
