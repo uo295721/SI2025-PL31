@@ -122,8 +122,8 @@ public class SwingMain {
         JPanel p = prepararSubmenu();
         JButton b1 = new JButton("Asignar Incidencias (Operador)");
         b1.addActionListener(e -> {
-            VentanaOperador v = new VentanaOperador();
-            new OperadorControlador(v, new IncidenciaModelo());
+            VentanaAsignarTecnico v = new VentanaAsignarTecnico();
+            new AsignarTecnicoControlador(v, new IncidenciaModelo());
             v.setVisible(true); 
         });
         JButton b2 = new JButton("Rechazar Incidencias (Operador)");

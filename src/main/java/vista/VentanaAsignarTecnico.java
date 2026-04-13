@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class VentanaOperador extends JFrame {
+public class VentanaAsignarTecnico extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tablaIncidencias;
@@ -15,7 +15,7 @@ public class VentanaOperador extends JFrame {
 	private JLabel lblEmailOperador;
 	private JTextField txtEmail;
 
-	public VentanaOperador() {
+	public VentanaAsignarTecnico() {
 		setTitle("Gestión de Incidencias - Panel de Operador");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 950, 600); 

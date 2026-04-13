@@ -11,18 +11,18 @@ import javax.swing.event.ListSelectionListener;
 import modelo.IncidenciaDTO;
 import modelo.IncidenciaModelo;
 import modelo.UsuarioModelo;
-import vista.VentanaOperador;
+import vista.VentanaAsignarTecnico;
 
-public class OperadorControlador {
+public class AsignarTecnicoControlador {
 
     private static final int CARGA_MAXIMA = 3; 
     
     private IncidenciaModelo modelo;
     private UsuarioModelo usuario = new UsuarioModelo(); 
-    private VentanaOperador vista;
+    private VentanaAsignarTecnico vista;
     private String emailOperador;
 
-    public OperadorControlador(VentanaOperador vista, IncidenciaModelo modelo) {
+    public AsignarTecnicoControlador(VentanaAsignarTecnico vista, IncidenciaModelo modelo) {
         this.vista = vista;
         this.modelo = modelo;
         this.configurarEventos();
