@@ -186,14 +186,30 @@ public class SwingMain {
             v.setVisible(true);
         });
         
-        JButton b6 = new JButton("Gestionar Presupuestos (Económico)");
+        JButton b6 = new JButton("Informe Económico por Categoría");
         b6.addActionListener(e -> {
+            String email = JOptionPane.showInputDialog(frame, "Email Responsable:");
+
+            if (email != null && usuario.esUsuarioConRol(email, "RESPONSABLE")) {
+                VentanaInformeEconomico v = new VentanaInformeEconomico();
+                new InformeEconomicoControlador(v, new IncidenciaModelo());
+                v.setVisible(true);
+            } 
+            else if (email != null) {
+                JOptionPane.showMessageDialog(frame, "Acceso denegado: El email no corresponde a un Responsable.",
+                        "Error de Permisos", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        p.add(b1); p.add(b2); p.add(b3); p.add(b4); p.add(b5);p.add(b6); p.add(botonVolver());
+        
+        JButton b7 = new JButton("Gestionar Presupuestos (Económico)");
+        b7.addActionListener(e -> {
             VentanaPresupuestos v = new VentanaPresupuestos();
             new PresupuestoControlador(v, new PresupuestoModelo());
             v.setVisible(true);
         });
         
-        p.add(b1); p.add(b2); p.add(b3); p.add(b4); p.add(b5);p.add(b6); p.add(botonVolver());
+        p.add(b7);
         return p;
     }
 

@@ -71,6 +71,14 @@ INSERT INTO "Asignacion_Incidencia" ("id_incidencia", "id_tecnico") VALUES
 (102, 'T1'), 
 (104, 'T2'); 
 
+INSERT INTO "TareaDiaria" ("id_incidencia", "id_tecnico", "fecha", "descripcion_tarea", "horas_dedicadas") VALUES 
+(101, 'T1', '2026-02-19', 'Revisión cables', 4.0),
+(102, 'T3', '2026-02-20', 'Sustitución focos', 6.0),
+(107, 'T2', '2026-02-21', 'Barnizar banco', 5.5),
+(104, 'T2', '2026-02-19', 'Reparación de fuga en tubería principal', 4.0),
+(105, 'T1', '2026-02-20', 'Vallado y preparación del terreno', 5.0),
+(111, 'T2', '2026-03-06', 'Desbroce y limpieza mecánica', 8.0);
+
 DELETE FROM "Presupuesto";
 INSERT INTO "Presupuesto" ("id_tipo", "importe_total", "importe_consumido", "fecha_inicio", "fecha_fin") 
 VALUES (1, 5000.0, 0.0, '2026-01-01', '2026-12-31');
