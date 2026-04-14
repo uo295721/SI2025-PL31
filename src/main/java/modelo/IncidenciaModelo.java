@@ -175,6 +175,39 @@ public class IncidenciaModelo {
 		db.executeUpdate(sqlU, horas, trabajos, idIncidencia);
 		db.executeUpdate(sqlH, idIncidencia, idTecnico);
 	}
+	
+	// ==========================================================
+	// HISTORIA DE USUARIO: INFORME ECONÓMICO POR CATEGORÍA
+	// ==========================================================
+
+	public List<InformeEconomicoDTO> obtenerInformeEconomico() {
+	    List<InformeEconomicoDTO> lista = new ArrayList<>();
+	
+	    String sql = "SELECT ti.nombre, " +
+	                 "COUNT(DISTINCT i.id_incidencia) as volumen, " +
+	                 "SUM(COALESCE(td.horas_dedicadas, 0) * COALESCE(u.precio_hora, 0)) as coste_total " +
+	                 "FROM TipoIncidencia ti " +
+	                 "JOIN Incidencia i ON ti.id_tipo = i.id_tipo " +
+	                 "LEFT JOIN TareaDiaria td ON i.id_incidencia = td.id_incidencia " +
+	                 "LEFT JOIN Usuario u ON td.id_tecnico = u.id_usuario " +
+	                 "GROUP BY ti.id_tipo, ti.nombre";
+
+	    List<Object[]> resultados = db.executeQueryArray(sql);
+
+	    if (resultados != null) {
+	        for (Object[] fila : resultados) {
+	            String categoria = fila[0].toString();
+	            int volumen = Integer.parseInt(fila[1].toString());
+	            double total = Double.parseDouble(fila[2].toString());
+	
+	            double media = (volumen > 0) ? total / volumen : 0.0;
+
+	            lista.add(new InformeEconomicoDTO(categoria, volumen, total, media));
+	        }
+	    }
+	    return lista;
+	}
+	
 
 	// ==========================================================
 	// HISTORIAL Y CIUDADANO

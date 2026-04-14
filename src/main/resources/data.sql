@@ -21,15 +21,15 @@ INSERT INTO "Zona" ("id_zona", "nombre") VALUES
 ('Z6', 'Zona Central-1'),
 ('Z7', 'Zona Central-2');
 
-INSERT INTO "Usuario" ("id_usuario", "nombre", "apellidos", "email", "rol", "id_tipo") VALUES 
-('T1', 'Ana', 'García', 'ana.tecnico@oviedo.es', 'TÉCNICO', 1),
-('T2', 'Carlos', 'Pérez', 'carlos.tecnico@oviedo.es', 'TÉCNICO', 2),
-('T3', 'Emil', 'Bauer', 'emil.bauer@oviedo.es', 'TÉCNICO', 1),
-('C1', 'Diego', 'Otero', 'diego.ciudadano@oviedo.es', 'CIUDADANO', NULL),
-('C2', 'Marco', 'Diaz', 'marco.ciudadano@oviedo.es', 'CIUDADANO', NULL),
-('R1', 'Ines', 'Canteli', 'ines.responsable@oviedo.es', 'RESPONSABLE', 1),
-('O1', 'Omar', 'Lobo', 'omar.operador@oviedo.es', 'OPERADOR', NULL),
-('O2', 'Marco', 'Estrada', 'marco.operador@oviedo.es', 'OPERADOR', NULL);
+INSERT INTO "Usuario" ("id_usuario", "nombre", "apellidos", "email", "rol", "id_tipo", "precio_hora") VALUES 
+('T1', 'Ana', 'García', 'ana.tecnico@oviedo.es', 'TÉCNICO', 1, 22.5),
+('T2', 'Carlos', 'Pérez', 'carlos.tecnico@oviedo.es', 'TÉCNICO', 2, 18.0),
+('T3', 'Emil', 'Bauer', 'emil.bauer@oviedo.es', 'TÉCNICO', 1,20.0),
+('C1', 'Diego', 'Otero', 'diego.ciudadano@oviedo.es', 'CIUDADANO', NULL,0.0),
+('C2', 'Marco', 'Diaz', 'marco.ciudadano@oviedo.es', 'CIUDADANO', NULL, 0.0),
+('R1', 'Ines', 'Canteli', 'ines.responsable@oviedo.es', 'RESPONSABLE', 1, 0.0),
+('O1', 'Omar', 'Lobo', 'omar.operador@oviedo.es', 'OPERADOR', NULL, 0.0),
+('O2', 'Marco', 'Estrada', 'marco.operador@oviedo.es', 'OPERADOR', NULL, 0.0);
 
 INSERT INTO "Incidencia" 
 ("estado", "id_incidencia", "descripcion", "id_ciudadano", "localizacion", "id_tipo", "fecha", "fecha_resolucion", "id_operador", "id_tecnico", "coste", "horas_estimadas") 
@@ -70,3 +70,11 @@ INSERT INTO "Asignacion_Incidencia" ("id_incidencia", "id_tecnico") VALUES
 (103, 'T1'), 
 (102, 'T1'), 
 (104, 'T2'); 
+
+INSERT INTO "TareaDiaria" ("id_incidencia", "id_tecnico", "fecha", "descripcion_tarea", "horas_dedicadas") VALUES 
+(101, 'T1', '2026-02-19', 'Revisión cables', 4.0),
+(102, 'T3', '2026-02-20', 'Sustitución focos', 6.0),
+(107, 'T2', '2026-02-21', 'Barnizar banco', 5.5),
+(104, 'T2', '2026-02-19', 'Reparación de fuga en tubería principal', 4.0),
+(105, 'T1', '2026-02-20', 'Vallado y preparación del terreno', 5.0),
+(111, 'T2', '2026-03-06', 'Desbroce y limpieza mecánica', 8.0);
