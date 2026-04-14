@@ -83,3 +83,12 @@ CREATE TABLE IF NOT EXISTS "Asignacion_Incidencia" (
     FOREIGN KEY("id_incidencia") REFERENCES "Incidencia"("id_incidencia") ON DELETE CASCADE,
     FOREIGN KEY("id_tecnico") REFERENCES "Usuario"("id_usuario")
 );
+CREATE TABLE IF NOT EXISTS "Presupuesto" (
+    "id_presupuesto" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "id_tipo" INTEGER NOT NULL,
+    "importe_total" REAL NOT NULL,
+    "importe_consumido" REAL DEFAULT 0.0,
+    "fecha_inicio" TEXT NOT NULL,
+    "fecha_fin" TEXT NOT NULL,
+    FOREIGN KEY("id_tipo") REFERENCES "TipoIncidencia"("id_tipo")
+);

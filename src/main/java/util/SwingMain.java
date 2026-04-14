@@ -185,7 +185,15 @@ public class SwingMain {
             new InformesControlador(v);
             v.setVisible(true);
         });
-        p.add(b1); p.add(b2); p.add(b3); p.add(b4); p.add(b5); p.add(botonVolver());
+        
+        JButton b6 = new JButton("Gestionar Presupuestos (Económico)");
+        b6.addActionListener(e -> {
+            VentanaPresupuestos v = new VentanaPresupuestos();
+            new PresupuestoControlador(v, new PresupuestoModelo());
+            v.setVisible(true);
+        });
+        
+        p.add(b1); p.add(b2); p.add(b3); p.add(b4); p.add(b5);p.add(b6); p.add(botonVolver());
         return p;
     }
 

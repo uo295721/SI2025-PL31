@@ -11,10 +11,6 @@ public class IncidenciaModelo {
 	public IncidenciaModelo() {
 	}
 
-	// ==========================================================
-	// SPRINT 3: REAPERTURA (HU CIUDADANO)
-	// ==========================================================
-
 	public boolean reabrirIncidencia(int idIncidencia, String idUsuario, String motivo) {
 		String sqlU = "UPDATE Incidencia SET estado = 'Nueva', fecha_resolucion = NULL WHERE id_incidencia = ?";
 		String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
@@ -28,10 +24,6 @@ public class IncidenciaModelo {
 			return false;
 		}
 	}
-
-	// ==========================================================
-	// INFORMES Y ESTADÍSTICAS (CONTROLADOR DE INFORMES)
-	// ==========================================================
 
 	public List<IncidenciaDTO> getEstadisticasFiltradas(String fechaInicio, String fechaFin, String tipo,
 														String zona, String estado) {
@@ -75,10 +67,6 @@ public class IncidenciaModelo {
 		return db.executeQueryArray(sql, fechaInicio, fechaFin);
 	}
 
-	// ==========================================================
-	// GESTIÓN DE OPERADORES Y CLASIFICACIÓN
-	// ==========================================================
-
 	public void validarClasificacion(int idIncidencia, String nuevoTipo, String idOperador) {
 		String sqlU = "UPDATE Incidencia SET id_tipo = (SELECT id_tipo FROM TipoIncidencia WHERE nombre = ?), "
 				+ "estado = 'Validada', id_operador = ? WHERE id_incidencia = ?";
@@ -99,7 +87,6 @@ public class IncidenciaModelo {
 
 	public boolean rechazarIncidencia(int idIncidencia, String emailOperador, String motivoRechazo) {
 	    String idReal = obtenerIdPorEmail(emailOperador);
-	    // Cambiado 'Rechazada por Operador' por 'Rechazada'
 	    String sqlU = "UPDATE Incidencia SET estado = 'Rechazada', id_operador = ? WHERE id_incidencia = ?";
 	    String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
 	            + "VALUES (?, ?, 'Rechazada', datetime('now','localtime'), ?)";
@@ -121,10 +108,6 @@ public class IncidenciaModelo {
 		} catch (Exception e) { return false; }
 	}
 
-	// ==========================================================
-	// TÉCNICOS Y TAREAS DIARIAS
-	// ==========================================================
-
 	public void registrarTareaDiaria(int idInci, String idTec, String fecha, String desc, double horas) {
 		String sql = "INSERT INTO TareaDiaria (id_incidencia, id_tecnico, fecha, descripcion_tarea, horas_dedicadas) VALUES (?, ?, ?, ?, ?)";
 		db.executeUpdate(sql, idInci, idTec, fecha, desc, horas);
@@ -144,13 +127,21 @@ public class IncidenciaModelo {
 		return 0.0;
 	}
 
+	// MÉTODO CON LA LÓGICA DE PRESUPUESTO INTEGRADA
 	public boolean marcarComoResueltaConCoste(int idInci, String idTec, double horas, double coste, String trabajos) {
 		String sqlU = "UPDATE Incidencia SET estado = 'Resuelta', descripcion_trabajos = ?, coste = ?, fecha_resolucion = datetime('now') WHERE id_incidencia = ?";
 		String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
 				+ "VALUES (?, ?, 'Resuelta', datetime('now','localtime'), ?)";
+		
+		// Lógica Presupuestaria: Actualizar importe consumido si hoy está en el rango de fechas
+		String sqlPresu = "UPDATE Presupuesto SET importe_consumido = importe_consumido + ? " +
+						  "WHERE id_tipo = (SELECT id_tipo FROM Incidencia WHERE id_incidencia = ?) " +
+						  "AND (date('now') BETWEEN fecha_inicio AND fecha_fin)";
+		
 		try {
 			db.executeUpdate(sqlU, trabajos, coste, idInci);
 			db.executeUpdate(sqlH, idInci, idTec, "Cerrada con coste total: " + coste + "€");
+			db.executeUpdate(sqlPresu, coste, idInci); 
 			return true;
 		} catch (Exception e) { return false; }
 	}
@@ -175,10 +166,6 @@ public class IncidenciaModelo {
 		db.executeUpdate(sqlU, horas, trabajos, idIncidencia);
 		db.executeUpdate(sqlH, idIncidencia, idTecnico);
 	}
-
-	// ==========================================================
-	// HISTORIAL Y CIUDADANO
-	// ==========================================================
 
 	public void registrarCambioHistorial(int idInci, String emailUser, String nuevoEstado, String comentario) {
 		String sql = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
@@ -209,10 +196,6 @@ public class IncidenciaModelo {
 			return true;
 		} catch (Exception e) { return false; }
 	}
-
-	// ==========================================================
-	// MÉTODOS GENERALES Y AUXILIARES
-	// ==========================================================
 
 	public String obtenerIdPorEmail(String email) {
 		String sql = "SELECT id_usuario FROM Usuario WHERE LOWER(email) = LOWER(?)";
@@ -309,7 +292,6 @@ public class IncidenciaModelo {
 	public boolean asignarVariosTecnicos(int idIncidencia, List<String> idsTecnicos, String emailOperador) {
 	    String idOperador = obtenerIdPorEmail(emailOperador);
 	    
-	    // SQLs
 	    String sqlDelete = "DELETE FROM Asignacion_Incidencia WHERE id_incidencia = ?";
 	    String sqlAsignar = "INSERT INTO Asignacion_Incidencia (id_incidencia, id_tecnico) VALUES (?, ?)";
 	    String sqlUpdateInci = "UPDATE Incidencia SET estado = 'Asignada', id_tecnico = NULL WHERE id_incidencia = ?";
@@ -317,21 +299,13 @@ public class IncidenciaModelo {
 	                          "VALUES (?, ?, 'Asignada', datetime('now','localtime'), ?)";
 
 	    try {
-	        // 1. Limpiamos asignaciones previas de esta incidencia
 	        db.executeUpdate(sqlDelete, idIncidencia);
-
-	        // 2. Insertamos los nuevos técnicos
 	        for (String idTec : idsTecnicos) {
 	            db.executeUpdate(sqlAsignar, idIncidencia, idTec);
 	        }
-
-	        // 3. Actualizamos la incidencia (ponemos id_tecnico a NULL porque ahora mandan los múltiples)
 	        db.executeUpdate(sqlUpdateInci, idIncidencia);
-
-	        // 4. Historial
 	        String comentario = "Asignada a " + idsTecnicos.size() + " técnicos por " + emailOperador;
 	        db.executeUpdate(sqlHistorial, idIncidencia, idOperador, comentario);
-
 	        return true;
 	    } catch (Exception e) {
 	        e.printStackTrace();

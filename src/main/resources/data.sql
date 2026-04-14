@@ -70,3 +70,11 @@ INSERT INTO "Asignacion_Incidencia" ("id_incidencia", "id_tecnico") VALUES
 (103, 'T1'), 
 (102, 'T1'), 
 (104, 'T2'); 
+
+DELETE FROM "Presupuesto";
+INSERT INTO "Presupuesto" ("id_tipo", "importe_total", "importe_consumido", "fecha_inicio", "fecha_fin") 
+VALUES (1, 5000.0, 0.0, '2026-01-01', '2026-12-31');
+INSERT INTO "Presupuesto" ("id_tipo", "importe_total", "importe_consumido", "fecha_inicio", "fecha_fin") 
+VALUES (2, 2000.0, 0.0, '2026-01-01', '2026-12-31');
+INSERT INTO "Presupuesto" ("id_tipo", "importe_total", "importe_consumido", "fecha_inicio", "fecha_fin") 
+VALUES (3, 3000.0, 0.0, '2026-01-01', '2026-12-31');
