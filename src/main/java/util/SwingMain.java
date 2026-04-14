@@ -185,7 +185,21 @@ public class SwingMain {
             new InformesControlador(v);
             v.setVisible(true);
         });
-        p.add(b1); p.add(b2); p.add(b3); p.add(b4); p.add(b5); p.add(botonVolver());
+        
+        JButton b6 = new JButton("Gestión de Facturación (Responsable)");
+        b6.addActionListener(e -> {
+            String id = JOptionPane.showInputDialog(frame, "Email Responsable:");
+            if (id != null && usuario.esUsuarioConRol(id, "RESPONSABLE")) {
+                vista.VentanaFacturas vF = new vista.VentanaFacturas();
+                new controlador.FacturacionControlador(vF);
+                vF.setVisible(true);
+            } else if (id != null) {
+                JOptionPane.showMessageDialog(frame, "Acceso denegado. Se requiere rol de Responsable.", 
+                                             "Error de Acceso", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        
+        p.add(b1); p.add(b2); p.add(b3); p.add(b4); p.add(b5); p.add(b6); p.add(botonVolver());
         return p;
     }
 

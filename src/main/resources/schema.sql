@@ -69,6 +69,7 @@ CREATE TABLE "TareaDiaria" (
     FOREIGN KEY("id_tecnico") REFERENCES "Usuario"("id_usuario"),
     FOREIGN KEY("id_incidencia") REFERENCES "Incidencia"("id_incidencia")
 );
+
 CREATE TABLE IF NOT EXISTS "Tecnico_Especialidad" (
     "id_usuario" TEXT NOT NULL,
     "id_tipo" INTEGER NOT NULL,
@@ -76,10 +77,22 @@ CREATE TABLE IF NOT EXISTS "Tecnico_Especialidad" (
     FOREIGN KEY("id_usuario") REFERENCES "Usuario"("id_usuario"),
     FOREIGN KEY("id_tipo") REFERENCES "TipoIncidencia"("id_tipo")
 );
+
 CREATE TABLE IF NOT EXISTS "Asignacion_Incidencia" (
     "id_incidencia" INTEGER NOT NULL,
     "id_tecnico" TEXT NOT NULL,
     PRIMARY KEY("id_incidencia", "id_tecnico"),
     FOREIGN KEY("id_incidencia") REFERENCES "Incidencia"("id_incidencia") ON DELETE CASCADE,
     FOREIGN KEY("id_tecnico") REFERENCES "Usuario"("id_usuario")
+);
+
+CREATE TABLE IF NOT EXISTS "Factura"(
+	"id_factura" INTEGER PRIMARY KEY,
+	"numero_factura" TEXT UNIQUE NOT NULL,
+	"id_incidencia" INTEGER UNIQUE NOT NULL,
+	"fecha_emision" TEXT NOT NULL,
+	"detalle_tecnico" TEXT,
+	"total" REAL NOT NULL,
+	"estado" text DEFAULT 'Activa',
+	FOREIGN KEY("id_incidencia") REFERENCES Incidencia("id_incidencia")	
 );

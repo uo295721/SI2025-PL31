@@ -338,4 +338,12 @@ public class IncidenciaModelo {
 	        return false;
 	    }
 	}	
+	
+	public List<IncidenciaDTO> getIncidenciasPendientesFacturar(){
+		String sql = "SELECT i.id_incidencia, i.fecha, i.descripcion_trabajos, i.coste "
+				   + "FROM Incidencia i WHERE i.estado = 'Resuelta' "
+				   + "AND i.id_incidencia NOT IN (SELECT id_incidencia FROM Factura) ORDER BY i.fecha ASC";
+		return db.executeQueryPojo(IncidenciaDTO.class, sql);
+	}
+	
 }

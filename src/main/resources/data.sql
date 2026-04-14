@@ -5,6 +5,7 @@ DELETE FROM "TipoIncidencia";
 DELETE FROM "Zona";
 DELETE FROM "Tecnico_Especialidad";
 DELETE FROM "Asignacion_Incidencia";
+DELETE FROM "Factura";
 
 INSERT INTO "TipoIncidencia" ("id_tipo", "nombre") VALUES
 (1, 'Electricidad'),
