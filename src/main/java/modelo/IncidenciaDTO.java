@@ -1,5 +1,8 @@
 package modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IncidenciaDTO {
 
 	private int idIncidencia;
@@ -9,7 +12,8 @@ public class IncidenciaDTO {
 	private String estado;
 	private String fecha; // Para poder ordenar
 	private String localización;
-	
+	private List<HistorialDTO> historial;
+
 
 	// Nuevos atributos para historia de Usuario
 	private int horas_estimadas;
@@ -26,6 +30,7 @@ public class IncidenciaDTO {
 		this.descripcion = titulo;
 		this.setFecha(fecha);
 		this.estado = estado;
+		this.historial = new ArrayList<>();
 	}
 
 	// Getters y Setters correspondientes para cada atributo
@@ -60,6 +65,10 @@ public class IncidenciaDTO {
 	
 	public String getTiempoResolucion() {
 		return tiempoResolucion;
+	}
+	
+	public List<HistorialDTO> getHistorial(){
+		return historial;
 	}
 
 	public void setId_incidencia(int idIncidencia) {
@@ -112,6 +121,10 @@ public class IncidenciaDTO {
 
 	public void setTiempoResolucion(String resol) {
 		this.tiempoResolucion = resol;
+	}
+	
+	public void setHistorial(List<HistorialDTO> hist) {
+		this.historial = hist;
 	}
 	
 	@Override

@@ -26,8 +26,7 @@ public class VentanaTareasDiarias extends JDialog {
     private JTable tablaHistorialTareas;
     private JButton btnRegistrar;
     private DefaultTableModel modeloTabla;
-
-  
+    private JLabel lblIncidenciaInfo; 
     public static void main(String[] args) {
         try {
             VentanaTareasDiarias dialog = new VentanaTareasDiarias();
@@ -40,20 +39,31 @@ public class VentanaTareasDiarias extends JDialog {
 
     public VentanaTareasDiarias() {
         setTitle("Registro Diario de Tareas - Técnico");
-        setBounds(100, 100, 550, 500);
+        setBounds(100, 100, 550, 600); 
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(new BorderLayout(0, 10));
+        
+        // Con este bloque podemos visualizar en que incidencia está anotando el técnico
+        JPanel panelInfoSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+        lblIncidenciaInfo = new JLabel("Incidencia: Seleccione una incidencia"); 
+        lblIncidenciaInfo.setFont(new Font("Tahoma", Font.BOLD, 12));
+        panelInfoSuperior.add(lblIncidenciaInfo); 
+        contentPanel.add(panelInfoSuperior, BorderLayout.NORTH);
+     
+
+        // Panel contenedor para el formulario y el historial 
+        JPanel contenedorCentral = new JPanel(new BorderLayout(0, 10)); 
+        contentPanel.add(contenedorCentral, BorderLayout.CENTER); 
 
         // panel superior del formulario de entrada
         JPanel panelFormulario = new JPanel();
-        contentPanel.add(panelFormulario, BorderLayout.NORTH);
+        contenedorCentral.add(panelFormulario, BorderLayout.NORTH); 
         panelFormulario.setLayout(new GridLayout(4, 2, 5, 10));
 
         panelFormulario.add(new JLabel("Fecha (AAAA-MM-DD):"));
         txtFecha = new JTextField();
-        // Por defecto ponemos la fecha de hoy
         txtFecha.setText(LocalDate.now().toString());
         panelFormulario.add(txtFecha);
 
@@ -68,14 +78,14 @@ public class VentanaTareasDiarias extends JDialog {
         JScrollPane scrollArea = new JScrollPane(areaDescripcion);
         panelFormulario.add(scrollArea);
 
-        panelFormulario.add(new JLabel("")); // Espacio vacío para alineación
+        panelFormulario.add(new JLabel("")); 
         btnRegistrar = new JButton("Registrar Tarea y Actualizar Historial");
         btnRegistrar.setFont(new Font("Arial", Font.BOLD, 11));
         panelFormulario.add(btnRegistrar);
 
-        // Panel central
+        // Panel central (Historial)
         JPanel panelHistorial = new JPanel();
-        contentPanel.add(panelHistorial, BorderLayout.CENTER);
+        contenedorCentral.add(panelHistorial, BorderLayout.CENTER); 
         panelHistorial.setLayout(new BorderLayout(0, 5));
 
         JLabel lblTituloHistorial = new JLabel("Historial de tareas registradas en esta incidencia:");
@@ -83,12 +93,11 @@ public class VentanaTareasDiarias extends JDialog {
         lblTituloHistorial.setFont(new Font("Tahoma", Font.ITALIC, 11));
         panelHistorial.add(lblTituloHistorial, BorderLayout.NORTH);
 
-        // Configuración de la Tabla
         String[] columnas = {"Fecha", "Descripción", "Horas"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Evita que el usuario edite la tabla directamente
+                return false; 
             }
         };
         
@@ -106,23 +115,27 @@ public class VentanaTareasDiarias extends JDialog {
         buttonPane.add(okButton);
     }
 
- 
+   
+    public void setLblIncidenciaInfo(String texto) { 
+        this.lblIncidenciaInfo.setText("Incidencia: " + texto); 
+    }
+
     public JTextField getTxtFecha() {
-    	return txtFecha;
-    	}
+        return txtFecha;
+    }
     public JTextField getTxtHoras() {
-    	return txtHoras;
-    	}
+        return txtHoras;
+    }
     public JTextArea getAreaDescripcion() {
-    	return areaDescripcion;
-    	}
+        return areaDescripcion;
+    }
     public JButton getBtnRegistrar() {
-    	return btnRegistrar; 
-    	}
+        return btnRegistrar; 
+    }
     public JTable getTablaHistorialTareas() { 
-    	return tablaHistorialTareas; 
-    	}
+        return tablaHistorialTareas; 
+    }
     public DefaultTableModel getModeloTabla() { 
-    	return modeloTabla; 
-    	}
+        return modeloTabla; 
+    }
 }

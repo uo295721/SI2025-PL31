@@ -76,3 +76,10 @@ CREATE TABLE IF NOT EXISTS "Tecnico_Especialidad" (
     FOREIGN KEY("id_usuario") REFERENCES "Usuario"("id_usuario"),
     FOREIGN KEY("id_tipo") REFERENCES "TipoIncidencia"("id_tipo")
 );
+CREATE TABLE IF NOT EXISTS "Asignacion_Incidencia" (
+    "id_incidencia" INTEGER NOT NULL,
+    "id_tecnico" TEXT NOT NULL,
+    PRIMARY KEY("id_incidencia", "id_tecnico"),
+    FOREIGN KEY("id_incidencia") REFERENCES "Incidencia"("id_incidencia") ON DELETE CASCADE,
+    FOREIGN KEY("id_tecnico") REFERENCES "Usuario"("id_usuario")
+);
