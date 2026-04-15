@@ -258,10 +258,60 @@ public class IncidenciaModelo {
 		return db.executeQueryPojo(IncidenciaDTO.class, sql, estado);
 	}
 
-	public void archivarIncidencia(List<Integer> listaIds) {
-		String sql = "UPDATE Incidencia SET estado = 'Cerrada' WHERE id_incidencia = ?";
-		for (int i : listaIds)
-			db.executeUpdate(sql, i);
+	public String archivarIncidencias(List<Integer> listaIds, String emailResponsable) {
+	    StringBuilder reporte = new StringBuilder();
+	    PresupuestoModelo presuModelo = new PresupuestoModelo();
+	    int exitos = 0;
+
+	    for (int id : listaIds) {
+	        String sqlData = "SELECT id_tipo, coste, descripcion FROM Incidencia WHERE id_incidencia = ?";
+	        List<Object[]> res = db.executeQueryArray(sqlData, id);
+	        
+	        if (res.isEmpty()) continue;
+
+	        int idTipo = Integer.parseInt(res.get(0)[0].toString());
+	        double coste = Double.parseDouble(res.get(0)[1].toString());
+	        String desc = (String) res.get(0)[2];
+
+	        PresupuestoDTO presupuesto = presuModelo.obtenerPresupuestoActivo(idTipo);
+
+	        if (presupuesto == null) {
+	            reporte.append("• ID ").append(id).append(": ERROR - No hay presupuesto activo para esta categoría.\n");
+	            continue;
+	        }
+
+	        double saldoDisponible = presupuesto.getImporte_total() - presupuesto.getImporte_consumido();
+	        
+	        if (coste > saldoDisponible) {
+	            reporte.append("ID- ").append(id).append(": SALDO INSUFICIENTE (Coste: ").append(coste)
+	                   .append("€ | Disponible: ").append(String.format("%.2f", saldoDisponible)).append("€).\n");
+	            continue;
+	        }
+
+	        // Si hay saldo, actualizamos presupuesto y cerramos
+	        try {
+	            // Descontar del presupuesto
+	            presuModelo.actualizarConsumo(presupuesto.getId_presupuesto(), coste);
+	            
+	            // Cerrar la incidencia
+	            String sqlCerrar = "UPDATE Incidencia SET estado = 'Cerrada' WHERE id_incidencia = ?";
+	            db.executeUpdate(sqlCerrar, id);
+	            
+	            // Registrar en historial
+	            registrarCambioHistorial(id, emailResponsable, "Cerrada", "Cierre validado con presupuesto. Coste: " + coste + "€");
+	            
+	            exitos++;
+	        } catch (Exception e) {
+	            reporte.append("• ID ").append(id).append(": Error técnico al procesar.\n");
+	        }
+	    }
+
+	    //Mensaje para el OptionPane
+	    if (reporte.length() == 0) {
+	        return "OK"; // Todo se cerró perfectamente
+	    } else {
+	        return "Se cerraron " + exitos + " incidencias, pero hubo problemas con las siguientes:\n\n" + reporte.toString();
+	    }
 	}
 
 	public List<IncidenciaDTO> getIncidenciasParaControlCalidad(String especialidad) {

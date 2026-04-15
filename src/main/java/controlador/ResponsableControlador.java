@@ -3,6 +3,7 @@ package controlador;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import modelo.IncidenciaDTO;
@@ -53,28 +54,32 @@ public class ResponsableControlador {
 	}
 	
 	private void archivarSeleccionadas() {
-		DefaultTableModel modelo = vista.getModeloTabla();
-		List<Integer> idsParaCerrar = new ArrayList<>();
-		
-		//Recorremos toda la tabla buscando las filas seleccionadas
-		for (int i = 0; i < modelo.getRowCount(); i++) {
-			Boolean seleccionado = (Boolean) modelo.getValueAt(i, 0);
-			if (seleccionado != null && seleccionado) {
-				int id = (int) modelo.getValueAt(i, 1);
-				idsParaCerrar.add(id);
-			}
-		}
-		
-		if (!idsParaCerrar.isEmpty()) {
-			incidencia.archivarIncidencia(idsParaCerrar);
-		
-			javax.swing.JOptionPane.showMessageDialog(vista, "Control de calidad finalizado con éxito.\n"
-				   + "Incidencias archivadas: "+idsParaCerrar.size());
-		
-			cargarTabla();
-		} else {
-			javax.swing.JOptionPane.showMessageDialog(vista, "Por favor, seleccione al menos una incidencia.");
-		}
+	    DefaultTableModel modelo = vista.getModeloTabla();
+	    List<Integer> idsParaCerrar = new ArrayList<>();
+	    
+	    for (int i = 0; i < modelo.getRowCount(); i++) {
+	        Boolean seleccionado = (Boolean) modelo.getValueAt(i, 0);
+	        if (seleccionado != null && seleccionado) {
+	            int id = (int) modelo.getValueAt(i, 1);
+	            idsParaCerrar.add(id);
+	        }
+	    }
+	    
+	    if (!idsParaCerrar.isEmpty()) {
+	        String resultado = incidencia.archivarIncidencias(idsParaCerrar, responsable.getEmail());
+	        if (resultado.equals("OK")) {
+	            JOptionPane.showMessageDialog(vista, "Control de calidad finalizado con éxito.\n"
+	                   + "Incidencias archivadas: " + idsParaCerrar.size());
+	        } else {
+	            // Si el resultado no es OK, es que ha habido un problema entonces lo imprimo
+	            JOptionPane.showMessageDialog(vista, resultado, 
+	                    "Validación de Presupuesto", JOptionPane.WARNING_MESSAGE);
+	        }
+	    
+	        cargarTabla(); //Vuelvo a cargar la tabla para que se pueda ver cuales se cerraron y cuales no
+	    } else {
+	        JOptionPane.showMessageDialog(vista, "Por favor, seleccione al menos una incidencia.");
+	    }
 	}
 	
 	private void cargarTabla() {
