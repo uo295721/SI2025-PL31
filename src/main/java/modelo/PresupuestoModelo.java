@@ -16,6 +16,19 @@ public class PresupuestoModelo {
         return db.executeQueryPojo(TipoIncidenciaDTO.class, "SELECT * FROM TipoIncidencia");
     }
 
+    public PresupuestoDTO obtenerPresupuestoActivo(int idTipo) {
+        String sql = "SELECT * FROM Presupuesto WHERE id_tipo = ? " +
+                     "AND date('now') BETWEEN fecha_inicio AND fecha_fin LIMIT 1";
+        
+        List<PresupuestoDTO> lista = db.executeQueryPojo(PresupuestoDTO.class, sql, idTipo);
+        return lista.isEmpty() ? null : lista.get(0);
+    }
+    
+    public void actualizarConsumo(int idPresupuesto, double coste) {
+        String sql = "UPDATE Presupuesto SET importe_consumido = importe_consumido + ? WHERE id_presupuesto = ?";
+        db.executeUpdate(sql, coste, idPresupuesto);
+    }
+    
     public boolean guardarPresupuesto(int idTipo, double total, String inicio, String fin) {
         // Regla: No solapar fechas para un mismo tipo
         String sqlCheck = "SELECT COUNT(*) FROM Presupuesto WHERE id_tipo = ? " +
