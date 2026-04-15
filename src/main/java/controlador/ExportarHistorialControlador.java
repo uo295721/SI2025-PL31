@@ -3,7 +3,6 @@ package controlador;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -92,9 +91,10 @@ public class ExportarHistorialControlador {
             sb.append("    \"fecha\": \"").append(inc.getFecha()).append("\",\n");
             sb.append("    \"tipo\": \"").append(inc.getTipo()).append("\",\n");
             sb.append("    \"zona\": \"").append(inc.getLocalizacion()).append("\",\n");
-            
-            // Sub-array de historial (Trazabilidad completa)
+            sb.append("    \"coste\": ").append(inc.getCoste()).append(",\n");
+            sb.append("    \"tiempo_total\": \"").append(inc.getTiempoResolucion()).append("\",\n");
             sb.append("    \"historial\": [\n");
+            
             List<HistorialDTO> hist = inc.getHistorial();
             for (int j = 0; j < hist.size(); j++) {
                 HistorialDTO h = hist.get(j);
@@ -126,10 +126,9 @@ public class ExportarHistorialControlador {
 	}
 	
 	private boolean fechasValidas(String fechaInicio, String fechaFin) {
-	    try {
+		try {
 	        if (fechaInicio.isEmpty() || fechaFin.isEmpty()) {
-	            JOptionPane.showMessageDialog(vista, "Por favor, introduzca ambas fechas para filtrar.",
-	                                         "Error de formato", JOptionPane.WARNING_MESSAGE);
+	            JOptionPane.showMessageDialog(vista, "Rellena ambas fechas (AAAA-MM-DD)");
 	            return false;
 	        }
 
@@ -137,15 +136,16 @@ public class ExportarHistorialControlador {
 	        LocalDate fin = LocalDate.parse(fechaFin);
 
 	        if (inicio.isAfter(fin)) {
-	            JOptionPane.showMessageDialog(vista, "La fecha de inicio no puede ser posterior a la de fin.",
-	                                         "Error lógico", JOptionPane.ERROR_MESSAGE);
+	            JOptionPane.showMessageDialog(vista, "La fecha de inicio no puede ser posterior a la de fin."
+	            		,"Error de Fecha", JOptionPane.ERROR_MESSAGE);
 	            return false;
 	        }
-	        return true; 
+	        return true;
 
-	    } catch (DateTimeParseException e) {
-	        JOptionPane.showMessageDialog(vista, "Formato de fecha incorrecto. Use: AAAA-MM-DD (ej: 2026-01-01)",
-	                                     "Error de formato", JOptionPane.ERROR_MESSAGE);
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(vista, 
+	            "Formato incorrecto.\nUsa el estándar: AAAA-MM-DD\nEjemplo: 2026-04-15", 
+	            "Error de Fecha", JOptionPane.ERROR_MESSAGE);
 	        return false;
 	    }
 	}

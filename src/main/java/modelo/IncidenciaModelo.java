@@ -322,10 +322,14 @@ public class IncidenciaModelo {
 	}
 	
 	public List<IncidenciaDTO> getIncidenciasConHistorialParaExportar(String fInicio, String fFin, String tipo, String zona){
-		StringBuilder sqlBuilder = new StringBuilder("SELECT i.id_incidencia, i.descripcion, i.localizacion, "
-												   + "i.fecha, i.id_ciudadano as descripcionCiudadano, t.nombre as tipo "
-												   + "FROM incidencia i "
-												   + "JOIN TipoIncidencia t ON i.id_tipo = t.id_tipo WHERE 1=1");
+		StringBuilder sqlBuilder = new StringBuilder("SELECT "
+	            + "i.id_incidencia AS idIncidencia,i.descripcion,i.localizacion,i.fecha, "
+	            + "i.id_ciudadano AS descripcionCiudadano, "
+	            + "t.nombre AS tipo, "
+	            + "i.coste, " 
+	            + "i.tiempo_resolucion AS tiempoResolucion "
+	            + "FROM incidencia i "
+	            + "JOIN TipoIncidencia t ON i.id_tipo = t.id_tipo WHERE 1=1");
 		List<Object> parametros = new ArrayList<>();
 		if (fInicio != null && !fInicio.trim().isEmpty()) {
 			sqlBuilder.append(" AND i.fecha >= ?");
