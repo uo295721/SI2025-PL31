@@ -67,9 +67,8 @@ public class FacturaModelo {
 	public List<FacturaDTO> obtenerTodasLasFacturas(){
 		String sql = "SELECT f.id_factura AS idFactura, f.numero_factura AS numeroFactura, " +
                 "f.id_incidencia AS idIncidencia, f.fecha_emision AS fechaEmision, " +
-                "f.total, f.estado, i.tiempoResolucion " + // Traemos el tiempo de la incidencia
-                "FROM Factura f " +
-                "JOIN Incidencia i ON f.id_incidencia = i.id_incidencia " +
+                "f.total, f.estado, i.tiempo_resolucion AS tiempoResolucion " + 
+                "FROM Factura f JOIN Incidencia i ON f.id_incidencia = i.id_incidencia " +
                 "ORDER BY f.id_factura DESC";
 		return db.executeQueryPojo(FacturaDTO.class, sql);
 	}

@@ -42,6 +42,7 @@ CREATE TABLE "Incidencia" (
     "coste" NUMERIC,
     "horas_estimadas"   INTEGER,
     "descripcion_trabajos"  TEXT,
+    "tiempo_resolucion" TEXT,
     PRIMARY KEY("id_incidencia"),
     FOREIGN KEY("localizacion") REFERENCES "Zona"("nombre"),
     FOREIGN KEY("id_tipo") REFERENCES "TipoIncidencia"("id_tipo")

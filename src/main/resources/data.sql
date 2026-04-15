@@ -33,22 +33,21 @@ INSERT INTO "Usuario" ("id_usuario", "nombre", "apellidos", "email", "rol", "id_
 ('O1', 'Omar', 'Lobo', 'omar.operador@oviedo.es', 'OPERADOR', NULL),
 ('O2', 'Marco', 'Estrada', 'marco.operador@oviedo.es', 'OPERADOR', NULL);
 
-INSERT INTO "Incidencia" 
-("estado", "id_incidencia", "descripcion", "id_ciudadano", "localizacion", "id_tipo", "fecha", "fecha_resolucion", "id_operador", "id_tecnico", "coste", "horas_estimadas") 
+INSERT INTO "Incidencia" ("estado", "id_incidencia", "descripcion", "id_ciudadano", "localizacion", "id_tipo", "fecha", "fecha_resolucion", "id_operador", "id_tecnico", "coste", "horas_estimadas", "descripcion_trabajos", "tiempo_resolucion") 
 VALUES 
-('Validada', 101, 'Falla de alumbrado público en Plaza Mayor', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T2', 100, 5),
-('Validada', 107, 'Banco roto en el Parque San Francisco', 'C1', 'Zona Portuaria-1', 2, '2026-02-20', NULL, 'O1', 'T2', 50, 2),
-('Validada', 108, 'Baldosas sueltas con riesgo de caída', 'C2', 'Zona Residencial-2', 4, '2026-02-21', NULL, 'O2', 'T2', 150, 4),
-('Validada', 109, 'Cambio de bombilla en Calle Principal', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T2', 100, 5),
-('Asignada', 103, 'Falla de alumbrado público en Plaza Mayor', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T1', 100, 5),
-('Proceso', 102, 'Falla de alumbrado público en Plaza Mayor', 'C2', 'Zona Portuaria-2', 1, '2026-02-19', NULL, 'O1', 'T1', 220, 8),
-('Nueva', 104, 'Fuga de agua en Calle Uría', 'C2', 'Zona Central-1', 3, '2026-02-19', NULL, 'O2', 'T2', 100, 5),
-('Nueva', 105, 'Socavón en calzada', 'C2', 'Zona Central-2', 4, '2026-02-19', NULL, 'O2', 'T1', 100, 5),
-('Resuelta', 106, 'Semáforo fundido', 'C2', 'Zona Central-1', 1, '2026-02-19', '2026-02-19', 'O1', 'T1', 220, 8),
-('Resuelta', 113, 'Red de semaforos caía', 'C2', 'Zona Central-2', 1, '2026-02-19', '2026-02-19', 'O1', 'T1', 4900, 20),
-('Resuelta', 112, 'Puente en mal estado', 'C2', 'Zona Portuaria-1', 2, '2026-02-19', '2026-02-19', 'O1', 'T1', 50000, 42),
-('Rechazada', 110, 'Pintada en monumento histórico', 'C1', 'Zona Central-1', 2, '2026-03-01', NULL, 'O1', NULL, 0, 0),
-('Cerrada', 111, 'Limpieza de rastrojo en solares', 'C2', 'Zona Residencial-2', 4, '2026-03-05', '2026-03-10', 'O2', 'T2', 300, 10);
+('Validada', 101, 'Falla de alumbrado público en Plaza Mayor', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T2', 100, 5, '', NULL),
+('Validada', 107, 'Banco roto en el Parque San Francisco', 'C1', 'Zona Portuaria-1', 2, '2026-02-20', NULL, 'O1', 'T2', 50, 2, '', NULL),
+('Validada', 108, 'Baldosas sueltas con riesgo de caída', 'C2', 'Zona Residencial-2', 4, '2026-02-21', NULL, 'O2', 'T2', 150, 4, '', NULL),
+('Validada', 109, 'Cambio de bombilla en Calle Principal', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T2', 100, 5, '', NULL),
+('Asignada', 103, 'Falla de alumbrado público en Plaza Mayor', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T1', 100, 5, '', NULL),
+('Proceso', 102, 'Falla de alumbrado público en Plaza Mayor', 'C2', 'Zona Portuaria-2', 1, '2026-02-19', NULL, 'O1', 'T1', 220, 8, '', NULL),
+('Nueva', 104, 'Fuga de agua en Calle Uría', 'C2', 'Zona Central-1', 3, '2026-02-19', NULL, 'O2', 'T2', 100, 5, '', NULL),
+('Nueva', 105, 'Socavón en calzada', 'C2', 'Zona Central-2', 4, '2026-02-19', NULL, 'O2', 'T1', 100, 5, '', NULL),
+('Resuelta', 106, 'Semáforo fundido', 'C2', 'Zona Central-1', 1, '2026-02-19', '2026-02-19', 'O1', 'T1', 220, 8, 'Reparación de bombilla', '7h 45min'),
+('Resuelta', 113, 'Red de semaforos caía', 'C2', 'Zona Central-2', 1, '2026-02-19', '2026-02-19', 'O1', 'T1', 4900, 20, 'Sustitución de placa', '19h 30min'),
+('Resuelta', 112, 'Puente en mal estado', 'C2', 'Zona Portuaria-1', 2, '2026-02-19', '2026-02-19', 'O1', 'T1', 50000, 42, 'Refuerzo estructural', '45h 00min'),
+('Rechazada', 110, 'Pintada en monumento histórico', 'C1', 'Zona Central-1', 2, '2026-03-01', NULL, 'O1', NULL, 0, 0, '', NULL),
+('Cerrada', 111, 'Limpieza de rastrojo en solares', 'C2', 'Zona Residencial-2', 4, '2026-03-05', '2026-03-10', 'O2', 'T2', 300, 10, 'Limpieza manual', '12h 15min');
 
 INSERT INTO "Historial" ("id_modificacion", "id_incidencia", "id_usuario", "estado_nuevo", "fecha_modificacion", "comentario")
 VALUES 

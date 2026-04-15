@@ -21,8 +21,20 @@ public class VentanaFacturas extends JFrame {
         JTabbedPane pestañas = new JTabbedPane();
 
         JPanel panelPendientes = new JPanel(new BorderLayout());
-        modeloPendientes = new DefaultTableModel(new Object[]{"ID", "Fecha", "Detalle Técnico", "Coste"}, 0);
+        modeloPendientes = new DefaultTableModel(new Object[]{"ID", "Fecha", "Detalle Técnico", "Total Horas", "Coste (€)"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Esto impide que se pueda escribir en ninguna celda
+            }
+        };
         tablaPendientes = new JTable(modeloPendientes);
+        modeloFacturas = new DefaultTableModel(new Object[]{"ID", "Nº Factura", "ID Incid.", "Fecha", "Total Horas", "Importe (€)", "Estado"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; 
+            }
+        };
+        tablaFacturas = new JTable(modeloFacturas);
         panelPendientes.add(new JScrollPane(tablaPendientes), BorderLayout.CENTER);
         
         btnGenerarFactura = new JButton("Generar Factura de Incidencia Seleccionada");
