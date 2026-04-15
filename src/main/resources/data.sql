@@ -29,6 +29,7 @@ INSERT INTO "Usuario" ("id_usuario", "nombre", "apellidos", "email", "rol", "id_
 ('C1', 'Diego', 'Otero', 'diego.ciudadano@oviedo.es', 'CIUDADANO', NULL),
 ('C2', 'Marco', 'Diaz', 'marco.ciudadano@oviedo.es', 'CIUDADANO', NULL),
 ('R1', 'Ines', 'Canteli', 'ines.responsable@oviedo.es', 'RESPONSABLE', 1),
+('R2', 'Cristiano', 'Ronaldo', 'cristiano.responsable@oviedo.es', 'RESPONSABLE', 2),
 ('O1', 'Omar', 'Lobo', 'omar.operador@oviedo.es', 'OPERADOR', NULL),
 ('O2', 'Marco', 'Estrada', 'marco.operador@oviedo.es', 'OPERADOR', NULL);
 
@@ -44,6 +45,8 @@ VALUES
 ('Nueva', 104, 'Fuga de agua en Calle Uría', 'C2', 'Zona Central-1', 3, '2026-02-19', NULL, 'O2', 'T2', 100, 5),
 ('Nueva', 105, 'Socavón en calzada', 'C2', 'Zona Central-2', 4, '2026-02-19', NULL, 'O2', 'T1', 100, 5),
 ('Resuelta', 106, 'Semáforo fundido', 'C2', 'Zona Central-1', 1, '2026-02-19', '2026-02-19', 'O1', 'T1', 220, 8),
+('Resuelta', 113, 'Red de semaforos caía', 'C2', 'Zona Central-2', 1, '2026-02-19', '2026-02-19', 'O1', 'T1', 4900, 20),
+('Resuelta', 112, 'Puente en mal estado', 'C2', 'Zona Portuaria-1', 2, '2026-02-19', '2026-02-19', 'O1', 'T1', 50000, 42),
 ('Rechazada', 110, 'Pintada en monumento histórico', 'C1', 'Zona Central-1', 2, '2026-03-01', NULL, 'O1', NULL, 0, 0),
 ('Cerrada', 111, 'Limpieza de rastrojo en solares', 'C2', 'Zona Residencial-2', 4, '2026-03-05', '2026-03-10', 'O2', 'T2', 300, 10);
 
@@ -71,3 +74,19 @@ INSERT INTO "Asignacion_Incidencia" ("id_incidencia", "id_tecnico") VALUES
 (103, 'T1'), 
 (102, 'T1'), 
 (104, 'T2'); 
+
+INSERT INTO "TareaDiaria" ("id_incidencia", "id_tecnico", "fecha", "descripcion_tarea", "horas_dedicadas") VALUES 
+(101, 'T1', '2026-02-19', 'Revisión cables', 4.0),
+(102, 'T3', '2026-02-20', 'Sustitución focos', 6.0),
+(107, 'T2', '2026-02-21', 'Barnizar banco', 5.5),
+(104, 'T2', '2026-02-19', 'Reparación de fuga en tubería principal', 4.0),
+(105, 'T1', '2026-02-20', 'Vallado y preparación del terreno', 5.0),
+(111, 'T2', '2026-03-06', 'Desbroce y limpieza mecánica', 8.0);
+
+DELETE FROM "Presupuesto";
+INSERT INTO "Presupuesto" ("id_tipo", "importe_total", "importe_consumido", "fecha_inicio", "fecha_fin") 
+VALUES (1, 5000.0, 0.0, '2026-01-01', '2026-12-31');
+INSERT INTO "Presupuesto" ("id_tipo", "importe_total", "importe_consumido", "fecha_inicio", "fecha_fin") 
+VALUES (2, 2000.0, 0.0, '2026-01-01', '2026-12-31');
+INSERT INTO "Presupuesto" ("id_tipo", "importe_total", "importe_consumido", "fecha_inicio", "fecha_fin") 
+VALUES (3, 3000.0, 0.0, '2026-01-01', '2026-12-31');

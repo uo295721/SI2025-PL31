@@ -77,12 +77,13 @@ public class SwingMain {
 
     private JPanel crearSeccionSistema() {
         JPanel p = prepararSubmenu();
+        
         JButton b1 = new JButton("Inicializar Base de Datos");
         b1.addActionListener(e -> { new Database().createDatabase(false); JOptionPane.showMessageDialog(frame, "DB inicializada."); });
+        
         JButton b2 = new JButton("Cargar Datos Iniciales");
         b2.addActionListener(e -> { Database db = new Database(); db.createDatabase(false); db.loadDatabase(); JOptionPane.showMessageDialog(frame, "Datos cargados."); });
         
-        // ---> Botón recuperado de tu rama HEAD que faltaba en el nuevo diseño <---
         JButton b3 = new JButton("Exportar Historial Completo (JSON)");
         b3.addActionListener(e -> {
             vista.VentanaExportarHistorial ventanaHistorial = new vista.VentanaExportarHistorial(frame);
@@ -96,6 +97,7 @@ public class SwingMain {
 
     private JPanel crearSeccionCiudadano() {
         JPanel p = prepararSubmenu();
+        
         JButton b1 = new JButton("Registrar Nueva Incidencia");
         b1.addActionListener(e -> {
             String id = JOptionPane.showInputDialog(frame, "DNI o Email:");
@@ -103,6 +105,11 @@ public class SwingMain {
                 RegistrarIncidencia v = new RegistrarIncidencia();
                 new RegistrarIncidenciasControlador(v, new IncidenciaModelo(), new ZonaModelo(), id);
                 v.setVisible(true); 
+            } else {
+            	JOptionPane.showMessageDialog(frame, 
+                        "Usuario con los permisos necesarios no encontrado en la base de datos. Por favor, verifique el DNI o Email introducido.", 
+                        "Error de Acceso", 
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
         JButton b2 = new JButton("Consultar Mis Incidencias");
@@ -112,6 +119,11 @@ public class SwingMain {
                 VentanaMisIncidencias v = new VentanaMisIncidencias();
                 new ConsultaIncidenciasControlador(v, new IncidenciaModelo(), new ZonaModelo(), usuario.asegurarID(id));
                 v.setVisible(true);
+            } else {
+            	JOptionPane.showMessageDialog(frame, 
+                        "Usuario con los permisos necesarios no encontrado en la base de datos. Por favor, verifique el DNI o Email introducido.", 
+                        "Error de Acceso", 
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
         p.add(b1); p.add(b2); p.add(botonVolver());
@@ -133,6 +145,11 @@ public class SwingMain {
                 VistaRechazoOperador v = new VistaRechazoOperador(id);
                 new RechazoIncidenciaControlador(v, new IncidenciaModelo(), id);
                 v.setVisible(true);
+            }  else {
+            	JOptionPane.showMessageDialog(frame, 
+                        "Usuario con los permisos necesarios no encontrado en la base de datos. Por favor, verifique el DNI o Email introducido.", 
+                        "Error de Acceso", 
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
         JButton b3 = new JButton("Ver Historial de Incidencia");
@@ -143,6 +160,7 @@ public class SwingMain {
 
     private JPanel crearSeccionTecnicoRespon() {
         JPanel p = prepararSubmenu();
+        
         JButton b1 = new JButton("Planificar Resolución (Técnico)");
         b1.addActionListener(e -> {
             String id = JOptionPane.showInputDialog(frame, "Email Técnico:");
@@ -150,17 +168,29 @@ public class SwingMain {
                 VentanaTecnico v = new VentanaTecnico();
                 new TecnicoControlador(new IncidenciaModelo(), v, id);
                 v.setVisible(true);
+            }  else {
+            	JOptionPane.showMessageDialog(frame, 
+                        "Usuario con los permisos necesarios no encontrado en la base de datos. Por favor, verifique el DNI o Email introducido.", 
+                        "Error de Acceso", 
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
+        
         JButton b2 = new JButton("Resolver en Proceso (Técnico)");
         b2.addActionListener(e -> {
             String id = JOptionPane.showInputDialog(frame, "ID/Email Técnico:");
-            if (id != null) {
+            if (id != null && usuario.esUsuarioConRol(id, "TÉCNICO")) {
                 IncidenciasTecnicoProceso v = new IncidenciasTecnicoProceso(id);
                 new IncidenciaControlador(new IncidenciaModelo(), v, id);
                 v.setVisible(true);
+            } else {
+            	JOptionPane.showMessageDialog(frame, 
+                        "Usuario con los permisos necesarios no encontrado en la base de datos. Por favor, verifique el DNI o Email introducido.", 
+                        "Error de Acceso", 
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
+        
         JButton b3 = new JButton("Control de Calidad (Responsable)");
         b3.addActionListener(e -> {
             String id = JOptionPane.showInputDialog(frame, "Email Responsable:");
@@ -168,6 +198,11 @@ public class SwingMain {
                 VentanaResponsable v = new VentanaResponsable();
                 new ResponsableControlador(v, id);
                 v.setVisible(true);
+            } else {
+            	JOptionPane.showMessageDialog(frame, 
+                        "Usuario con los permisos necesarios no encontrado en la base de datos. Por favor, verifique el DNI o Email introducido.", 
+                        "Error de Acceso", 
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
         JButton b4 = new JButton("Generar Informe Responsable");
@@ -177,8 +212,14 @@ public class SwingMain {
                 VentanaInformeResponsable v = new VentanaInformeResponsable(email);
                 new InformeResponsableControlador(new IncidenciaModelo(), new UsuarioModelo(), v, email);
                 v.setVisible(true);
+            } else {
+            	JOptionPane.showMessageDialog(frame, 
+                        "Usuario con los permisos necesarios no encontrado en la base de datos. Por favor, verifique el DNI o Email introducido.", 
+                        "Error de Acceso", 
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
+        
         JButton b5 = new JButton("Estadísticas (Público)");
         b5.addActionListener(e -> {
             VentanaInformes v = new VentanaInformes();
@@ -193,13 +234,30 @@ public class SwingMain {
                 vista.VentanaFacturas vF = new vista.VentanaFacturas();
                 new controlador.FacturacionControlador(vF);
                 vF.setVisible(true);
-            } else if (id != null) {
-                JOptionPane.showMessageDialog(frame, "Acceso denegado. Se requiere rol de Responsable.", 
-                                             "Error de Acceso", JOptionPane.ERROR_MESSAGE);
             }
         });
         
-        p.add(b1); p.add(b2); p.add(b3); p.add(b4); p.add(b5); p.add(b6); p.add(botonVolver());
+        JButton b7 = new JButton("Informe Económico por Categoría");
+        b7.addActionListener(e -> {
+            String email = JOptionPane.showInputDialog(frame, "Email Responsable:");
+            if (email != null && usuario.esUsuarioConRol(email, "RESPONSABLE")) {
+                VentanaInformeEconomico v = new VentanaInformeEconomico();
+                new InformeEconomicoControlador(v, new IncidenciaModelo());
+                v.setVisible(true);
+            } 
+        });
+        
+        
+        JButton b8 = new JButton("Gestionar Presupuestos (Económico)");
+        b8.addActionListener(e -> {
+            VentanaPresupuestos v = new VentanaPresupuestos();
+            new PresupuestoControlador(v, new PresupuestoModelo());
+            v.setVisible(true);
+        });
+
+        // Añadimos todos en orden
+        p.add(b1); p.add(b2); p.add(b3); p.add(b4); p.add(b5); p.add(b6); p.add(b7); p.add(b8); 
+        p.add(botonVolver());
         return p;
     }
 

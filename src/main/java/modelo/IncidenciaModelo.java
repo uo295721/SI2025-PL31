@@ -11,10 +11,6 @@ public class IncidenciaModelo {
 	public IncidenciaModelo() {
 	}
 
-	// ==========================================================
-	// SPRINT 3: REAPERTURA (HU CIUDADANO)
-	// ==========================================================
-
 	public boolean reabrirIncidencia(int idIncidencia, String idUsuario, String motivo) {
 		String sqlU = "UPDATE Incidencia SET estado = 'Nueva', fecha_resolucion = NULL WHERE id_incidencia = ?";
 		String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
@@ -28,10 +24,6 @@ public class IncidenciaModelo {
 			return false;
 		}
 	}
-
-	// ==========================================================
-	// INFORMES Y ESTADÍSTICAS (CONTROLADOR DE INFORMES)
-	// ==========================================================
 
 	public List<IncidenciaDTO> getEstadisticasFiltradas(String fechaInicio, String fechaFin, String tipo,
 														String zona, String estado) {
@@ -75,10 +67,6 @@ public class IncidenciaModelo {
 		return db.executeQueryArray(sql, fechaInicio, fechaFin);
 	}
 
-	// ==========================================================
-	// GESTIÓN DE OPERADORES Y CLASIFICACIÓN
-	// ==========================================================
-
 	public void validarClasificacion(int idIncidencia, String nuevoTipo, String idOperador) {
 		String sqlU = "UPDATE Incidencia SET id_tipo = (SELECT id_tipo FROM TipoIncidencia WHERE nombre = ?), "
 				+ "estado = 'Validada', id_operador = ? WHERE id_incidencia = ?";
@@ -99,7 +87,6 @@ public class IncidenciaModelo {
 
 	public boolean rechazarIncidencia(int idIncidencia, String emailOperador, String motivoRechazo) {
 	    String idReal = obtenerIdPorEmail(emailOperador);
-	    // Cambiado 'Rechazada por Operador' por 'Rechazada'
 	    String sqlU = "UPDATE Incidencia SET estado = 'Rechazada', id_operador = ? WHERE id_incidencia = ?";
 	    String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
 	            + "VALUES (?, ?, 'Rechazada', datetime('now','localtime'), ?)";
@@ -121,10 +108,6 @@ public class IncidenciaModelo {
 		} catch (Exception e) { return false; }
 	}
 
-	// ==========================================================
-	// TÉCNICOS Y TAREAS DIARIAS
-	// ==========================================================
-
 	public void registrarTareaDiaria(int idInci, String idTec, String fecha, String desc, double horas) {
 		String sql = "INSERT INTO TareaDiaria (id_incidencia, id_tecnico, fecha, descripcion_tarea, horas_dedicadas) VALUES (?, ?, ?, ?, ?)";
 		db.executeUpdate(sql, idInci, idTec, fecha, desc, horas);
@@ -144,13 +127,21 @@ public class IncidenciaModelo {
 		return 0.0;
 	}
 
+	// MÉTODO CON LA LÓGICA DE PRESUPUESTO INTEGRADA
 	public boolean marcarComoResueltaConCoste(int idInci, String idTec, double horas, double coste, String trabajos) {
 		String sqlU = "UPDATE Incidencia SET estado = 'Resuelta', descripcion_trabajos = ?, coste = ?, fecha_resolucion = datetime('now') WHERE id_incidencia = ?";
 		String sqlH = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
 				+ "VALUES (?, ?, 'Resuelta', datetime('now','localtime'), ?)";
+		
+		// Lógica Presupuestaria: Actualizar importe consumido si hoy está en el rango de fechas
+		String sqlPresu = "UPDATE Presupuesto SET importe_consumido = importe_consumido + ? " +
+						  "WHERE id_tipo = (SELECT id_tipo FROM Incidencia WHERE id_incidencia = ?) " +
+						  "AND (date('now') BETWEEN fecha_inicio AND fecha_fin)";
+		
 		try {
 			db.executeUpdate(sqlU, trabajos, coste, idInci);
 			db.executeUpdate(sqlH, idInci, idTec, "Cerrada con coste total: " + coste + "€");
+			db.executeUpdate(sqlPresu, coste, idInci); 
 			return true;
 		} catch (Exception e) { return false; }
 	}
@@ -175,10 +166,39 @@ public class IncidenciaModelo {
 		db.executeUpdate(sqlU, horas, trabajos, idIncidencia);
 		db.executeUpdate(sqlH, idIncidencia, idTecnico);
 	}
+	
+	// ==========================================================
+	// HISTORIA DE USUARIO: INFORME ECONÓMICO POR CATEGORÍA
+	// ==========================================================
 
-	// ==========================================================
-	// HISTORIAL Y CIUDADANO
-	// ==========================================================
+	public List<InformeEconomicoDTO> obtenerInformeEconomico() {
+	    List<InformeEconomicoDTO> lista = new ArrayList<>();
+	
+	    String sql = "SELECT ti.nombre, " +
+	                 "COUNT(DISTINCT i.id_incidencia) as volumen, " +
+	                 "SUM(COALESCE(td.horas_dedicadas, 0) * COALESCE(u.precio_hora, 0)) as coste_total " +
+	                 "FROM TipoIncidencia ti " +
+	                 "JOIN Incidencia i ON ti.id_tipo = i.id_tipo " +
+	                 "LEFT JOIN TareaDiaria td ON i.id_incidencia = td.id_incidencia " +
+	                 "LEFT JOIN Usuario u ON td.id_tecnico = u.id_usuario " +
+	                 "GROUP BY ti.id_tipo, ti.nombre";
+
+	    List<Object[]> resultados = db.executeQueryArray(sql);
+
+	    if (resultados != null) {
+	        for (Object[] fila : resultados) {
+	            String categoria = fila[0].toString();
+	            int volumen = Integer.parseInt(fila[1].toString());
+	            double total = Double.parseDouble(fila[2].toString());
+	
+	            double media = (volumen > 0) ? total / volumen : 0.0;
+
+	            lista.add(new InformeEconomicoDTO(categoria, volumen, total, media));
+	        }
+	    }
+	    return lista;
+	}
+	
 
 	public void registrarCambioHistorial(int idInci, String emailUser, String nuevoEstado, String comentario) {
 		String sql = "INSERT INTO Historial (id_incidencia, id_usuario, estado_nuevo, fecha_modificacion, comentario) "
@@ -210,10 +230,6 @@ public class IncidenciaModelo {
 		} catch (Exception e) { return false; }
 	}
 
-	// ==========================================================
-	// MÉTODOS GENERALES Y AUXILIARES
-	// ==========================================================
-
 	public String obtenerIdPorEmail(String email) {
 		String sql = "SELECT id_usuario FROM Usuario WHERE LOWER(email) = LOWER(?)";
 		List<Object[]> result = db.executeQueryArray(sql, email);
@@ -242,10 +258,60 @@ public class IncidenciaModelo {
 		return db.executeQueryPojo(IncidenciaDTO.class, sql, estado);
 	}
 
-	public void archivarIncidencia(List<Integer> listaIds) {
-		String sql = "UPDATE Incidencia SET estado = 'Cerrada' WHERE id_incidencia = ?";
-		for (int i : listaIds)
-			db.executeUpdate(sql, i);
+	public String archivarIncidencias(List<Integer> listaIds, String emailResponsable) {
+	    StringBuilder reporte = new StringBuilder();
+	    PresupuestoModelo presuModelo = new PresupuestoModelo();
+	    int exitos = 0;
+
+	    for (int id : listaIds) {
+	        String sqlData = "SELECT id_tipo, coste, descripcion FROM Incidencia WHERE id_incidencia = ?";
+	        List<Object[]> res = db.executeQueryArray(sqlData, id);
+	        
+	        if (res.isEmpty()) continue;
+
+	        int idTipo = Integer.parseInt(res.get(0)[0].toString());
+	        double coste = Double.parseDouble(res.get(0)[1].toString());
+	        String desc = (String) res.get(0)[2];
+
+	        PresupuestoDTO presupuesto = presuModelo.obtenerPresupuestoActivo(idTipo);
+
+	        if (presupuesto == null) {
+	            reporte.append("• ID ").append(id).append(": ERROR - No hay presupuesto activo para esta categoría.\n");
+	            continue;
+	        }
+
+	        double saldoDisponible = presupuesto.getImporte_total() - presupuesto.getImporte_consumido();
+	        
+	        if (coste > saldoDisponible) {
+	            reporte.append("ID- ").append(id).append(": SALDO INSUFICIENTE (Coste: ").append(coste)
+	                   .append("€ | Disponible: ").append(String.format("%.2f", saldoDisponible)).append("€).\n");
+	            continue;
+	        }
+
+	        // Si hay saldo, actualizamos presupuesto y cerramos
+	        try {
+	            // Descontar del presupuesto
+	            presuModelo.actualizarConsumo(presupuesto.getId_presupuesto(), coste);
+	            
+	            // Cerrar la incidencia
+	            String sqlCerrar = "UPDATE Incidencia SET estado = 'Cerrada' WHERE id_incidencia = ?";
+	            db.executeUpdate(sqlCerrar, id);
+	            
+	            // Registrar en historial
+	            registrarCambioHistorial(id, emailResponsable, "Cerrada", "Cierre validado con presupuesto. Coste: " + coste + "€");
+	            
+	            exitos++;
+	        } catch (Exception e) {
+	            reporte.append("• ID ").append(id).append(": Error técnico al procesar.\n");
+	        }
+	    }
+
+	    //Mensaje para el OptionPane
+	    if (reporte.length() == 0) {
+	        return "OK"; // Todo se cerró perfectamente
+	    } else {
+	        return "Se cerraron " + exitos + " incidencias, pero hubo problemas con las siguientes:\n\n" + reporte.toString();
+	    }
 	}
 
 	public List<IncidenciaDTO> getIncidenciasParaControlCalidad(String especialidad) {
@@ -309,7 +375,6 @@ public class IncidenciaModelo {
 	public boolean asignarVariosTecnicos(int idIncidencia, List<String> idsTecnicos, String emailOperador) {
 	    String idOperador = obtenerIdPorEmail(emailOperador);
 	    
-	    // SQLs
 	    String sqlDelete = "DELETE FROM Asignacion_Incidencia WHERE id_incidencia = ?";
 	    String sqlAsignar = "INSERT INTO Asignacion_Incidencia (id_incidencia, id_tecnico) VALUES (?, ?)";
 	    String sqlUpdateInci = "UPDATE Incidencia SET estado = 'Asignada', id_tecnico = NULL WHERE id_incidencia = ?";
@@ -317,21 +382,13 @@ public class IncidenciaModelo {
 	                          "VALUES (?, ?, 'Asignada', datetime('now','localtime'), ?)";
 
 	    try {
-	        // 1. Limpiamos asignaciones previas de esta incidencia
 	        db.executeUpdate(sqlDelete, idIncidencia);
-
-	        // 2. Insertamos los nuevos técnicos
 	        for (String idTec : idsTecnicos) {
 	            db.executeUpdate(sqlAsignar, idIncidencia, idTec);
 	        }
-
-	        // 3. Actualizamos la incidencia (ponemos id_tecnico a NULL porque ahora mandan los múltiples)
 	        db.executeUpdate(sqlUpdateInci, idIncidencia);
-
-	        // 4. Historial
 	        String comentario = "Asignada a " + idsTecnicos.size() + " técnicos por " + emailOperador;
 	        db.executeUpdate(sqlHistorial, idIncidencia, idOperador, comentario);
-
 	        return true;
 	    } catch (Exception e) {
 	        e.printStackTrace();

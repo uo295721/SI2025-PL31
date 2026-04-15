@@ -37,7 +37,7 @@ public class RegistrarIncidencia extends JFrame {
 		contentPane.add(LabelTipo);
 		
 		cBTiposIncidencia = new JComboBox<String>();
-		cBTiposIncidencia.setModel(new DefaultComboBoxModel<String>(new String[] {"Sin tipo", "Alumbrado", "Limpieza", "Mobiliario urbano", "Zonas verdes", "Señalización", "Calzada"}));
+		cBTiposIncidencia.setModel(new DefaultComboBoxModel<String>(new String[] {"Sin tipo", "Electricidad", "Mobiliario", "Fontanería", "Obras"}));
 		cBTiposIncidencia.setName("");
 		cBTiposIncidencia.setBounds(223, 23, 180, 22);
 		contentPane.add(cBTiposIncidencia);

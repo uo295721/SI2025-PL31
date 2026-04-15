@@ -30,7 +30,7 @@ CREATE TABLE "Usuario" (
 
 CREATE TABLE "Incidencia" (
     "estado"    TEXT NOT NULL,
-    "id_incidencia" INTEGER NOT NULL UNIQUE,
+    "id_incidencia" INTEGER NOT NULL,
     "descripcion"   TEXT,
     "id_ciudadano"    TEXT NOT NULL,
     "localizacion"  TEXT,
@@ -95,4 +95,14 @@ CREATE TABLE IF NOT EXISTS "Factura"(
 	"total" REAL NOT NULL,
 	"estado" text DEFAULT 'Activa',
 	FOREIGN KEY("id_incidencia") REFERENCES Incidencia("id_incidencia")	
+);
+	
+CREATE TABLE IF NOT EXISTS "Presupuesto" (
+    "id_presupuesto" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "id_tipo" INTEGER NOT NULL,
+    "importe_total" REAL NOT NULL,
+    "importe_consumido" REAL DEFAULT 0.0,
+    "fecha_inicio" TEXT NOT NULL,
+    "fecha_fin" TEXT NOT NULL,
+    FOREIGN KEY("id_tipo") REFERENCES "TipoIncidencia"("id_tipo")
 );

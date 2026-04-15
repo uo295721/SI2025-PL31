@@ -51,7 +51,10 @@ public class FacturaModelo {
 	
 	public void anularFactura(int idFactura) {
 		String sql = "UPDATE Factura SET estado = 'Anulada' WHERE id_factura = ?";
+		
 		db.executeUpdate(sql, idFactura);
+		
+		System.out.println("DEBUG: Intentando anular ID: " + idFactura);
 	}
 	
 	public List<FacturaDTO> obtenerTodasLasFacturas(){

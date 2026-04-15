@@ -75,12 +75,15 @@ public class FacturacionControlador {
 		if (fila == -1) return;
 		
 		int idFactura = (int) vista.modeloFacturas.getValueAt(fila, 0);
-		int confirm = JOptionPane.showConfirmDialog(vista, "¿Seguro que desea ANULAR la factura " + idFactura + "?");
-		
-		if (confirm == JOptionPane.YES_OPTION) {
-			modeloFactura.anularFactura(idFactura);
-			refrescarTablas();
-			JOptionPane.showMessageDialog(vista, "Factura "+idFactura+" anulada correctamente.");
-		}
+		String numFactura = (String) vista.modeloFacturas.getValueAt(fila, 1);
+	    
+	    int confirm = JOptionPane.showConfirmDialog(vista, "¿Seguro que desea ANULAR la factura " + numFactura + "?");
+	    
+	    if (confirm == JOptionPane.YES_OPTION) {
+	        modeloFactura.anularFactura(idFactura);
+	        
+	        refrescarTablas();
+	        JOptionPane.showMessageDialog(vista, "Factura " + numFactura + " anulada correctamente.");
+	    }
 	}
 }

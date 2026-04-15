@@ -20,7 +20,6 @@ public class VentanaFacturas extends JFrame {
 
         JTabbedPane pestañas = new JTabbedPane();
 
-        // --- Pestaña 1: Pendientes de Facturar ---
         JPanel panelPendientes = new JPanel(new BorderLayout());
         modeloPendientes = new DefaultTableModel(new Object[]{"ID", "Fecha", "Detalle Técnico", "Coste"}, 0);
         tablaPendientes = new JTable(modeloPendientes);
@@ -29,9 +28,8 @@ public class VentanaFacturas extends JFrame {
         btnGenerarFactura = new JButton("Generar Factura de Incidencia Seleccionada");
         panelPendientes.add(btnGenerarFactura, BorderLayout.SOUTH);
 
-        // --- Pestaña 2: Historial de Facturas ---
         JPanel panelHistorial = new JPanel(new BorderLayout());
-        modeloFacturas = new DefaultTableModel(new Object[]{"Nº Factura", "ID Incid.", "Fecha Emisión", "Total", "Estado"}, 0);
+        modeloFacturas = new DefaultTableModel(new Object[]{"ID", "Nº Factura", "ID Incid.", "Fecha", "Total", "Estado"}, 0);
         tablaFacturas = new JTable(modeloFacturas);
         panelHistorial.add(new JScrollPane(tablaFacturas), BorderLayout.CENTER);
         

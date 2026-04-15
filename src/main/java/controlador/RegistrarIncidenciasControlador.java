@@ -62,7 +62,7 @@ public class RegistrarIncidenciasControlador {
         int zona = vista.getcBLocalizacion().getSelectedIndex();
         String descripcion = vista.getTextDescripcion().getText().trim();
 
-        if (zona == 0 || descripcion.isEmpty() || tipo.trim() == "Sin tipo") {
+        if (zona == 0 || descripcion.isEmpty() || tipo.trim().equals("Sin tipo")) {
             JOptionPane.showMessageDialog(vista, "Por favor, complete todos los campos para crear la incidencia.");
             return false;
         }
