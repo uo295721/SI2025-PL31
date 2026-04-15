@@ -30,7 +30,7 @@ CREATE TABLE "Usuario" (
 
 CREATE TABLE "Incidencia" (
     "estado"    TEXT NOT NULL,
-    "id_incidencia" INTEGER NOT NULL UNIQUE,
+    "id_incidencia" INTEGER NOT NULL,
     "descripcion"   TEXT,
     "id_ciudadano"    TEXT NOT NULL,
     "localizacion"  TEXT,
