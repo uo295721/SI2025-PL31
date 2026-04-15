@@ -20,6 +20,7 @@ public class IncidenciaDTO {
 	private String descripcion_trabajos;
 	private String descripcionCiudadano;
 	private String tiempoResolucion;
+	private double coste;
 
 	// Constructor de la clase
 	public IncidenciaDTO() {}
@@ -69,6 +70,10 @@ public class IncidenciaDTO {
 	
 	public List<HistorialDTO> getHistorial(){
 		return historial;
+	}
+	
+	public double getCoste() {
+		return coste;
 	}
 
 	public void setId_incidencia(int idIncidencia) {
@@ -138,5 +143,9 @@ public class IncidenciaDTO {
 
 	public void setId_tipo(int id_tipo) {
 		this.id_tipo = id_tipo;
+	}
+	
+	public void setCoste(double coste) {
+		this.coste = coste;
 	}
 }

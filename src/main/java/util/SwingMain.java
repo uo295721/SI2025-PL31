@@ -231,8 +231,8 @@ public class SwingMain {
         b6.addActionListener(e -> {
             String id = JOptionPane.showInputDialog(frame, "Email Responsable:");
             if (id != null && usuario.esUsuarioConRol(id, "RESPONSABLE")) {
-                vista.VentanaFacturas vF = new vista.VentanaFacturas();
-                new controlador.FacturacionControlador(vF);
+                VentanaFacturas vF = new VentanaFacturas();
+                new FacturacionControlador(vF);
                 vF.setVisible(true);
             }
         });

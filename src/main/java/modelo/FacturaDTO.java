@@ -9,6 +9,7 @@ public class FacturaDTO {
 	private String detalleTecnico;
 	private double total;
 	private String estado;
+	private String tiempoResolucion;
 	
 	public FacturaDTO() {}
 
@@ -39,6 +40,10 @@ public class FacturaDTO {
 	public String getEstado() {
 		return estado;
 	}
+	
+	public String getTiempoResolucion() {
+		return tiempoResolucion;
+	}
 
 	public void setIdFactura(int idFactura) {
 		this.idFactura = idFactura;
@@ -66,5 +71,9 @@ public class FacturaDTO {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	
+	public void setTiempoResolucion(String tiempo) {
+		this.tiempoResolucion = tiempo;
 	}
 }

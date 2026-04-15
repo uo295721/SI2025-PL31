@@ -29,7 +29,7 @@ public class VentanaFacturas extends JFrame {
         panelPendientes.add(btnGenerarFactura, BorderLayout.SOUTH);
 
         JPanel panelHistorial = new JPanel(new BorderLayout());
-        modeloFacturas = new DefaultTableModel(new Object[]{"ID", "Nº Factura", "ID Incid.", "Fecha", "Total", "Estado"}, 0);
+        modeloFacturas = new DefaultTableModel(new Object[]{"ID", "Nº Factura", "ID Incid.", "Fecha", "Total Horas","Importe (€) ", "Estado"}, 0);
         tablaFacturas = new JTable(modeloFacturas);
         panelHistorial.add(new JScrollPane(tablaFacturas), BorderLayout.CENTER);
         
