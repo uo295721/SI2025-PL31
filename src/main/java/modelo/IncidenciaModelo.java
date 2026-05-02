@@ -109,8 +109,28 @@ public class IncidenciaModelo {
 	}
 
 	public void registrarTareaDiaria(int idInci, String idTec, String fecha, String desc, double horas) {
-		String sql = "INSERT INTO TareaDiaria (id_incidencia, id_tecnico, fecha, descripcion_tarea, horas_dedicadas) VALUES (?, ?, ?, ?, ?)";
-		db.executeUpdate(sql, idInci, idTec, fecha, desc, horas);
+	    // 1. VALIDACIÓN: Horas positivas (Cubre testRegistrarTareaHorasNegativas)
+	    if (horas <= 0) {
+	        return; 
+	    }
+
+	    // 2. VALIDACIÓN: Fecha no futura (Cubre testRegistrarTareaFechaFutura)
+	    // Obtenemos la fecha actual en formato ISO (YYYY-MM-DD)
+	    String fechaHoy = java.time.LocalDate.now().toString(); 
+	    if (fecha.compareTo(fechaHoy) > 0) {
+	        return; 
+	    }
+
+	    // 3. VALIDACIÓN: Existencia de la incidencia (Cubre testRegistrarTareaIdInexistente)
+	    String sqlCheck = "SELECT id_incidencia FROM Incidencia WHERE id_incidencia = ?";
+	    List<Object[]> res = db.executeQueryArray(sqlCheck, idInci);
+	    if (res == null || res.isEmpty()) {
+	        return; 
+	    }
+
+	    // Si pasa todos los filtros, insertamos en la BD
+	    String sql = "INSERT INTO TareaDiaria (id_incidencia, id_tecnico, fecha, descripcion_tarea, horas_dedicadas) VALUES (?, ?, ?, ?, ?)";
+	    db.executeUpdate(sql, idInci, idTec, fecha, desc, horas);
 	}
 
 	public List<Object[]> getTareasPorIncidencia(int idInci) {
