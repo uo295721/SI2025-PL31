@@ -41,6 +41,7 @@ VALUES
 ('Validada', 107, 'Banco roto en el Parque San Francisco', 'C1', 'Zona Portuaria-1', 2, '2026-02-20', NULL, 'O1', 'T2', 50, 2, '', NULL),
 ('Validada', 108, 'Baldosas sueltas con riesgo de caída', 'C2', 'Zona Residencial-2', 4, '2026-02-21', NULL, 'O2', 'T2', 150, 4, '', NULL),
 ('Validada', 109, 'Cambio de bombilla en Calle Principal', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T2', 100, 5, '', NULL),
+('Validada', 115, 'Socavón en calzada', 'C2', 'Zona Central-2', 4, '2026-02-19', NULL, 'O2', 'T1', 100, 5, '', NULL),
 ('Asignada', 103, 'Falla de alumbrado público en Plaza Mayor', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T1', 100, 5, '', NULL),
 ('Asignada', 114, 'Falla de bombilla en catedral', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T1', 100, 5, '', NULL),
 ('Proceso', 102, 'Falla de alumbrado público en Plaza Mayor', 'C2', 'Zona Portuaria-2', 1, '2026-02-19', NULL, 'O1', 'T1', 220, 8, '', NULL),

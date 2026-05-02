@@ -60,4 +60,31 @@ public class AsignarTecnicoTest {
         boolean exito = modelo.asignarVariosTecnicos(109, tecnicos, "omar.operador@oviedo.es");
         assertFalse("Solo pueden asignar técnicos a incidencias que compartan especialidad", exito);
     }
+    
+    @Test
+    //Test T6
+    public void testFalloPorTecnicoIncorrecto() {
+        List<String> tecnicos = new ArrayList<>();
+        tecnicos.add("T20");
+        boolean exito = modelo.asignarVariosTecnicos(109, tecnicos, "omar.operador@oviedo.es");
+        assertFalse("Solo pueden asignar incidencias a técnicos registrados", exito);
+    }
+    
+    @Test
+    //Test T7
+    public void testFalloPorIncidenciaIncorrecto() {
+        List<String> tecnicos = new ArrayList<>();
+        tecnicos.add("T5");
+        boolean exito = modelo.asignarVariosTecnicos(200, tecnicos, "omar.operador@oviedo.es");
+        assertFalse("Solo pueden asignar técnicos a incidencias registradas", exito);
+    }
+    
+    @Test
+    //Test T8
+    public void testFalloPorOperadorIncorrecto() {
+        List<String> tecnicos = new ArrayList<>();
+        tecnicos.add("T5");
+        boolean exito = modelo.asignarVariosTecnicos(115, tecnicos, "nadie.operador@oviedo.es");
+        assertFalse("Solo puede realizarse la operación si el operador es correcto", exito);
+    }
 }
