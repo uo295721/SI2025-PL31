@@ -26,6 +26,8 @@ INSERT INTO "Usuario" ("id_usuario", "nombre", "apellidos", "email", "rol", "id_
 ('T1', 'Ana', 'García', 'ana.tecnico@oviedo.es', 'TÉCNICO', 1),
 ('T2', 'Carlos', 'Pérez', 'carlos.tecnico@oviedo.es', 'TÉCNICO', 2),
 ('T3', 'Emil', 'Bauer', 'emil.bauer@oviedo.es', 'TÉCNICO', 1),
+('T4', 'Luis', 'Alonso', 'luis.tecnico@oviedo.es', 'TÉCNICO', 2),
+('T5', 'Maria', 'Menendez', 'maria.tecnico@oviedo.es', 'TÉCNICO', 4),
 ('C1', 'Diego', 'Otero', 'diego.ciudadano@oviedo.es', 'CIUDADANO', NULL),
 ('C2', 'Marco', 'Diaz', 'marco.ciudadano@oviedo.es', 'CIUDADANO', NULL),
 ('R1', 'Ines', 'Canteli', 'ines.responsable@oviedo.es', 'RESPONSABLE', 1),
@@ -40,6 +42,7 @@ VALUES
 ('Validada', 108, 'Baldosas sueltas con riesgo de caída', 'C2', 'Zona Residencial-2', 4, '2026-02-21', NULL, 'O2', 'T2', 150, 4, '', NULL),
 ('Validada', 109, 'Cambio de bombilla en Calle Principal', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T2', 100, 5, '', NULL),
 ('Asignada', 103, 'Falla de alumbrado público en Plaza Mayor', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T1', 100, 5, '', NULL),
+('Asignada', 114, 'Falla de bombilla en catedral', 'C1', 'Zona Residencial-1', 1, '2026-02-19', NULL, 'O1', 'T1', 100, 5, '', NULL),
 ('Proceso', 102, 'Falla de alumbrado público en Plaza Mayor', 'C2', 'Zona Portuaria-2', 1, '2026-02-19', NULL, 'O1', 'T1', 220, 8, '', NULL),
 ('Nueva', 104, 'Fuga de agua en Calle Uría', 'C2', 'Zona Central-1', 3, '2026-02-19', NULL, 'O2', 'T2', 100, 5, '', NULL),
 ('Nueva', 105, 'Socavón en calzada', 'C2', 'Zona Central-2', 4, '2026-02-19', NULL, 'O2', 'T1', 100, 5, '', NULL),
@@ -71,8 +74,9 @@ INSERT INTO "Tecnico_Especialidad" ("id_usuario", "id_tipo") VALUES ('T3', 1);
 
 INSERT INTO "Asignacion_Incidencia" ("id_incidencia", "id_tecnico") VALUES 
 (103, 'T1'), 
-(102, 'T1'), 
-(104, 'T2'); 
+(102, 'T1'),
+(114, 'T1'), 
+(104, 'T2');
 
 INSERT INTO "TareaDiaria" ("id_incidencia", "id_tecnico", "fecha", "descripcion_tarea", "horas_dedicadas") VALUES 
 (101, 'T1', '2026-02-19', 'Revisión cables', 4.0),

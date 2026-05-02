@@ -377,8 +377,26 @@ public class IncidenciaModelo {
 	}
 	
 	public boolean asignarVariosTecnicos(int idIncidencia, List<String> idsTecnicos, String emailOperador) {
-	    String idOperador = obtenerIdPorEmail(emailOperador);
+	    String sqlCheckInci = "SELECT estado, id_tipo FROM Incidencia WHERE id_incidencia = ?";
+	    List<Object[]> resInci = db.executeQueryArray(sqlCheckInci, idIncidencia);
 	    
+	    if (resInci.isEmpty() || !resInci.get(0)[0].toString().equals("Validada")) {
+	        return false;
+	    }
+	    int idTipoInci = Integer.parseInt(resInci.get(0)[1].toString());
+
+	    for (String idTec : idsTecnicos) {
+	        String sqlCarga = "SELECT COUNT(*) FROM Asignacion_Incidencia ai " +
+	                          "JOIN Incidencia i ON ai.id_incidencia = i.id_incidencia " +
+	                          "WHERE ai.id_tecnico = ? AND i.estado NOT IN ('Resuelta', 'Cerrada')";
+	        List<Object[]> resCarga = db.executeQueryArray(sqlCarga, idTec);
+	        int cargaActual = Integer.parseInt(resCarga.get(0)[0].toString());
+	        
+	        if (cargaActual >= 3) {
+	            return false;
+	        }
+	    }
+	    String idOperador = obtenerIdPorEmail(emailOperador);
 	    String sqlDelete = "DELETE FROM Asignacion_Incidencia WHERE id_incidencia = ?";
 	    String sqlAsignar = "INSERT INTO Asignacion_Incidencia (id_incidencia, id_tecnico) VALUES (?, ?)";
 	    String sqlUpdateInci = "UPDATE Incidencia SET estado = 'Asignada', id_tecnico = NULL WHERE id_incidencia = ?";
@@ -395,10 +413,9 @@ public class IncidenciaModelo {
 	        db.executeUpdate(sqlHistorial, idIncidencia, idOperador, comentario);
 	        return true;
 	    } catch (Exception e) {
-	        e.printStackTrace();
 	        return false;
 	    }
-	}	
+	}
 	
 	public List<IncidenciaDTO> getIncidenciasPendientesFacturar(){
 		String sql = "SELECT i.id_incidencia, i.fecha, i.descripcion_trabajos,i.tiempo_resolucion, i.coste "
